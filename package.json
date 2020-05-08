@@ -1,0 +1,15 @@
+{
+  "name": "pocket",
+  "version": "1.0.0",
+  "description": "data pocket redistribution",
+  "main": "index.js",
+  "scripts": {
+    "example":"node ./examples.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "simple-q": "git+ssh://git@eaglex_bitbucket:eag1ex/simple-q.git"
+  }
+}
