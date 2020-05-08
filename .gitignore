@@ -2,6 +2,7 @@ node_modules
 npm-debug.log
 
 temp
+logcommits.md
 *.env
 *.dev
 .DS_Store
