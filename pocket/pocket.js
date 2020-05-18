@@ -1,17 +1,19 @@
 
-const { isString, isArray, uniq, error, log, warn, push } = require('./utils')
+const { isString, warn } = require('./utils')
 
 /**
  * set new pocket model
- * - every new task has a set of requiremends. Once status is `complete` and data is available, the information is ipc.send and pocket is closed
+ * - every new task has a set of requirements. Once status is `complete` and data availabl, information is send and pocket is sealed.
  * methods:`{get,all}` props: `{id,data,tasks,status}`
  *  @param {*} opts.id required
  *  @param {*} opts.tasks required
  *  @param {*} opts.compaign optional
+ *  @param {*} debug optional
  */
 module.exports = (self) => {
     return class Pocket {
-        constructor(opts = {}) {
+        constructor(opts = {}, debug) {
+            this.debug = debug || false
             if (opts.id !== undefined) opts.id = opts.id.toString()
             if (!opts.id) throw ('id is required')
             if (!opts.task || !isString(opts.task)) throw ('task as string is required')
@@ -26,7 +28,7 @@ module.exports = (self) => {
 
         set data(v) {
             /**
-            * data set once cannot be updated when status is send || complete
+            * once cannot be updated uppon status is send || complete
             */
             const complete = this.status === 'complete' || this.status === 'send'
             if (complete) return null
@@ -44,21 +46,23 @@ module.exports = (self) => {
 
             if (v === 'open') {
                 this._status = 'open'
+                /// //////////////////////////////////////
                 this.onOpenStatus(v) // emit pocket when status opens
+                /// //////////////////////////
                 return
             }
 
-            let okStatus = v === 'complete' || v === 'busy' || v === 'error'
+            let okStatus = (v === 'complete' || v === 'busy' || v === 'error')
 
             if (okStatus) {
                 this._status = v
                 /// //////////////////////////////////////
-                this.onComplete(v)
+                this.onComplete(v) // emit pocket when status complete
                 /// //////////////////////////
 
                 // log('new status set to', v)
             } else {
-                warn(`you set invalid status, nothing changed`)
+                if (this.debug) warn(`id:${this.id},  you set invalid status, nothing changed`)
             }
         }
 
@@ -73,22 +77,20 @@ module.exports = (self) => {
         onComplete(status) {
             if (status === 'complete' && this.status !== 'send' && this.data) {
                 setTimeout(() => {
-                    self.emit({ pocket: this, status:'complete' })
-                    // ipc.send('pre-script', this.all()) // send directly to server
+                    self._emit({ pocket: this, status: 'complete' })
                 })
                 this._status = 'send'
-                //
             }
         }
         /**
-         * do something on open tast, this means we start request for data
+         * do something on open task, this means we start request for data
          * @param {*} status
          */
         onOpenStatus(status) {
             if (status === 'open') {
                 // return this pocket and update it when its complete
                 setTimeout(() => {
-                    self.emit({ pocket: this, status:'open' })
+                    self._emit({ pocket: this, status: 'open' })
                 })
             }
         }

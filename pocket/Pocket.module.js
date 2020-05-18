@@ -4,8 +4,15 @@ module.exports = () => {
     const { log, error, warn, copy, isString, isArray, uniq, isObject, push } = require('./utils')
     const sq = require('simple-q')
     const newPocket = require('./pocket')
+    
     return class PocketController {
-        constructor(opts = {}) {
+      
+        /**
+         * @param {*} opts  no options yet!
+         * @param {*} debug optional
+         */
+        constructor(opts = {}, debug) {
+            this.debug = debug || false
             /**
              * what is a pocketSet
              * pocketSet works with ` this.pocket[id]`, `this.pocketSetRef[id]` and `this.payloadData[id]`
@@ -14,14 +21,14 @@ module.exports = () => {
             this.defers = {}
             this.pocket = {} // currently set pockets, example this.pocket[`abc::taskName`]
             this.payloadData = {}// each payload by id
-            this.pocketSetRef = {} //
+            this.pocketSetRef = {} // references each payload to help deliver results
             this.lastPocketTimestamp = 0
             Dispatcher.initListener().subscribe(z => {
                 const { pocket,status } = z || {}
                
                 if(status==='complete'){
                     // NOTE dispatch data out
-                    log(`pocket id:${pocket.id} completed`)
+                  if(  this.debug  )  log(`pocket id:${pocket.id} completed`)
                 }
                 // uppon succesfull delivery all data is deleted
                 if (pocket) this.delivery(pocket)
@@ -93,13 +100,13 @@ module.exports = () => {
 
             for (let val of data['tasks'].values()) {
                 if (!val['task']) {
-                    log('task must be setfor your tasks')
+                    if( this.debug ) log('task must be set for your tasks')
                     continue
                 }
                 if (!this.payloadData[data.id]) this.payloadData[data.id] = { value: [], status: 'open', timestamp: new Date().getTime() }
                 const exists = this.payloadData[data.id]['value'].filter(z => z.task.indexOf(val.task) !== -1)
                 if (exists.length) {
-                    warn(`the same task "${val.task}" already exists on the payload, you must choose uniq`)
+                   if( this.debug ) warn(`the same task "${val.task}" already exists on the payload, you must choose uniq`)
                     continue
                 }
 
@@ -112,8 +119,12 @@ module.exports = () => {
                 return true
             } else return false
         }
+
+        /**
+         * - ready/defer is resolved for each payload assignmnet
+         */
         ready(id) {
-            if (!this.defers[id]) throw (`defers[id] not found`)
+            if (!this.defers[id] || !id) throw (`defers[id] not found`)
             return this.defers[id].p
         }
 
@@ -137,9 +148,7 @@ module.exports = () => {
                     const pl = { id: key, ...value }
                     const pocketSet = this.setPocket(pl)
                     if (pocketSet) this.pocketSetRef[key] = false // create ref for each new set of pockets
-                    else {
-                        error(`pocket for id:${key} already exists`)
-                    }
+                    else  error(`pocket for id:${key} already exists`)
                 }
             }
             return this
@@ -166,12 +175,12 @@ module.exports = () => {
             if (!opts.id || !opts.task) throw ('id and task both must be set')
             const uid = `${opts.id}::${opts.task}`
             if (this.pocket[uid]) {
-                log(`[setPocket] pocket: ${uid} already set`)
+                if( this.debug ) log(`[setPocket] pocket: ${uid} already set`)
                 return null
             }
             try {
                 opts.id = uid
-                const p = new this.Pocket(opts)
+                const p = new this.Pocket(opts,this.debug )
                 this.pocket[uid] = p
             } catch (err) {
                 error(err)
@@ -183,25 +192,30 @@ module.exports = () => {
 
         /**
          * set new pocket model
-         * - every new task has a set of requiremends. Once status is `complete` and data is available, every pocket sends a dispatch with pocket information.
+         * - every new task has a set of requirements. Once status is `complete` and data is available, every pocket sends a dispatch with pocket information.
          * methods:`{get,all}` props: `{id,data,task,status}`
          *  @param {*} opts.id required
          *  @param {*} opts.task required
          *  @param {*} opts.compaign optional
          */
         get Pocket() {
-            const Poc = newPocket(this)
-            return Poc
+            return newPocket(this)
         }
 
         /**
+         * - emit extends with `Dispatcher` to be used by every new Pocket as an emitter
          * - being used by every `pocket`
          * @param {*} obj required
          */
-        emit(obj) {
-            if (!obj) return this
-            Dispatcher.initListener().next(obj)
-            return this
+        _emit(obj) {
+            if (!obj) return null
+            try {
+                Dispatcher.initListener().next(obj)
+                return true
+            } catch (err) {
+                error(`[_emit] Dispatcher did not emit`)
+                return null
+            }
         }
     }
 }

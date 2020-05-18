@@ -4,12 +4,21 @@
   "description": "data pocket redistribution",
   "main": "index.js",
   "scripts": {
-    "example":"node ./examples.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "example": "node ./examples.js",
+    "lint": "./node_modules/.bin/eslint --ext .js pocket"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "simple-q": "git+ssh://git@eaglex_bitbucket:eag1ex/simple-q.git"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^4.19.1",
+    "eslint-plugin-babel": "^4.1.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
   }
 }

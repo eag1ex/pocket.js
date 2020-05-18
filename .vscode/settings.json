@@ -1,7 +1,7 @@
 {
     "jslint.enable": false,
     "sasslint.enable":true,
-    "eslint.validate": [ "javascript", "javascriptreact", { "language": "html", "autoFix": true } ],
+    "eslint.validate": [ "javascript", { "autoFix": true } ],
     "eslint.codeAction.showDocumentation":{ "enable": true, "location": "sameLine" },
     "eslint.autoFixOnSave":true,
     "eslint.workingDirectories": [
@@ -10,7 +10,6 @@
     "peacock.affectActivityBar": true,
     "peacock.affectStatusBar": true,
     "peacock.affectTitleBar": true,
-    "eslint.options": { "configFile": "eslintrc.json" },
     "peacock.elementAdjustments": {
       "activityBar": "lighten"
     },
@@ -19,12 +18,10 @@
         "ignore": [
             "node_modules/**"
         ],
-        "plugins": ["html"],
         "parser": "babel-eslint",
     },
     "standard.validate": [
         "javascript",
-        "html"
     ],
 
     "peacock.favoriteColors": [

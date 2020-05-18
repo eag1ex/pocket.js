@@ -1,6 +1,7 @@
 
 const Pocket = require('./pocket/Pocket.module')()
-const pc = new Pocket()
+const DEBUG = true
+const pc = new Pocket({},DEBUG)
 const data = {
     id: 'abc123',
     // NOTE each task is a pocket
