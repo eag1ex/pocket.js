@@ -5,20 +5,24 @@
   "main": "index.js",
   "scripts": {
     "example": "node ./examples.js",
-    "lint": "./node_modules/.bin/eslint --ext .js pocket"
+    "lint": "./node_modules/.bin/eslint  --ext .js pocket" 
   },
   "author": "",
-  "license": "ISC",
+  "license": "ISC", 
   "dependencies": {
     "simple-q": "git+ssh://git@eaglex_bitbucket:eag1ex/simple-q.git"
   },
-  "devDependencies": {
+  "devDependencies": { 
     "babel-eslint": "^10.1.0",
-    "eslint": "^4.19.1",
+    "eslint": "^7.0.0",
     "eslint-plugin-babel": "^4.1.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1"
+  },
+  "engine": {
+    "node": "*",
+    "npm": "*"
   }
 }

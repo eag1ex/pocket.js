@@ -1,7 +1,7 @@
 
 const Pocket = require('./pocket/Pocket.module')()
 const DEBUG = true
-const pc = new Pocket({},DEBUG)
+const pc = new Pocket({}, DEBUG)
 const data = {
     id: 'abc123',
     // NOTE each task is a pocket
@@ -22,5 +22,5 @@ if (!pc.payload(data)) {
 }
 
 pc.ready('abc123').then(z => {
-    console.log('pocketSet [abc123] ready',z)
+    console.log('pocketSet [abc123] ready', z)
 })

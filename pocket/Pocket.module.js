@@ -1,12 +1,10 @@
-
 module.exports = () => {
     const Dispatcher = require('../libs/dispatcher')()
-    const { log, error, warn, copy, isString, isArray, uniq, isObject, push } = require('./utils')
+    const { log, error, warn, isArray, isObject } = require('./utils')
     const sq = require('simple-q')
     const newPocket = require('./pocket')
-    
+
     return class PocketController {
-      
         /**
          * @param {*} opts  no options yet!
          * @param {*} debug optional
@@ -24,11 +22,11 @@ module.exports = () => {
             this.pocketSetRef = {} // references each payload to help deliver results
             this.lastPocketTimestamp = 0
             Dispatcher.initListener().subscribe(z => {
-                const { pocket,status } = z || {}
-               
-                if(status==='complete'){
+                const { pocket, status } = z || {}
+
+                if (status === 'complete') {
                     // NOTE dispatch data out
-                  if(  this.debug  )  log(`pocket id:${pocket.id} completed`)
+                    if (this.debug) log(`pocket id:${pocket.id} completed`)
                 }
                 // uppon succesfull delivery all data is deleted
                 if (pocket) this.delivery(pocket)
@@ -100,13 +98,13 @@ module.exports = () => {
 
             for (let val of data['tasks'].values()) {
                 if (!val['task']) {
-                    if( this.debug ) log('task must be set for your tasks')
+                    if (this.debug) log('task must be set for your tasks')
                     continue
                 }
                 if (!this.payloadData[data.id]) this.payloadData[data.id] = { value: [], status: 'open', timestamp: new Date().getTime() }
                 const exists = this.payloadData[data.id]['value'].filter(z => z.task.indexOf(val.task) !== -1)
                 if (exists.length) {
-                   if( this.debug ) warn(`the same task "${val.task}" already exists on the payload, you must choose uniq`)
+                    if (this.debug) warn(`the same task "${val.task}" already exists on the payload, you must choose uniq`)
                     continue
                 }
 
@@ -119,8 +117,7 @@ module.exports = () => {
                 return true
             } else return false
         }
-
-        /**
+        /** 
          * - ready/defer is resolved for each payload assignmnet
          */
         ready(id) {
@@ -148,7 +145,7 @@ module.exports = () => {
                     const pl = { id: key, ...value }
                     const pocketSet = this.setPocket(pl)
                     if (pocketSet) this.pocketSetRef[key] = false // create ref for each new set of pockets
-                    else  error(`pocket for id:${key} already exists`)
+                    else error(`pocket for id:${key} already exists`)
                 }
             }
             return this
@@ -175,12 +172,12 @@ module.exports = () => {
             if (!opts.id || !opts.task) throw ('id and task both must be set')
             const uid = `${opts.id}::${opts.task}`
             if (this.pocket[uid]) {
-                if( this.debug ) log(`[setPocket] pocket: ${uid} already set`)
+                if (this.debug) log(`[setPocket] pocket: ${uid} already set`)
                 return null
             }
             try {
                 opts.id = uid
-                const p = new this.Pocket(opts,this.debug )
+                const p = new this.Pocket(opts, this.debug)
                 this.pocket[uid] = p
             } catch (err) {
                 error(err)

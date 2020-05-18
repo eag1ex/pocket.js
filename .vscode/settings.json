@@ -1,29 +1,70 @@
 {
     "jslint.enable": false,
-    "sasslint.enable":true,
-    "eslint.validate": [ "javascript", { "autoFix": true } ],
-    "eslint.codeAction.showDocumentation":{ "enable": true, "location": "sameLine" },
+    "standard.enable":true,
+    "eslint.nodePath":"./node_modules/eslint",
+    "eslint.enable": true,
     "eslint.autoFixOnSave":true,
-    "eslint.workingDirectories": [
-        "./",{ "directory": "./", "changeProcessCWD": true }
-      ],
-    "peacock.affectActivityBar": true,
-    "peacock.affectStatusBar": true,
-    "peacock.affectTitleBar": true,
-    "peacock.elementAdjustments": {
-      "activityBar": "lighten"
+    "javascript.validate.enable":true,
+    "javascript.format.enable": true,
+    "eslint.codeAction.showDocumentation":{
+        "enable": true
+    },
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        {
+            "language": "html",
+            "autoFix": true
+        }
+    ],
+    "editor.wordWrap": "on",
+    "beautify.language": {
+        "js": {
+            "type": [
+                "javascript"
+            ],
+            "filename": [
+                ".jshintrc",
+                ".jsbeautifyrc"
+            ]
+        },
+        "css": [
+            "css",
+            "scss"
+        ],
+        "html": [
+            "htm",
+            "html"
+        ]
+        // ^^ providing just an array sets the VS Code file type
     },
     "standard.options": {
-        "globals": ["$", "jQuery", "fetch"],
+        "globals": [
+            "$",
+            "jQuery",
+            "fetch"
+        ],
         "ignore": [
             "node_modules/**"
         ],
+        "plugins": [
+            "html"
+        ],
         "parser": "babel-eslint",
+        "envs": [
+            "jest"
+        ]
     },
     "standard.validate": [
         "javascript",
+        "html"
     ],
-
+    "peacock.elementAdjustments": {
+        "activityBar": "lighten"
+    },
+    "peacock.affectActivityBar": true,
+    "peacock.affectStatusBar": true,
+    "peacock.affectTitleBar": true,
     "peacock.favoriteColors": [
         {
             "name": "Angular Red",
@@ -97,5 +138,6 @@
         " ",
         ": ",
         " - "
-    ]
+    ],
+    "typescript.validate.enable": false
 }
