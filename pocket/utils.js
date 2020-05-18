@@ -1,5 +1,6 @@
 /* eslint-disable no-proto */
 module.exports = {
+    isPromise:(defer)=> Promise.prototype === (defer || {}).__proto__, 
     uniq: (arr) => arr.filter((el, i, all) => all.indexOf(el) === i),
     isObject: (obj) => !obj ? false : Object.prototype === (obj).__proto__,
     isArray: (arr) => !arr ? false : Array.prototype === (arr).__proto__,

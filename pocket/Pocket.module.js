@@ -1,16 +1,21 @@
 module.exports = () => {
     const Dispatcher = require('../libs/dispatcher')()
-    const { log, error, warn, isArray, isObject } = require('./utils')
+    const { log, error, warn, isArray, isObject, isPromise } = require('./utils')
     const sq = require('simple-q')
     const newPocket = require('./pocket')
 
-    return class PocketController {
+    class PocketController {
         /**
-         * @param {*} opts  no options yet!
+         * @param {*} opts.async, when set, allow payload(`data`) to be async object
          * @param {*} debug optional
          */
         constructor(opts = {}, debug) {
             this.debug = debug || false
+            this.async =null
+            if(opts){
+                this.async = opts.async || null
+            }
+          
             /**
              * what is a pocketSet
              * pocketSet works with ` this.pocket[id]`, `this.pocketSetRef[id]` and `this.payloadData[id]`
@@ -117,6 +122,9 @@ module.exports = () => {
                 return true
             } else return false
         }
+
+        
+
         /** 
          * - ready/defer is resolved for each payload assignmnet
          */
@@ -157,7 +165,10 @@ module.exports = () => {
         */
         $get(id) {
             if (!id) return null
-            if (!this.pocket[id]) return null
+            if (!this.pocket[id]){
+                if(this.debug) warn(`[get] did not find pocket with id ${id}`)
+                return null
+            }
             if (id.indexOf(`::`) === -1) return null
             return this.pocket[id]
         }
@@ -212,6 +223,26 @@ module.exports = () => {
             } catch (err) {
                 error(`[_emit] Dispatcher did not emit`)
                 return null
+            }
+        }
+    }
+
+    return class PocketControllerExt extends PocketController{
+        constructor(opts,debug){
+            super(opts,debug)
+        }
+
+        /**
+         * - extend payload async data handling
+         * @param {*} data data can be async,
+         */
+        payload(data) {
+            if (this.async && isPromise(data)) return data.then(z => super.payload(z), err => err)
+            if (!this.async && !isPromise(data)) return super.payload(data)
+            else {
+                if (this.debug) error(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
+                if(this.async) return Promise.reject()
+                else return null
             }
         }
     }

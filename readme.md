@@ -18,7 +18,7 @@
 
 
 #### Stack
-* Node.js, ES6, Javascript, data-management, Promise, prototype, Istanbul/nyc, eslint, Mocha/Chai, custom/Utils, debug/error exception handling.
+* Node.js, ES6, Javascript, data-management, Promise, prototype, Istanbul/nyc, Eslint, Mocha/Chai, custom/Utils, debug/error exception handling.
 
 #### About the code:
 - PocketModule manages each `new Pocket()`, when `pocket.js` job status `complete` is set the data is send via emit/dispatcher, final results for each payload are returned in `ready(id).then` promise

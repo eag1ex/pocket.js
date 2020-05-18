@@ -19,7 +19,11 @@ module.exports = (self) => {
             if (!opts.task || !isString(opts.task)) throw ('task as string is required')
             if (opts.id.indexOf(`::`) === -1) throw ('each id must be of format id::taskName')
             this.task = opts.task.replace(/ /gi, '_').toLowerCase()// every task must be valid and same format
+
             this._data = null
+            // assing initial data if differs from default
+            if(opts.data!==this._data) this.data = opts.data   
+
             this._status = null
             this.compaign = opts.compaign || null // optional
             this.id = opts.id.replace(/ /gi, '_').toLowerCase()
