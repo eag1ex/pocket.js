@@ -1,6 +1,6 @@
 module.exports = () => {
     const Dispatcher = require('../libs/dispatcher')()
-    const { log, error, warn, isArray, isObject, isPromise } = require('./utils')
+    const { log, error, warn, isArray, isObject, isPromise, validID } = require('./utils')
     const sq = require('simple-q')
     const newPocket = require('./pocket')
 
@@ -31,7 +31,12 @@ module.exports = () => {
 
                 if (status === 'complete') {
                     // NOTE dispatch data out
-                    if (this.debug) log(`pocket id:${pocket.id} completed`)
+                    if (this.debug) log(`[dispatcher] pocket id:${pocket.id} completed`)
+                }
+
+                if (status === 'error') {
+                    // NOTE dispatch data out
+                    if (this.debug) log(`[dispatcher] pocket id:${pocket.id} error`)
                 }
                 // uppon succesfull delivery all data is deleted
                 if (pocket) this.delivery(pocket)
@@ -39,6 +44,10 @@ module.exports = () => {
             })
         }
 
+        // each pocket props that can be available and send on ready
+        get pocketProps(){
+            return ['compaign','data','status','id','task']
+        }
         /**
          * - match all pockets by id and check if set to `send`
          * - return {pockets:[],success}
@@ -58,16 +67,29 @@ module.exports = () => {
          * @param {*} pocket === this.pocket[id]
          */
         delivery({ id }) {
+
+            // grab user friendly values
+            const userOutput = (pock) => {
+                const output = {}              
+                if (!isObject(pock)) return null
+                for (let i=0; i<this.pocketProps.length; i++){
+                    const prop = this.pocketProps[i]
+                    if(pock[prop]) output[prop] = pock[prop]
+                }
+                return output
+            }
+
             try {
                 const setID = id.split(`::`)[0]
-
                 const { pockets, success } = this.pocketSetStatus(setID) || {}
                 if (success === true && this.pocketSetRef[setID] === false) {
                     this.pocketSetRef[setID] = true
+                   
+                    const output = pockets.map(p=>userOutput(p))
+                    this.defers[setID].def.resolve(output)
                     this.deletePocketSet(setID)
-                    this.defers[setID].def.resolve(pockets)
                 }
-            } catch (err) {
+            } catch (err) {               
                 error(`[delivery]`, err)
             }
         }
@@ -82,6 +104,8 @@ module.exports = () => {
             delete this.payloadData[id]
             delete this.pocketSetRef[id]
         }
+
+        
 
         /**
          * @prop {*} data required
@@ -100,7 +124,9 @@ module.exports = () => {
             // must match all keys
             if (keys.every(el => ['id', 'tasks'].indexOf(el) === -1)) return false
             if (!isArray(data['tasks'])) return false
-
+            // make sure our id's all are lowercase
+            data.id =  validID(data.id)
+            if(!data.id) return false
             for (let val of data['tasks'].values()) {
                 if (!val['task']) {
                     if (this.debug) log('task must be set for your tasks')
@@ -129,11 +155,14 @@ module.exports = () => {
          * - ready/defer is resolved for each payload assignmnet
          */
         ready(id) {
-            if (!this.defers[id] || !id) throw (`defers[id] not found`)
+            id = validID(id)
+            if(!id)  throw (`id must be set`)
+            if (!this.defers[id]) throw (`defers[id] not found`)
             return this.defers[id].p
         }
 
         setDefer(id) {
+            id = validID(id)
             if (!id) throw 'id must be set'
             const def = sq()
             this.defers[id] = { p: def.promise(), def }
@@ -148,10 +177,11 @@ module.exports = () => {
 
                 // omit done
                 if (el.status === 'complete' || el.status === 'send') continue
-
+               
                 for (let value of el.value.values()) {
                     const pl = { id: key, ...value }
                     const pocketSet = this.setPocket(pl)
+                  
                     if (pocketSet) this.pocketSetRef[key] = false // create ref for each new set of pockets
                     else error(`pocket for id:${key} already exists`)
                 }
@@ -164,7 +194,9 @@ module.exports = () => {
          *  methods:`{get,all}` props: `{id,data,tasks,status}`
         */
         $get(id) {
+            id = validID(id)
             if (!id) return null
+
             if (!this.pocket[id]){
                 if(this.debug) warn(`[get] did not find pocket with id ${id}`)
                 return null
@@ -181,7 +213,9 @@ module.exports = () => {
          */
         setPocket(opts = {}) {
             if (!opts.id || !opts.task) throw ('id and task both must be set')
-            const uid = `${opts.id}::${opts.task}`
+            if(!validID(opts.id)) throw ('opts.id not valid')
+
+            const uid = `${opts.id}::${opts.task}`      
             if (this.pocket[uid]) {
                 if (this.debug) log(`[setPocket] pocket: ${uid} already set`)
                 return null

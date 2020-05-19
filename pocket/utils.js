@@ -1,8 +1,10 @@
 /* eslint-disable no-proto */
 module.exports = {
+    validID:(id)=>  !(id ||'') ? null: (id ||'').toString().toLowerCase(),
+    isNumber:(n)=> n!==undefined ? (n).__proto__===Number.prototype:false,
     isPromise:(defer)=> Promise.prototype === (defer || {}).__proto__, 
     uniq: (arr) => arr.filter((el, i, all) => all.indexOf(el) === i),
-    isObject: (obj) => !obj ? false : Object.prototype === (obj).__proto__,
+    isObject: (obj) => !obj ? false : (Object.prototype === (obj).__proto__ || (obj) instanceof Object) ,
     isArray: (arr) => !arr ? false : Array.prototype === (arr).__proto__,
     isString: (str) => !str ? false : String.prototype === (str).__proto__,
     isFunction: (el) => typeof el === 'function',

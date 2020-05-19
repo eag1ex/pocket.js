@@ -17,16 +17,20 @@ async function init(){
         // console.log(`payload send`)
         pc.pocket['abc123::required'].data = 'new data'
         pc.pocket['abc123::required'].status = 'complete'
-        // console.log(pc.$get('abc123::required'))
+       // console.log(pc.$get('abc123::required'))
     
-        pc.pocket['abc123::grab'].data = 'new data'
+         pc.pocket['abc123::grab'].data = 'new data'
         pc.pocket['abc123::grab'].status = 'complete'
         // console.log(pc.$get('abc123::grab'))
     }
-    
-    pc.ready('abc123').then(z => {
-        console.log('pocketSet [abc123] ready', z)
+    setTimeout(()=>{
+        pc.ready('abc123').then(z => {
+            console.log('pocketSet [abc123] ready', z)
+        },2000)
     })
+   
 
 }
 init()
+
+

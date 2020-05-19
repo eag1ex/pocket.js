@@ -1,5 +1,5 @@
 
-const { isString, warn } = require('./utils')
+const { isString, warn,log,isNumber } = require('./utils')
 
 /**
  * set new pocket model
@@ -14,20 +14,24 @@ module.exports = (self) => {
     return class Pocket {
         constructor(opts = {}, debug) {
             this.debug = debug || false
-            if (opts.id !== undefined) opts.id = opts.id.toString()
+            if (isNumber(opts.id) || opts.id ) opts.id = opts.id.toString()
             if (!opts.id) throw ('id is required')
             if (!opts.task || !isString(opts.task)) throw ('task as string is required')
             if (opts.id.indexOf(`::`) === -1) throw ('each id must be of format id::taskName')
+
             this.task = opts.task.replace(/ /gi, '_').toLowerCase()// every task must be valid and same format
+            
+            this._updateIndex = 1 // cound times data been updated to hel set correct status for  `updated`
+            this._status = 'open'
 
-            this._data = null
+            this._data = null      
             // assing initial data if differs from default
-            if(opts.data!==this._data) this.data = opts.data   
-
-            this._status = null
+            if(opts.data!==this._data) this._data = opts.data   
+            
+          
             this.compaign = opts.compaign || null // optional
             this.id = opts.id.replace(/ /gi, '_').toLowerCase()
-            this.status = 'open'
+            
         }
 
         set data(v) {
@@ -35,28 +39,49 @@ module.exports = (self) => {
             * once cannot be updated uppon status is send || complete
             */
             const complete = this.status === 'complete' || this.status === 'send'
-            if (complete) return null
-            else this._data = v
+            if (complete) {
+                if(this.debug) warn(`you cannot update data once the status is complete and send`)
+                return null
+            }
+
+           this._data = v
+           this._updateIndex++
+
+           if(this.status==='open' && this._data!==null && this._updateIndex>1) this.status='updated'
+          
         }
         get data() {
             return this._data
         }
 
+        /**
+         * allowed status: open | updated | complete | send
+         * `open`: this status is set when pocked is initialized
+         * `updated`: this status is set when data is updated
+         * `complete`: this status is set when you want to discard and complete the the pocket
+         * `send`: once the status was set the complete data is emited first then this status is set as send, at this pont Pocked is done/seald and cannot be worked in anymore
+         */
         get status() {
             return this._status
         }
         set status(v) {
             if (this._status === 'send') return
 
+            if(v==='updated'){
+                this._status = v
+                if(this.debug) log(`id:${this.id},  data updated`)
+                return 
+            }
+
             if (v === 'open') {
-                this._status = 'open'
+                this._status = v
                 /// //////////////////////////////////////
                 this.onOpenStatus(v) // emit pocket when status opens
                 /// //////////////////////////
                 return
             }
 
-            let okStatus = (v === 'complete' || v === 'busy' || v === 'error')
+            let okStatus = (v === 'complete' || v === 'error')
 
             if (okStatus) {
                 this._status = v
@@ -79,11 +104,14 @@ module.exports = (self) => {
          * @param {*} status
          */
         onComplete(status) {
-            if (status === 'complete' && this.status !== 'send' && this.data) {
-                setTimeout(() => {
-                    self._emit({ pocket: this, status: 'complete' })
+            if ((status === 'complete' || status==='error' ) && this.status !== 'send' && this.data) {
+            
+                setTimeout(() => {                 
+                    self._emit({ pocket: this, status })
+                  
                 })
-                this._status = 'send'
+                this._status = 'send'         
+               
             }
         }
         /**
