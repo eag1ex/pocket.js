@@ -3,13 +3,10 @@ module.exports = {
     /**
      * make class copy by refs[...]
      */
-    copyBy:(obj, refs)=> {
-        const copy = {} 
-        for(let i=0; i<refs.length; i++) {
-            if(obj[refs[i]]!==undefined) copy[refs[i]] = obj[refs[i]]
-        }
-        return copy
-    },
+    copyBy: (obj, refs) => refs.reduce((n, el, i) => {
+        if (obj[el] !== undefined) n[el] = obj[el]
+        return n
+    }, {}),
     validID: (id) => !(id || '') ? null : (id || '').toString().toLowerCase(),
     isNumber: (n) => n !== undefined ? (n).__proto__ === Number.prototype : false,
     isPromise: (defer) => Promise.prototype === (defer || {}).__proto__,
@@ -49,5 +46,4 @@ module.exports = {
         }
         return msgs
     }
-
 }

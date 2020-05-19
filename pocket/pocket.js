@@ -95,7 +95,7 @@ module.exports = (self) => {
         }
 
         /**
-         * forward motion status order `update` is allowed
+         * forward motion `status` order update is allowed
          */
         get statusSetOrder(){
             return {
@@ -120,11 +120,11 @@ module.exports = (self) => {
 
         set status(v) {
 
-            const statusSetOrder = (stat)=>{
-                    const 
+            // const statusSetOrder = (stat)=>{
+            //         const 
 
-                  switch()  
-            }
+            //       switch()  
+            // }
 
             if (this._status === 'send') return
 

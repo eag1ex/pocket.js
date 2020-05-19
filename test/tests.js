@@ -2,8 +2,7 @@
 
 const assert = require('assert');
 const chai = require('chai');
-//const {run} = require ('mocha');
-const should = chai.should();
+//const should = chai.should();
 const expect = chai.expect;
 
 // asset
@@ -11,22 +10,20 @@ const { log } = require('../pocket/utils')
 const Pocket = require('../index')()
 const DEBUG = false
 
-// asset: https://mochajs.org/
-// asset: https://www.chaijs.com/
-
+// help: https://mochajs.org/
+// help: https://www.chaijs.com/
 
 describe('PocketSet/asyncData should succeed with tasks: [required, final]', function () {
-
+    
     const pc = new Pocket({ async: true }, DEBUG)
     const payloadData = {
-        id: 'jobOne',
+        id: 'jobone',
         // NOTE each task is a pocket
         // task name and id are required to create new Pocket
         tasks: [{ task: 'required', data: { 'value': 'lala' }, }, { task: 'final', data: { 'value': 'lala' } }]
     }
     const asyncData = pc.payload(Promise.resolve(payloadData))
     let payloadOK = null
-
 
     // initialize payload
     beforeEach(function (done) {
@@ -39,13 +36,10 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
         })
     });
 
-
-
     it(`Pocket payloadData should be a Promise`, function (done) {
         expect(asyncData.__proto__ === Promise.prototype).to.equal(true)
         done()
     })
-
 
     it(`Pocket payloadData should resolve===true`, function (done) {
         expect(payloadOK).to.equal(true)
@@ -53,9 +47,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
     })
 
     ////////////////// start all other test
-    // wait for asyncData
     setTimeout(function () {
-
         describe(`PocketSet tasks should perform status check and data update`, function () {
 
             const tasks = payloadData.tasks
@@ -84,7 +76,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
             // await asyncData
 
             const payloadData = {
-                id: 'jobOne',
+                id: 'jobone',
                 // NOTE each task is a pocket
                 // task name and id are required to create new Pocket
                 tasks: [{ task: 'required', data: { 'value': 'hola' } }, { task: 'final', data: { 'value': 'ha' } }]
@@ -101,21 +93,18 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
                 const item = payloadData.tasks[i]
                 const pocketID = `${payloadData.id}::${item.task}`
 
-                it(`Pocket : ${item} id cannot be changed`,function(done){
-                    console.log('what is pc.pocket[pocketID]', pc.pocket,pocketID)
-                    pc.pocket[pocketID].id = 'wrong'
-                    expect(pc.$get(pocketID).id).not.equal('wrong')
+                it(`Pocket : ${pocketID} id cannot be changed`,function(done){
+                    pc.$get(pocketID).id = 'wrong'
+                    expect(pc.pocket[pocketID].id).not.equal('wrong')
                     done()
                 })
 
-                it(`Pocket : ${item} task cannot be changed`,function(done){
-                    pc.pocket[pocketID].task = 'wrong'
-                    expect(pc.$get(pocketID).task).not.equal('wrong')
+                it(`Pocket : ${pocketID} task cannot be changed`,function(done){
+                    pc.$get(pocketID).task = 'wrong'
+                    expect(pc.pocket[pocketID].task).not.equal('wrong')
                     done()
                 })
-
             }
-
         })
 
         describe(`#PocketSet tasks status should update and be ready`, function () {
