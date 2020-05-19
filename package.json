@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "example": "node ./examples.js",
-    "mocha": "mocha ./test/tests.js --colors",
+    "mocha": "mocha ./test/tests.js --colors --delay",
     "lint": "./node_modules/.bin/eslint  --ext .js pocket"
   },
   "author": "",

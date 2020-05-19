@@ -12,6 +12,15 @@ const { isString, warn, log, isNumber } = require('./utils')
  */
 module.exports = (self) => {
     return class Pocket {
+        /**
+         * 
+         * @param {*} opts.id required, case sensitive, all will be set toLowerCase() 
+         * @param {*} opts.tast once set cannot be changed
+         * @param {*} opts.compaign optional, once set cannot be changed
+         * @param {*} opts.data optional any value except undefind, cannot be change once status set to complete or send
+         * @param {*} opts.status required to control Pocket actions, cannot set
+         * @param {*} debug 
+         */
         constructor(opts = {}, debug) {
             this.debug = debug || false
             if (isNumber(opts.id) || opts.id) opts.id = opts.id.toString()
@@ -19,7 +28,7 @@ module.exports = (self) => {
             if (!opts.task || !isString(opts.task)) throw ('task as string is required')
             if (opts.id.indexOf(`::`) === -1) throw ('each id must be of format id::taskName')
 
-            this.task = opts.task.replace(/ /gi, '_').toLowerCase()// every task must be valid and same format
+            this._task = opts.task.replace(/ /gi, '_').toLowerCase()// every task must be valid and same format
             this._updateIndex = 1 // cound times data been updated to hel set correct status for  `updated`
             this._status = 'open'
 
@@ -27,8 +36,42 @@ module.exports = (self) => {
             // assing initial data if differs from default
             if (opts.data !== this._data) this._data = opts.data
 
-            this.compaign = opts.compaign || null // optional
-            this.id = opts.id.replace(/ /gi, '_').toLowerCase()
+            this._compaign = isString(opts.compaign) ? opts.compaign: null // optional
+            this._id = opts.id.replace(/ /gi, '_').toLowerCase()
+        }
+
+        set id(v){
+
+            if(this._id) {
+                if(this.debug) warn(`cannot update already set id: ${this._id}`)
+                return
+            }
+
+            this._id = v
+        }
+        
+        get id(){
+            return this._id
+        }
+
+        set compaign(v){
+            if(this._compaign){
+                if(this.debug) warn(`cannot update already set compaign ${this._compaign}`)
+                return 
+            }
+            this._compaign = v
+        }
+
+        set task(v){
+            if(this._task) {
+                if(this.debug) warn(`cannot update already set task`)
+                return
+            }
+            this._task = v
+        }
+
+        get task(){
+            return this._task
         }
 
         set data(v) {
@@ -52,20 +95,45 @@ module.exports = (self) => {
         }
 
         /**
+         * forward motion status order `update` is allowed
+         */
+        get statusSetOrder(){
+            return {
+                open:{value:1, set:false},
+                updated:{value:2, set:false},
+                complete:{value:3, set:false},
+                send:{value:4, set:false},
+            }
+        }
+
+        /**
          * allowed status: open | updated | complete | send
          * `open`: this status is set when pocked is initialized
          * `updated`: this status is set when data is updated
          * `complete`: this status is set when you want to discard and complete the the pocket
          * `send`: once the status was set the complete data is emited first then this status is set as send, at this pont Pocked is done/seald and cannot be worked in anymore
+         * status cano only be updated in forward motion according to `this.statusSetOrder`
          */
         get status() {
             return this._status
         }
 
         set status(v) {
+
+            const statusSetOrder = (stat)=>{
+                    const 
+
+                  switch()  
+            }
+
             if (this._status === 'send') return
 
-            if (v === 'updated') {
+            if (v === 'updated' && this._status==='complete'){
+                if(this.debug) warn(`cannot update status to 'updated' then previously set to 'complete'`)
+                return
+            }
+
+            if (v === 'updated' && this._status!=='complete') {
                 this._status = v
                 if (this.debug) log(`id:${this.id},  data updated`)
                 return

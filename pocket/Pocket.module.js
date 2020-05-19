@@ -1,6 +1,6 @@
 module.exports = () => {
     const Dispatcher = require('../libs/dispatcher')()
-    const { log, error, warn, isArray, isObject, isPromise, validID } = require('./utils')
+    const { log, error, warn, isArray, isObject, isPromise, validID,copyBy } = require('./utils')
     const sq = require('simple-q')
     const newPocket = require('./pocket')
 
@@ -38,8 +38,9 @@ module.exports = () => {
                     // NOTE dispatch data out
                     if (this.debug) log(`[dispatcher] pocket id:${pocket.id} error`)
                 }
+
                 // uppon succesfull delivery all data is deleted
-                if (pocket) this.delivery(pocket)
+                if (pocket) this.delivery(copyBy(pocket,this.pocketProps))  
                 // else console.log('ready', ready)
             })
         }
@@ -106,6 +107,7 @@ module.exports = () => {
 
         /**
          * @prop {*} data required
+         * @prop {*} async override current opts.sync for this payload
          * initialize new payload, for as many tasks as required
          * - sets a multi task with instructions
          * - `data = {
@@ -114,7 +116,7 @@ module.exports = () => {
             }`
          * - call distributor method
          */
-        payload(data = {}) {
+        payload(data = {}, async) {
             // validate payload format
             if (!isObject(data)) return false
             const keys = Object.keys(data)
@@ -186,6 +188,7 @@ module.exports = () => {
 
         /**
          * - get pocket by `id::taskName`
+         * - returns instance a Pocket
          *  methods:`{get,all}` props: `{id,data,tasks,status}`
         */
         $get(id) {
@@ -263,14 +266,14 @@ module.exports = () => {
 
         /**
          * - extend payload async data handling
-         * @param {*} data data can be async,
          */
-        payload(data) {
-            if (this.async && isPromise(data)) return data.then(z => super.payload(z), err => err)
+        payload(data,async) {
+            const asAsync = async!==undefined ?  async:this.async // override if set
+            if (asAsync && isPromise(data)) return data.then(z => super.payload(z), err => err)
             if (!this.async && !isPromise(data)) return super.payload(data)
             else {
                 if (this.debug) error(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
-                if (this.async) return Promise.reject()
+                if (asAsync) return Promise.reject()
                 else return null
             }
         }
