@@ -28,31 +28,39 @@
 - Ready case examples awailable in `./examples.js` or `npm run example`
 ```sh
 
-  const pc = new Pocket({},DEBUG)
-  const data = {
+const DEBUG = true
+const opts =  {async:true} // when setting async:true, call return payload as Promise
+const pc = new Pocket(opts, DEBUG)
+
+const data = {
     id: 'abc123',
-    tasks: [{ task: 'required', data: { 'value': 'lala' } }, { task: 'final', data: { 'value': 'hola' } }]
-  }
+    // NOTE each task is a pocket
+    // task name and id are required to create new Pocket
+    tasks: [{ task: 'required', data: { 'value': 'lala' } }, { task: 'grab', data: { 'value': 'lala' } }]
+}
 
-  // `abc123` assignment example  
-  if (!pc.payload(data)) {
-    console.log(' payload not send')
+
+async function init(){
+    // `abc123` assignment example  
+    if (!await pc.payload(Promise.resolve(data))) {
+        console.log('error, payload not send')
     } else {
-        // console.log(`payload send`)
-        pc.pocket['abc123::required'].data = 'new data'
+        pc.pocket['abc123::required'].data = 'new data' // status > 'updated'
         pc.pocket['abc123::required'].status = 'complete'
-        // console.log(pc.$get('abc123::todo'))
-
-        pc.pocket['abc123::final'].data = 'new data'
-        pc.pocket['abc123::final'].status = 'complete'
+       // console.log(pc.$get('abc123::required'))
+    
+        pc.pocket['abc123::grab'].data = 'new data'
+        pc.pocket['abc123::grab'].status = 'complete'
         // console.log(pc.$get('abc123::grab'))
     }
-
-    // resolve for this `abc123` assignment
-    pc.ready('abc123').then(z => {
-        console.log('pocketSet [abc123] ready',z)
+    setTimeout(()=>{
+       // when both tasks are complete 
+        pc.ready('abc123').then(z => {
+            console.log('pocketSet [abc123] ready', z)
+        },2000)
     })
 }
+init()
 ```
 
 #### Test / Mocha and coverage
