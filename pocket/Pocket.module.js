@@ -4,12 +4,17 @@ module.exports = () => {
     const sq = require('simple-q')
     const newPocket = require('./pocket')
 
-    class PocketController {
+    class PocketModule {
         /**
          * @param {*} opts.async, when set, allow payload(`data`) to be async object
+         * @param {*} opts.disposeAfterReady, means you still have access to each Pocket after set complete, it will be deleted when `ready()` is called
          * @param {*} debug optional
          */
         constructor(opts = {}, debug) {
+
+            // hacking option, if we set it, means that after PocketSet is complete, data will not be purged until ready(..) is resolved  
+            this.disposeAfterReady = opts.disposeAfterReady || null
+
             this.debug = debug || false
             this.async = null
             if (opts) {
@@ -29,18 +34,22 @@ module.exports = () => {
             Dispatcher.initListener().subscribe(z => {
                 const { pocket, status } = z || {}
 
-                if (status === 'complete') {
-                    // NOTE dispatch data out
-                    if (this.debug) log(`[dispatcher] pocket id:${pocket.id} completed`)
-                }
-
                 if (status === 'error') {
                     // NOTE dispatch data out
                     if (this.debug) log(`[dispatcher] pocket id:${pocket.id} error`)
                 }
 
+                if(status==='open'){
+                    if (this.debug) log(`[dispatcher] pocket id:${pocket.id} created`)
+                }
+
+                if (status === 'complete') {
+                    // NOTE dispatch data out
+                    if (this.debug) log(`[dispatcher] pocket id:${pocket.id} completed`)
+                }    
+
                 // uppon succesfull delivery all data is deleted
-                if (pocket) this.delivery(copyBy(pocket,this.pocketProps))  
+                if (pocket && status!=='open') this.delivery(copyBy(pocket,this.pocketProps))  
                 // else console.log('ready', ready)
             })
         }
@@ -87,10 +96,15 @@ module.exports = () => {
 
                     const output = pockets.map(p => userOutput(p))
                     this.defers[setID].def.resolve(output)
-                    this.deletePocketSet(setID)
+                    // data well only be delete if we did not set `opts.disposeAfterReady`
+                    if(!this.disposeAfterReady) {
+                        this.deletePocketSet(setID)
+                        if(this.debug) log(`Pocket data of PocketSet id:${setID} already disposed, call ready(..)`)
+                    }   
+                   
                 }
             } catch (err) {
-                error(`[delivery]`, err)
+                onerror(`[delivery]`, err)
             }
         }
 
@@ -98,11 +112,13 @@ module.exports = () => {
          * - delete completed `pocketSet`
          */
         deletePocketSet(id) {
-            for (let poc of Object.values(this.pocket)) {
-                if (poc.id.includes(id)) delete this.pocket[poc.id]
+            if(Object.values(this.pocket).length){
+                for (let poc of Object.values(this.pocket)) {
+                    if (poc.id.includes(id)) delete this.pocket[poc.id]
+                }
             }
-            delete this.payloadData[id]
-            delete this.pocketSetRef[id]
+            if(this.payloadData[id]) delete this.payloadData[id]
+            if(this.payloadData[id]) delete this.pocketSetRef[id]
         }
 
         /**
@@ -180,7 +196,7 @@ module.exports = () => {
                     const pocketSet = this.setPocket(pl)
 
                     if (pocketSet) this.pocketSetRef[key] = false // create ref for each new set of pockets
-                    else error(`pocket for id:${key} already exists`)
+                    else onerror(`pocket for id:${key} already exists`)
                 }
             }
             return this
@@ -223,7 +239,7 @@ module.exports = () => {
                 const p = new this.Pocket(opts, this.debug)
                 this.pocket[uid] = p
             } catch (err) {
-                error(err)
+                onerror(err)
                 return null
             }
 
@@ -253,13 +269,13 @@ module.exports = () => {
                 Dispatcher.initListener().next(obj)
                 return true
             } catch (err) {
-                error(`[_emit] Dispatcher did not emit`)
+                onerror(`[_emit] Dispatcher did not emit`)
                 return null
             }
         }
     }
 
-    return class PocketControllerExt extends PocketController {
+    return class PocketModuleExt extends PocketModule {
         constructor(opts, debug) {
             super(opts, debug)
         }
@@ -272,9 +288,25 @@ module.exports = () => {
             if (asAsync && isPromise(data)) return data.then(z => super.payload(z), err => err)
             if (!this.async && !isPromise(data)) return super.payload(data)
             else {
-                if (this.debug) error(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
+                if (this.debug) onerror(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
                 if (asAsync) return Promise.reject()
                 else return null
+            }
+        }
+        async ready(id) {
+            try {
+                const data = await super.ready(id)
+                if (!isArray(data)) throw ('[ready] internal error, data must be an array of PocketSets')
+
+                return data.map(z => {
+                    if (this.disposeAfterReady) {
+                        const setID = z.id.split(`::`)[0]
+                        this.deletePocketSet(setID)
+                    }
+                    return z
+                })
+            } catch (err) {
+                return Promise.reject(err)
             }
         }
     }

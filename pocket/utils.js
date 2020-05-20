@@ -1,4 +1,8 @@
 /* eslint-disable no-proto */
+
+const util = require('util')
+const color = require('bash-color')    
+
 module.exports = {
     /**
      * make class copy by refs[...]
@@ -17,16 +21,21 @@ module.exports = {
     isFunction: (el) => typeof el === 'function',
     log: function (...args) {
         args = [].concat('[Pocket]', args)
+        args = args.map(z=>util.inspect(z, false, 3, true))
         console.log.apply(null, args)
     },
     warn: function (...args) {
         args = [].concat('[warning]', args)
+        args = args.map(z=> color.cyan(util.inspect(z, false, 2, false), true))
         console.warn.apply(null, args)
     },
-    error: function (...args) {
+    onerror: function (...args) {
         args = [].concat('[error]', args)
+        args = args.map(z=> color.red(util.inspect(z, false, 2, false), true))
+        console.log('  ')
         console.error.apply(null, args)
-    },
+        console.log('  ')
+    },  
     copy: (data) => {
         if (!data) return data
         try {

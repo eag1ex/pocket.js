@@ -1,5 +1,5 @@
 
-const { isString, warn, log, isNumber } = require('./utils')
+const { isString, warn, log, isNumber,onerror } = require('./utils')
 
 /**
  * set new pocket model
@@ -13,7 +13,6 @@ const { isString, warn, log, isNumber } = require('./utils')
 module.exports = (self) => {
     return class Pocket {
         /**
-         * 
          * @param {*} opts.id required, case sensitive, all will be set toLowerCase() 
          * @param {*} opts.tast once set cannot be changed
          * @param {*} opts.compaign optional, once set cannot be changed
@@ -27,17 +26,21 @@ module.exports = (self) => {
             if (!opts.id) throw ('id is required')
             if (!opts.task || !isString(opts.task)) throw ('task as string is required')
             if (opts.id.indexOf(`::`) === -1) throw ('each id must be of format id::taskName')
-
+            this._id = null
+            this.id = opts.id.replace(/ /gi, '_').toLowerCase()
+            
             this._task = opts.task.replace(/ /gi, '_').toLowerCase()// every task must be valid and same format
-            this._updateIndex = 1 // cound times data been updated to hel set correct status for  `updated`
-            this._status = 'open'
+            this._statusIndex = 0
+            this._status = null
+            this.status = 'open'
 
+            this._dataIndex = 0;
             this._data = null
             // assing initial data if differs from default
-            if (opts.data !== this._data) this._data = opts.data
+            if (opts.data !== this._data) this.data = opts.data
 
             this._compaign = isString(opts.compaign) ? opts.compaign: null // optional
-            this._id = opts.id.replace(/ /gi, '_').toLowerCase()
+
         }
 
         set id(v){
@@ -80,14 +83,13 @@ module.exports = (self) => {
             */
             const complete = this.status === 'complete' || this.status === 'send'
             if (complete) {
-                if (this.debug) warn(`you cannot update data once the status is complete and send`)
+                if (this.debug) warn(`you cannot update data once the status is complete or send`)
                 return null
             }
 
-            this._data = v
-            this._updateIndex++
-
-            if (this.status === 'open' && this._data !== null && this._updateIndex > 1) this.status = 'updated'
+            this._dataIndex++
+            if (this.status === 'open' && this._data !== null && this._dataIndex>1) this.status = 'updated'
+            this._data = v         
         }
 
         get data() {
@@ -96,23 +98,26 @@ module.exports = (self) => {
 
         /**
          * forward motion `status` order update is allowed
+         * `value`: importance que
+         * `set`: if the status was already set
          */
         get statusSetOrder(){
             return {
-                open:{value:1, set:false},
+                open:{value:1, set:false}, 
                 updated:{value:2, set:false},
                 complete:{value:3, set:false},
                 send:{value:4, set:false},
+                error:{value:5, set:false}
             }
         }
 
         /**
-         * allowed status: open | updated | complete | send
+         * allow status: open | updated | complete | send | error
          * `open`: this status is set when pocked is initialized
          * `updated`: this status is set when data is updated
          * `complete`: this status is set when you want to discard and complete the the pocket
-         * `send`: once the status was set the complete data is emited first then this status is set as send, at this pont Pocked is done/seald and cannot be worked in anymore
-         * status cano only be updated in forward motion according to `this.statusSetOrder`
+         * `send`: once the status was set the complete data is emited first then status is set as send.
+         * and Pocket is locked, cannot be interacted with. Follow the strategic order set by `statusSetOrder`
          */
         get status() {
             return this._status
@@ -120,45 +125,75 @@ module.exports = (self) => {
 
         set status(v) {
 
-            // const statusSetOrder = (stat)=>{
-            //         const 
+            // the order of status and allowed values
+            ((stat) => {
+                try {
+                    // meaning do not allow any status changes beond `updated`
+                    if (this.statusSetOrder[stat].value > 2 && this.statusSetOrder[stat].set === true) return false
 
-            //       switch()  
-            // }
+                } catch (err) {
+                    onerror('statusSetOrder invalid status')
+                }
+ 
+                if(this._status==='complete' || this._status==='send') {
+                    if(this.debug) log(`cannot update status if already complete`)
+                    return false
+                }
+                let error = false
+                switch (stat) {
+                    case 'open':
+                        if(this._status==='updated'){
+                            if (this.debug) warn(`cannot set status back to open once set to updated`)
+                            break
+                        }
+                        this._status = stat
+                        this.statusSetOrder[stat].set=true          
+                        this.onOpenStatus(v) // emit pocket when status opens
+                        break
 
-            if (this._status === 'send') return
+                    case 'updated':
+                        if (this._status === 'complete') {
+                            if (this.debug) warn(`cannot update status to 'updated' then previously set to 'complete'`)
+                            error = true
+                            break
+                        }
 
-            if (v === 'updated' && this._status==='complete'){
-                if(this.debug) warn(`cannot update status to 'updated' then previously set to 'complete'`)
-                return
-            }
+                        this._status = stat
+                        this.statusSetOrder[stat].set = true   
+                        if (this.debug) log(`id:${this.id}, data updated`)
+                        break
+                        
 
-            if (v === 'updated' && this._status!=='complete') {
-                this._status = v
-                if (this.debug) log(`id:${this.id},  data updated`)
-                return
-            }
+                    case 'complete':
+                        this._status = stat
+                        this.statusSetOrder[stat].set = true 
+                        this.onComplete(v) // emit pocket when status complete                     
+                        break
 
-            if (v === 'open') {
-                this._status = v
-                /// //////////////////////////////////////
-                this.onOpenStatus(v) // emit pocket when status opens
-                /// //////////////////////////
-                return
-            }
+                    case 'send':
+                        if(this._status!=='complete'){
+                            if (this.debug) warn(`cannot update status to 'send' then previously not set to 'complete'`)
+                            break
+                        }
+                        this._status = stat
+                        this.statusSetOrder[stat].set = true 
+                        break
 
-            let okStatus = (v === 'complete' || v === 'error')
 
-            if (okStatus) {
-                this._status = v
-                /// //////////////////////////////////////
-                this.onComplete(v) // emit pocket when status complete
-                /// //////////////////////////
+                    case 'error':
+                        // even we have error we need to inform what happen
+                        this._status = stat
+                        this.statusSetOrder[stat].set = true
+                        this.onComplete(v) // emit pocket when status complete                     
+                        break      
 
-                // log('new status set to', v)
-            } else {
-                if (this.debug) warn(`id:${this.id},  you set invalid status, nothing changed`)
-            }
+                    default:
+                        if (this.debug) warn(`id:${this.id},  you set invalid status: ${stat}, nothing changed`)
+                        error = true
+                }
+                return error ? false:true
+            })(v)
+
         }
 
         all() {
