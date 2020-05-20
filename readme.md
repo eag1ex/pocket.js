@@ -9,13 +9,13 @@
 
 #### About
 * Pocket data redistribution controller, a way of asking for something and getting it back by assignment.
-* You assing tasks to Pocket id, each task is associated to individual Pocket, and controlled via PocketSet, once all tasks in your payload are completed, a ready callback is initiated.
+* You assign tasks, associated to individual Pocket, that are controlled by PocketModule, once all tasks in your payload are completed, `await ready(id)` can be called. 
 
 
 #### Why use it
 * Your data project is assignment driven, and requires tasks to complete each job
 * Ask for a task, and receive a result by job assignment
-
+* Destribution of data sheduled assignments
 
 #### Stack
 * Node.js, ES6, Javascript, data-management, Promise, prototype, Istanbul/nyc, Eslint, Mocha/Chai, custom/Utils, debug/error exception handling.
@@ -23,6 +23,14 @@
 #### About the code:
 - PocketModule manages each `new Pocket()`, when `pocket.js` job status `complete` is set the data is send via emit/dispatcher, final results for each payload are returned in `ready(id).then` promise
 - Well documented with debug: logging and error messages, using `errors.js` to identify all inportant messages by `id`
+
+
+#### Test / Mocha and coverage
+- To run a Mocha test: `npm run mocha`
+- To run full coverage test with Instanbul: `npm run test` 
+Coverage can be found in `coverage/index.html`
+
+
 
 #### Start / Examples
 - Ready case examples awailable in `./examples.js` or `npm run example`
@@ -62,9 +70,6 @@ async function init(){
 }
 init()
 ```
-
-#### Test / Mocha and coverage
-
 
 #### TODO
 

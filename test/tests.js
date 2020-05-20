@@ -127,6 +127,14 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
             const tasks = payloadData.tasks
             const job = payloadData.id
 
+            it(`first pocket: ${tasks[0].task} should set status to 'error' and complete/send`, function (done) {
+                const pocketID = `${job}::${tasks[0].task}`
+                const pocket = pc.$get(pocketID)
+                pocket.status = 'error'
+                expect(pc.pocket[pocketID].status).equal('send')
+                done()
+            })
+
             for (let i = 0; i < tasks.length; i++) {
                 const task = tasks[i].task
                 const pocketID = `${job}::${task}`
@@ -138,6 +146,9 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
                     done()
                 })
             }
+
+
+
         })
 
         describe(`PocketSet tasks status should update and be ready`, function () {

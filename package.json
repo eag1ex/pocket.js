@@ -6,7 +6,8 @@
   "scripts": {
     "example": "node ./examples.js",
     "mocha": "mocha ./test/tests.js --colors --delay",
-    "lint": "./node_modules/.bin/eslint  --ext .js pocket"
+    "lint": "./node_modules/.bin/eslint  --ext .js pocket",
+    "test": "nyc --reporter=html --port=2222 --reporter=text mocha ./test/tests.js --colors --delay"
   },
   "author": "",
   "license": "ISC",
