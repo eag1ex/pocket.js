@@ -13,11 +13,12 @@ const DEBUG = false
 // help: https://mochajs.org/
 // help: https://www.chaijs.com/
 
+
 describe('PocketSet/asyncData should succeed with tasks: [required, final]', function () {
 
     const pc = new Pocket({ async: true, disposeAfterReady: true }, DEBUG)
     const payloadData = {
-        id: 'jobone',
+        id: 'job-two',
         // NOTE each task is a pocket
         // task name and id are required to create new Pocket
         tasks: [{ task: 'required', data: { 'value': 0, type: 'payment' }, }, { task: 'final', data: { 'value': 0, type: 'fee' } }]
@@ -79,7 +80,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
             // await asyncData
 
             const plData = {
-                id: 'jobone',
+                id: 'job-two',
                 // NOTE each task is a pocket
                 // task name and id are required to create new Pocket
                 tasks: [{ task: 'required', data: { 'value': -1, type: 'payment' }, }, { task: 'final', data: { 'value': 0, type: 'fee' } }]
@@ -88,7 +89,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
             const payload = pc.payload(plData, false)
 
             it(`payload(...) cannot not be set over existing tasks`, function (done) {
-                expect(payload).null
+                expect(payload).false
                 done()
             })
 
@@ -146,9 +147,6 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
                     done()
                 })
             }
-
-
-
         })
 
         describe(`PocketSet tasks status should update and be ready`, function () {
@@ -170,6 +168,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
             describe(`Pocket/task in PocketSet id: '${payloadData.id}', should:`, function () {
                 let resolvePromise = null
                 let rejectPromise = null
+
                 let readyData = new Promise((resolve, reject) => {
                     resolvePromise = resolve
                     rejectPromise = reject
@@ -214,4 +213,115 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
         run();
     }, 1500);
     /// end of setTimeout
+})
+
+describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
+
+    const pc = new Pocket({ async: false, disposeAfterReady: true }, DEBUG)
+    let payloadData = null
+
+    describe(`should not set payload() with missing id, or any new Pocket`, function () {
+
+        before(async function () {
+            return payloadData = {
+                //id: 'job-one',
+                tasks: [{ task: 'start', data: { 'value': 0, type: 'payment' }, }, { task: 'end', data: { 'value': 10000000000, type: 'gift' } }]
+            }
+        })
+
+        it(`payload() should fail`, function (done) {
+            expect(pc.payload(payloadData)).to.be.false;
+            done()
+        })
+
+        it(`no new Pocket() should exist`, function (done) {
+            expect(Object.entries(pc.pocket)).to.have.lengthOf(0);
+            done()
+        })
+    })
+
+
+    describe(`should set payload() and new Pocket/tasks`, function () {
+        before(async function () {
+            return payloadData = {
+                id: 'job-one',
+                tasks: [{ task: 'start', data: { 'value': 0, type: 'payment' }, }, { task: 'end', data: { 'value': 10000000000, type: 'gift' } }]
+            }
+        })
+
+        it(`payload() success`, function (done) {
+            expect(pc.payload(payloadData)).to.be.true;
+            done()
+        })
+
+        it(`new Pockets/task set with status='open'`, function (done) {
+            for (let key in pc.pocket) expect(pc.pocket[key].status).equal('open')
+            done()
+        })
+
+        describe(`Pocket/task 'start' should:`, function () {
+            it(`add value '5000'`, function (done) {
+                const pocketID = `${payloadData.id}::start`
+                pc.$get(pocketID).data = Object.assign({}, pc.$get(pocketID).data, { value: 5000 })
+                expect(pc.$get(pocketID).data).to.have.property('value')
+                expect(pc.$get(pocketID).data['value']).to.equal(5000);
+                done()
+            })
+
+            it(`change status to updated`, function (done) {
+                const pocketID = `${payloadData.id}::start`
+                expect(pc.$get(pocketID).status).to.equal('updated')
+                done()
+            })
+        })
+
+        describe(`Pocket/task 'end' should:`, function () {
+            it(`combine values from Pocket/task 'start'`, function (done) {
+                // initial payload data
+                const pocketID = `${payloadData.id}::end`
+                const startValue = pc.$get(`${payloadData.id}::start`).data['value']
+                const endValue = pc.$get(pocketID).data.value
+                const newData = Object.assign({}, pc.$get(pocketID).data, { value: startValue + endValue })
+                pc.$get(pocketID).data = Object.assign({}, pc.$get(pocketID).data, newData)
+                expect(pc.$get(pocketID).data).to.have.property('value').equal(startValue + endValue)
+                done()
+            })
+
+            it(`have status: 'updated'`, function (done) {
+                const pocketID = `${payloadData.id}::end`
+                expect(pc.$get(pocketID).status).to.equal('updated')
+                done()
+            })
+        })
+
+        describe(`both Pocket/tasks [start,end] should`, function () {
+            describe(`complete => send => ready`, function () {
+                it(`task 'start'`, function (done) {
+                    const pocketID = `${payloadData.id}::start`
+                    pc.$get(pocketID).status = 'complete'
+                    expect(pc.$get(pocketID).status).to.equal('send')
+                    done()
+                })
+
+                it(`task 'end'`, function (done) {
+                    const pocketID = `${payloadData.id}::end`
+                    pc.$get(pocketID).status = 'complete'
+                    expect(pc.$get(pocketID).status).to.equal('send')
+
+                    done()
+                })
+            })
+        })
+    })
+
+    after(function () {
+       // console.log('pc.pocket', pc.pocket)
+       return pc.ready(payloadData.id).then(z => {
+            z.forEach((el, i) => {
+               // expect(el).to.have.property('data')
+            })
+           // expect(Object.entries(pc.pocket)).to.have.lengthOf(0);
+        })
+    })
+
 })

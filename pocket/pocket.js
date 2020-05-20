@@ -3,7 +3,7 @@ const { isString, warn, log, isNumber,onerror } = require('./utils')
 
 /**
  * set new pocket model
- * - every new task has a set of requirements. Once status is `complete` and data availabl, information is send and pocket is sealed.
+ * - every new task has a set of requirements controlled by `statusSetOrder` and status settr it self. Once status is `complete` and data available, information is send and pocket is blocked.
  * methods:`{get,all}` props: `{id,data,tasks,status}`
  *  @param {*} opts.id required
  *  @param {*} opts.tasks required
@@ -16,7 +16,7 @@ module.exports = (self) => {
          * @param {*} opts.id required, case sensitive, all will be set toLowerCase() 
          * @param {*} opts.tast once set cannot be changed
          * @param {*} opts.compaign optional, once set cannot be changed
-         * @param {*} opts.data optional any value except undefind, cannot be change once status set to complete or send
+         * @param {*} opts.data optional any value except undefind, cannot be change once status set to `complete` or send
          * @param {*} opts.status required to control Pocket actions, cannot set
          * @param {*} debug 
          */
@@ -29,7 +29,7 @@ module.exports = (self) => {
             this._id = null
             this.id = opts.id.replace(/ /gi, '_').toLowerCase()
             
-            this._task = opts.task.replace(/ /gi, '_').toLowerCase()// every task must be valid and same format
+            this._task = opts.task.replace(/ /gi, '_').toLowerCase()// every task must be valid with required format
             this._statusIndex = 0
             this._status = null
             this.status = 'open'
@@ -44,12 +44,10 @@ module.exports = (self) => {
         }
 
         set id(v){
-
             if(this._id) {
                 if(this.debug) warn(`cannot update already set id: ${this._id}`)
                 return
             }
-
             this._id = v
         }
         
@@ -79,7 +77,7 @@ module.exports = (self) => {
 
         set data(v) {
             /**
-            * once cannot be updated uppon status is send || complete
+            * cannot be updated uppon status is send || complete
             */
             const complete = this.status === 'complete' || this.status === 'send'
             if (complete) {
@@ -97,7 +95,7 @@ module.exports = (self) => {
         }
 
         /**
-         * forward motion `status` order update is allowed
+         * forward motion `status` update is allowed
          * `value`: importance que
          * `set`: if the status was already set
          */
@@ -118,6 +116,7 @@ module.exports = (self) => {
          * `complete`: this status is set when you want to discard and complete the the pocket
          * `send`: once the status was set the complete data is emited first then status is set as send.
          * and Pocket is locked, cannot be interacted with. Follow the strategic order set by `statusSetOrder`
+         * `error` acts like complete, it will emit last available data and block the Pocket
          */
         get status() {
             return this._status
@@ -193,7 +192,6 @@ module.exports = (self) => {
                 }
                 return error ? false:true
             })(v)
-
         }
 
         all() {

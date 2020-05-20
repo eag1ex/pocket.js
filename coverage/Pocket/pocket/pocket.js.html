@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.15% </span>
+                <span class="strong">74.07% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>79/108</span>
+                <span class='fraction'>80/108</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.89% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>16/18</span>
+                <span class='fraction'>17/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.52% </span>
+                <span class="strong">84.62% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>76/91</span>
+                <span class='fraction'>77/91</span>
             </div>
         
             
@@ -284,9 +284,7 @@
 <a name='L225'></a><a href='#L225'>225</a>
 <a name='L226'></a><a href='#L226'>226</a>
 <a name='L227'></a><a href='#L227'>227</a>
-<a name='L228'></a><a href='#L228'>228</a>
-<a name='L229'></a><a href='#L229'>229</a>
-<a name='L230'></a><a href='#L230'>230</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L228'></a><a href='#L228'>228</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -332,17 +330,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -362,7 +358,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -381,7 +377,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -408,7 +404,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">41x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -484,8 +481,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -520,7 +516,7 @@ const { isString, warn, log, isNumber,onerror } = require('./utils')
 &nbsp;
 /**
  * set new pocket model
- * - every new task has a set of requirements. Once status is `complete` and data availabl, information is send and pocket is sealed.
+ * - every new task has a set of requirements controlled by `statusSetOrder` and status settr it self. Once status is `complete` and data available, information is send and pocket is blocked.
  * methods:`{get,all}` props: `{id,data,tasks,status}`
  *  @param {*} opts.id required
  *  @param {*} opts.tasks required
@@ -533,7 +529,7 @@ module.exports = (self) =&gt; {
          * @param {*} opts.id required, case sensitive, all will be set toLowerCase() 
          * @param {*} opts.tast once set cannot be changed
          * @param {*} opts.compaign optional, once set cannot be changed
-         * @param {*} opts.data optional any value except undefind, cannot be change once status set to complete or send
+         * @param {*} opts.data optional any value except undefind, cannot be change once status set to `complete` or send
          * @param {*} opts.status required to control Pocket actions, cannot set
          * @param {*} debug 
          */
@@ -546,7 +542,7 @@ module.exports = (self) =&gt; {
             this._id = null
             this.id = opts.id.replace(/ /gi, '_').toLowerCase()
             
-            this._task = opts.task.replace(/ /gi, '_').toLowerCase()// every task must be valid and same format
+            this._task = opts.task.replace(/ /gi, '_').toLowerCase()// every task must be valid with required format
             this._statusIndex = 0
             this._status = null
             this.status = 'open'
@@ -561,12 +557,10 @@ module.exports = (self) =&gt; {
         }
 &nbsp;
         set id(v){
-&nbsp;
             if(this._id) {
                 <span class="missing-if-branch" title="if path not taken" >I</span>if(this.debug) <span class="cstat-no" title="statement not covered" >warn(`cannot update already set id: ${this._id}`)</span>
                 return
             }
-&nbsp;
             this._id = v
         }
         
@@ -596,7 +590,7 @@ module.exports = (self) =&gt; {
 &nbsp;
         set data(v) {
             /**
-            * once cannot be updated uppon status is send || complete
+            * cannot be updated uppon status is send || complete
             */
             const complete = this.status === 'complete' || this.status === 'send'
             if (complete) {
@@ -614,7 +608,7 @@ module.exports = (self) =&gt; {
         }
 &nbsp;
         /**
-         * forward motion `status` order update is allowed
+         * forward motion `status` update is allowed
          * `value`: importance que
          * `set`: if the status was already set
          */
@@ -635,6 +629,7 @@ module.exports = (self) =&gt; {
          * `complete`: this status is set when you want to discard and complete the the pocket
          * `send`: once the status was set the complete data is emited first then status is set as send.
          * and Pocket is locked, cannot be interacted with. Follow the strategic order set by `statusSetOrder`
+         * `error` acts like complete, it will emit last available data and block the Pocket
          */
         get status() {
             return this._status
@@ -710,11 +705,10 @@ module.exports = (self) =&gt; {
                 }
                 return error ? <span class="branch-0 cbranch-no" title="branch not covered" >false:</span>true
             })(v)
-&nbsp;
         }
 &nbsp;
-<span class="fstat-no" title="function not covered" >        al</span>l() {
-<span class="cstat-no" title="statement not covered" >            return { compaign: this.compaign, data: this.data, id: this.id, task: this.task, status: this.status }</span>
+        all() {
+            return { compaign: this.compaign, data: this.data, id: this.id, task: this.task, status: this.status }
         }
 &nbsp;
         /**
@@ -751,7 +745,7 @@ module.exports = (self) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 20 2020 20:31:08 GMT+0700 (Novosibirsk Standard Time)
+                at Wed May 20 2020 22:31:44 GMT+0700 (Novosibirsk Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

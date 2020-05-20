@@ -1,6 +1,6 @@
 module.exports = () => {
     const Dispatcher = require('../libs/dispatcher')()
-    const { log, error, warn, isArray, isObject, isPromise, validID,copyBy } = require('./utils')
+    const { log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
     const sq = require('simple-q')
     const newPocket = require('./pocket')
 
@@ -49,8 +49,8 @@ module.exports = () => {
                 }    
 
                 // uppon succesfull delivery all data is deleted
-                if (pocket && status!=='open') this.delivery(copyBy(pocket,this.pocketProps))  
-                // else console.log('ready', ready)
+                // we can use `pocket,all()` / or `copyBy(pocket,this.pocketProps)`
+                if (pocket && status!=='open')  this.delivery(pocket.all()) 
             })
         }
 
@@ -290,7 +290,7 @@ module.exports = () => {
             else {
                 if (this.debug) onerror(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
                 if (asAsync) return Promise.reject()
-                else return null
+                else return false
             }
         }
         async ready(id) {
