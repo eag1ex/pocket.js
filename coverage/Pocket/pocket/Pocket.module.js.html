@@ -445,12 +445,7 @@
 <a name='L386'></a><a href='#L386'>386</a>
 <a name='L387'></a><a href='#L387'>387</a>
 <a name='L388'></a><a href='#L388'>388</a>
-<a name='L389'></a><a href='#L389'>389</a>
-<a name='L390'></a><a href='#L390'>390</a>
-<a name='L391'></a><a href='#L391'>391</a>
-<a name='L392'></a><a href='#L392'>392</a>
-<a name='L393'></a><a href='#L393'>393</a>
-<a name='L394'></a><a href='#L394'>394</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L389'></a><a href='#L389'>389</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -555,6 +550,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -564,7 +560,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -610,14 +605,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -836,10 +829,7 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -946,29 +936,29 @@
           * - `get pocket by 'id::taskName'`
           * - `returns instance a Pocket`
           *  methods:`{get,all}` props: `{id,data,tasks,status}`
+          * @param {*} pocketID required, example format: `${payload.id}::taskName`
          */
-        $get(id) {
-            id = validID(id)
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (!id) <span class="cstat-no" title="statement not covered" >return null</span>
+        $get(pocketID) {
+            pocketID = validID(pocketID)
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!pocketID) <span class="cstat-no" title="statement not covered" >return null</span>
 &nbsp;
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.pocket[id]) {
-<span class="cstat-no" title="statement not covered" >                if (this.debug) <span class="cstat-no" title="statement not covered" >warn(`[get] did not find pocket with id ${id}`)</span></span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.pocket[pocketID]) {
+<span class="cstat-no" title="statement not covered" >                if (this.debug) <span class="cstat-no" title="statement not covered" >warn(`[get] did not find pocket with pocketID ${id}`)</span></span>
 <span class="cstat-no" title="statement not covered" >                return null</span>
             }
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (id.indexOf(`::`) === -1) <span class="cstat-no" title="statement not covered" >return null</span>
-            return this.pocket[id]
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (pocketID.indexOf(`::`) === -1) <span class="cstat-no" title="statement not covered" >return null</span>
+            return this.pocket[pocketID]
         }
-&nbsp;
 &nbsp;
         /**
          * ### $update
          * - update Pocket/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
-         * @param {*} id required PocketID
+         * @param {*} pocketID required, example format: `${payload.id}::taskName`
          * @param {*} dataFrom required, must specify what to update on the Pocket, example: `dataFrom:{data:'coke',status:'complete',compaign:'cocacola'}`
          * @prop {*} mergeData optional if `true` will merge: `Object.assing({},pocket[id].data,mergeData['data'])`
          */
-        $update(id, dataFrom, mergeData = null) {
-            id = validID(id)
+        $update(pocketID, dataFrom, mergeData = null) {
+           let id = validID(pocketID)
 &nbsp;
             if (!id) {
                 <span class="missing-if-branch" title="if path not taken" >I</span>if (this.debug) <span class="cstat-no" title="statement not covered" >onerror(`[$update] must specify id`)</span>
@@ -1002,16 +992,14 @@
                         <span class="missing-if-branch" title="if path not taken" >I</span>if (mergeData === true) {
 <span class="cstat-no" title="statement not covered" >                            this.pocket[id][key] = Object.assign({}, this.pocket[id][key], dataFrom[key])</span>
 <span class="cstat-no" title="statement not covered" >                            updated = true</span>
-                        }
-                        else {
+                        } else {
                             this.pocket[id][key] = dataFrom[key]
                             updated = true
                         }
                     }
 &nbsp;
                     continue
-                }
-                else {
+                } else {
 <span class="cstat-no" title="statement not covered" >                    if (this.debug) <span class="cstat-no" title="statement not covered" >warn(`[$update] not a valid propName: ${key}`)</span></span>
                 }
             }
@@ -1022,13 +1010,13 @@
         /**
          * ### $activeTasks
          * - list any active tasks for assigned Pockets
-         * @param {*} id optional, when set will only filter thru given job id (NOT Pocket ID!)
+         * @param {*} payloadID optional, when set will only filter thru given job id (NOT Pocket ID!)
          */
-        $activeTasks(id = null) {
+        $activeTasks(payloadID = null) {
             <span class="missing-if-branch" title="if path not taken" >I</span>if (!Object.entries(this.pocket).length) <span class="cstat-no" title="statement not covered" >return []</span>
             return Object.entries(this.pocket).reduce((n, [pocketID, pocket]) =&gt; {
-                if (pocketID.indexOf(id || '') === 0 &amp;&amp; id &amp;&amp; this.payloadData[id]) n.push(pocket['task'])
-                else <span class="missing-if-branch" title="else path not taken" >E</span>if (!id) n.push(pocket['task'])
+                if (pocketID.indexOf(payloadID || '') === 0 &amp;&amp; payloadID &amp;&amp; this.payloadData[payloadID]) n.push(pocket['task'])
+                else <span class="missing-if-branch" title="else path not taken" >E</span>if (!payloadID) n.push(pocket['task'])
                 return n
             }, [])
         }
@@ -1037,16 +1025,16 @@
          * ### $ready
          * - resolves currently active `$payload(...)`
          * - `after completion of PocketSet, all instance data for all Pockets is deleted`
-         * @param {*} id `required`
+         * @param {*} payloadID `required`
          */
-        $ready(id) {
-            id = validID(id)
+        $ready(payloadID) {
+            payloadID = validID(payloadID)
 &nbsp;
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (!id) <span class="cstat-no" title="statement not covered" >throw (`id must be set`)</span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!payloadID) <span class="cstat-no" title="statement not covered" >throw (`payloadID must be set`)</span>
 &nbsp;
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (!this._ready[id]) <span class="cstat-no" title="statement not covered" >throw (`ready[id] is not set, maybe you called it before $payload()`)</span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!this._ready[payloadID]) <span class="cstat-no" title="statement not covered" >throw (`ready[payloadID] is not set, maybe you called it before $payload()`)</span>
 &nbsp;
-            return this._ready[id].promise()
+            return this._ready[payloadID].promise()
         }
 &nbsp;
         //
@@ -1225,15 +1213,12 @@
             }
         }
         
-        $ready(id){
-            return super.$ready(id).then(z=&gt;{
-                this.deletePocketSet(id) 
+        $ready(payloadID) {
+            return super.$ready(payloadID).then(z =&gt; {
+                this.deletePocketSet(payloadID)
                 return z
-            },<span class="fstat-no" title="function not covered" >er</span>r=&gt;{
-<span class="cstat-no" title="statement not covered" >                return Promise.reject(err)</span>
-            })
+            }, <span class="fstat-no" title="function not covered" >er</span>r =&gt; <span class="cstat-no" title="statement not covered" >Promise.reject(err))</span>
         }
-      
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -1243,7 +1228,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 22 2020 00:40:11 GMT+0700 (Novosibirsk Standard Time)
+                at Fri May 22 2020 01:56:50 GMT+0700 (Novosibirsk Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

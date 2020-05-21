@@ -101,28 +101,29 @@ module.exports = () => {
           * - `get pocket by 'id::taskName'`
           * - `returns instance a Pocket`
           *  methods:`{get,all}` props: `{id,data,tasks,status}`
+          * @param {*} pocketID required, example format: `${payload.id}::taskName`
          */
-        $get(id) {
-            id = validID(id)
-            if (!id) return null
+        $get(pocketID) {
+            pocketID = validID(pocketID)
+            if (!pocketID) return null
 
-            if (!this.pocket[id]) {
-                if (this.debug) warn(`[get] did not find pocket with id ${id}`)
+            if (!this.pocket[pocketID]) {
+                if (this.debug) warn(`[get] did not find pocket with pocketID ${id}`)
                 return null
             }
-            if (id.indexOf(`::`) === -1) return null
-            return this.pocket[id]
+            if (pocketID.indexOf(`::`) === -1) return null
+            return this.pocket[pocketID]
         }
 
         /**
          * ### $update
          * - update Pocket/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
-         * @param {*} id required PocketID
+         * @param {*} pocketID required, example format: `${payload.id}::taskName`
          * @param {*} dataFrom required, must specify what to update on the Pocket, example: `dataFrom:{data:'coke',status:'complete',compaign:'cocacola'}`
          * @prop {*} mergeData optional if `true` will merge: `Object.assing({},pocket[id].data,mergeData['data'])`
          */
-        $update(id, dataFrom, mergeData = null) {
-            id = validID(id)
+        $update(pocketID, dataFrom, mergeData = null) {
+           let id = validID(pocketID)
 
             if (!id) {
                 if (this.debug) onerror(`[$update] must specify id`)
@@ -160,6 +161,9 @@ module.exports = () => {
                             this.pocket[id][key] = dataFrom[key]
                             updated = true
                         }
+                    } else {                      
+                        this.pocket[id][key] = dataFrom[key]
+                        updated = true
                     }
 
                     continue
@@ -174,13 +178,13 @@ module.exports = () => {
         /**
          * ### $activeTasks
          * - list any active tasks for assigned Pockets
-         * @param {*} id optional, when set will only filter thru given job id (NOT Pocket ID!)
+         * @param {*} payloadID optional, when set will only filter thru given job id (NOT Pocket ID!)
          */
-        $activeTasks(id = null) {
+        $activeTasks(payloadID = null) {
             if (!Object.entries(this.pocket).length) return []
             return Object.entries(this.pocket).reduce((n, [pocketID, pocket]) => {
-                if (pocketID.indexOf(id || '') === 0 && id && this.payloadData[id]) n.push(pocket['task'])
-                else if (!id) n.push(pocket['task'])
+                if (pocketID.indexOf(payloadID || '') === 0 && payloadID && this.payloadData[payloadID]) n.push(pocket['task'])
+                else if (!payloadID) n.push(pocket['task'])
                 return n
             }, [])
         }
@@ -189,16 +193,16 @@ module.exports = () => {
          * ### $ready
          * - resolves currently active `$payload(...)`
          * - `after completion of PocketSet, all instance data for all Pockets is deleted`
-         * @param {*} id `required`
+         * @param {*} payloadID `required`
          */
-        $ready(id) {
-            id = validID(id)
+        $ready(payloadID) {
+            payloadID = validID(payloadID)
 
-            if (!id) throw (`id must be set`)
+            if (!payloadID) throw (`payloadID must be set`)
 
-            if (!this._ready[id]) throw (`ready[id] is not set, maybe you called it before $payload()`)
+            if (!this._ready[payloadID]) throw (`ready[payloadID] is not set, maybe you called it before $payload()`)
 
-            return this._ready[id].promise()
+            return this._ready[payloadID].promise()
         }
 
         //
@@ -377,9 +381,9 @@ module.exports = () => {
             }
         }
         
-        $ready(id) {
-            return super.$ready(id).then(z => {
-                this.deletePocketSet(id)
+        $ready(payloadID) {
+            return super.$ready(payloadID).then(z => {
+                this.deletePocketSet(payloadID)
                 return z
             }, err => Promise.reject(err))
         }

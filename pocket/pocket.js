@@ -3,7 +3,7 @@ const { isString, warn, log, isNumber, onerror } = require('./utils')
 const sq = require('simple-q')
 /**
  * Set new pocket model
- * - every new task has a set of requirements controlled by `statusSetOrder` in status setter. Once status is `complete` and data available, information is send and pocket is blocked.
+ * - every new task has a set of requirements controlled by `statusStackOrder` in status setter. Once status is `complete` and data available, information is send and pocket is blocked.
  * methods:`{get,all}` props: `{id,data,tasks,status}`
  *  @param {*} opts.id required
  *  @param {*} opts.tasks required
@@ -109,7 +109,7 @@ module.exports = (dispatcher) => {
          * `value`: importance que
          * `set`: if status already set
          */
-        get statusSetOrder() {
+        get statusStackOrder() {
             return {
                 open: { value: 1, set: false },
                 updated: { value: 2, set: false },
@@ -125,7 +125,7 @@ module.exports = (dispatcher) => {
          * `updated`: status is set when data is updated
          * `complete`: status is set when you want to complete and discard pocket
          * `send`: once the status was set `complete` data is resolved first then status is set as `send`.
-         * and Pocket is locked, cannot be interacted with. Follow the strategic order set by `statusSetOrder`
+         * and Pocket is locked, cannot be interacted with. Follow the strategic order set by `statusStackOrder`
          * `error` acts like complete, it will resolve() last available data and block the Pocket
          */
         get status() {
@@ -137,9 +137,9 @@ module.exports = (dispatcher) => {
             ((stat) => {
                 try {
                     // meaning do not allow any status changes beond `updated`
-                    if (this.statusSetOrder[stat].value > 2 && this.statusSetOrder[stat].set === true) return false
+                    if (this.statusStackOrder[stat].value > 2 && this.statusStackOrder[stat].set === true) return false
                 } catch (err) {
-                    onerror('statusSetOrder invalid status')
+                    onerror('statusStackOrder invalid status')
                 }
 
                 if (this._status === 'complete' || this._status === 'send') {
@@ -154,7 +154,7 @@ module.exports = (dispatcher) => {
                             break
                         }
                         this._status = stat
-                        this.statusSetOrder[stat].set = true
+                        this.statusStackOrder[stat].set = true
                         this.onOpenStatus(v) // emit pocket when status opens
                         break
 
@@ -164,14 +164,17 @@ module.exports = (dispatcher) => {
                             break
                         }
 
-                        this._status = stat
-                        this.statusSetOrder[stat].set = true
-                        if (this.debug) log(`id:${this.id}, data updated`)
+                        if(this._dataIndex>0){
+                            this._status = stat
+                            this.statusStackOrder[stat].set = true
+                            if (this.debug) log(`id:${this.id}, data updated`)
+                        }
+
                         break
 
                     case 'complete':
                         this._status = stat
-                        this.statusSetOrder[stat].set = true
+                        this.statusStackOrder[stat].set = true
                         this.onComplete(v) // resolve pocket when status complete                     
                         break
 
@@ -181,13 +184,13 @@ module.exports = (dispatcher) => {
                             break
                         }
                         this._status = stat
-                        this.statusSetOrder[stat].set = true
+                        this.statusStackOrder[stat].set = true
                         break
 
                     case 'error':
                         // when we have error we need to inform what happen, and close the Pocket
                         this._status = stat
-                        this.statusSetOrder[stat].set = true
+                        this.statusStackOrder[stat].set = true
                         this.onComplete(v) // resolve pocket when status complete                     
                         break
 
@@ -206,7 +209,7 @@ module.exports = (dispatcher) => {
          * @param {*} status
          */
         onComplete(status) {
-            if ((status === 'complete' || status === 'error') && this.status !== 'send' && this.data) {
+            if ((status === 'complete' || status === 'error') && this.status !== 'send' && this._dataIndex>0) {
                 setTimeout(() => {
                     if (dispatcher) dispatcher._emit({ pocket: this, status })
                     this.sq.resolve({ pocket: this.all() })

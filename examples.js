@@ -14,19 +14,19 @@ async function init(){
     if (!pc.$payload(data)) {
         console.log(' payload not send')
     } else {
-       
-        setTimeout(()=>{
-            pc.$update('abc123::required',{data:'new data', status:'complete','id':'any'})
-        },500)
+      //  pc.$get('abc123::required').status='error'
+        //setTimeout(()=>{
+         pc.$update('abc123::required',{status:'error'})
+       // },500)
 
-        setTimeout(()=>{
-            pc.$get('abc123::required').data='another data'
-        },300)
-
-        setTimeout(()=>{
+        // setTimeout(()=>{
+        //    
+        // },300)
+        console.log(pc.$get('abc123::required'))
+        // setTimeout(()=>{
             
-            pc.$get('abc123::grab').status = 'complete'
-        },2000)
+        //     pc.$get('abc123::grab').status = 'complete'
+        // },2000)
        console.log('pc activeTasks', pc.$activeTasks())
     }
     
