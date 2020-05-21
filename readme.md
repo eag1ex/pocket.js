@@ -17,14 +17,15 @@
 
 #### Why use it
 
-* Your data project is assignment driven, requires tasks to complete each jobs
-* You specify `tasks`, and receive results by assignment
+* Data project is assignment driven, requires tasks to complete each job
+* Specify `tasks`, and receive results by assignment
 * Re/Distribution of data/scheduled assignments
-
+* Data status management
+* Creative flexibility - *make your work easy and justifiable*
 
 #### Stack
 
-* Node.js, ES6, JavaScript, data-management, Promise, prototype, Istanbul/nyc, Eslint, Mocha/Chai, Custom Utils, debug/error exception handling.
+* Node.js, ES6, JavaScript, data-management, state/management, Promise, prototyping, Istanbul/nyc, Eslint, Mocha/Chai, Custom Utils, debug/error exception handling, user/friendly logging.
 
 
 #### About the code:
@@ -35,40 +36,43 @@
 - Good catch exceptions
 - In depth `Mocha` tests.
 
-#### Pocket methods, settings and requirements:
+
+#### PocketModule config/opts and status logic:
 - `PocketModule.opts{}`: available options on constructor to be set with instance creation.
     - `opts.async:Boolean`: when set will handle `await payload(asyncData)` as Promise. 
     - `opts.dispatcher:Boolean`: when set will load `Dispatcher module`, in to our instance, and allow additional live on-change loggin and dirrect communication with each Pocket, currently this feature is limited to only display messages, must set `debug:true` to see it in action. `[dispatcher]...`.
     - `debug:Boolean`: will log additional messages on what is happening, good for debuging :)!
 
-- `Pocket status process/system`: each Pocket has `status`, which gives it the required interation behaviour through out each payload. Status list, runs in forward motion, once the status is set 'completed' nothing can be changed:
+- `Pocket status logic`: each Pocket has `status`, which gives it the required interation behaviour through out each payload. Status list, runs in forward motion, once the status is set 'completed' nothing can be changed:
     - `open`: When new Pocket is created, new fisrt status is created automaticly, this status will remain the same until `Pocket.data` property setter is updated, it can never be set back to `open`.
     - `updated`: status is set automaticly once first `Pocket.data` is updated to any true value, it can be re updated, once initial `data` was previously set
     - `complete`: when given Pocket/task is done, `Pocket.sq.resolve()` is called, and nothing can be done the Pocket
     - `send`: automaticly set after `Pocket.sq.resolve()` is called, cannot be set manualy, it is used to identify last status
     - `error` works same as `complete`, with small difference... it is set last in `statusStackOrder`
 
-- *$payload( data ):Boolean* : top level method to initiate requested tasks, returns true when succesfull, and false on error.
+
+#### PocketModule methods:
+- **$payload( data ):Boolean** : top level method to initiate requested tasks, returns true when succesfull, and false on error.
     - `data.id:String`: payload id that identifies this payload
     - `data.tasks:Array[]`: specifies required format of tasks to perform. Specifications for this can be found in `./example.js` and in `./samples/**`
 
 
-- *$get( pocketID ):Pocket*: will return an active instance of your Pocket/task => `$get(pocketID).status='complete'`, you can also use it instead of `$update()`
+- **$get( pocketID ):Pocket**: will return an active instance of your Pocket/task => `$get(pocketID).status='complete'`, you can also use it instead of `$update()`
     - `pocketID:String`: provided format must be, example: `${payloadID}::${task}`
 
 
-- *$update(pocketID, dataFrom, mergeData):Boolean* : will select currently available Pocket/tast by `id`, and update its data, only available fields found on Pocket cen be updated according to setter/getter requirements 
+- **$update(pocketID, dataFrom, mergeData):Boolean** : will select currently available Pocket/tast by `id`, and update its data, only available fields found on Pocket cen be updated according to setter/getter requirements 
     - `pocketID:String`: required PocketID, each pocket `pocketID` makes up this format: `${payload.id}::${task}`, dynamicly created uppon `$payload(..)===true`
     - `dataFrom:{}`: format of `dataFrom` and avaialble fields example: `dataFrom:{data:'some cola', compaign:'cocacola',status:'complete'}`, will perform an update on Pocket[id][data],Pocket[id][compaign], etc. Validation is sensitive.
     - `mergeData`: when specified and `dataFrom.data` field is set,  will merge both
 
 
-- *$activeTasks( payloadID ):Array*: returns an `array['taskA','tastB']` of current job payload, will only be available before `$ready(..)` is resolved, and before PocketSet tasks are completed.
+- **$activeTasks( payloadID ):Array**: returns an `array['taskA','tastB']` of current job payload, will only be available before `$ready(..)` is resolved, and before PocketSet tasks are completed.
 
 
-- *$ready(payloadID):Promise*: last calling method, when all your `PocketSet` tasks have been completed, example: `Pocket[id][status]='complete'` only then, it will resolve(), otherwise pending Pocket/tasks will remain and `$ready()` will expire, this is the desired effect, most logical behaviour.
+- **$ready(payloadID):Promise**: last calling method, when all your `PocketSet` tasks have been completed, example: `Pocket[id][status]='complete'` only then, it will resolve(), otherwise pending Pocket/tasks will remain and `$ready()` will expire, this is the desired effect, most logical behaviour.
 
-- **Final notes: All user/interaction methods are prefixed with '$'**
+- *Final note: All user/interaction methods are prefixed with '$'*
 
 
 
