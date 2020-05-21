@@ -1,12 +1,10 @@
 /* eslint-disable no-proto */
-
 const util = require('util')
 const color = require('bash-color')
 /**
  * @Utils
  * my own lodash/like `Utils`
  */
-
 
 /**
 * make class copy by refs[...]

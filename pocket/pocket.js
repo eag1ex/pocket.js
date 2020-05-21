@@ -33,13 +33,11 @@ module.exports = (dispatcher) => {
             this._statusIndex = 0
             this._status = null
             this.status = 'open'
-            this._dataIndex = 0;
+            this._dataIndex = 0
             this._data = null
             // assign initial data if differs from default
             if (opts.data !== this._data) this.data = opts.data
-
             this._compaign = isString(opts.compaign) ? opts.compaign : null // optional
-
         }
 
         /**
@@ -61,6 +59,10 @@ module.exports = (dispatcher) => {
 
         get id() {
             return this._id
+        }
+
+        get compaign() {
+            return this._compaign
         }
 
         set compaign(v) {
@@ -131,13 +133,11 @@ module.exports = (dispatcher) => {
         }
 
         set status(v) {
-
             // order of status and allowed values
             ((stat) => {
                 try {
                     // meaning do not allow any status changes beond `updated`
                     if (this.statusSetOrder[stat].value > 2 && this.statusSetOrder[stat].set === true) return false
-
                 } catch (err) {
                     onerror('statusSetOrder invalid status')
                 }
@@ -146,7 +146,7 @@ module.exports = (dispatcher) => {
                     if (this.debug) log(`cannot update status if already complete`)
                     return false
                 }
-                let error = false
+
                 switch (stat) {
                     case 'open':
                         if (this._status === 'updated') {
@@ -161,7 +161,6 @@ module.exports = (dispatcher) => {
                     case 'updated':
                         if (this._status === 'complete') {
                             if (this.debug) warn(`cannot update status to 'updated' then previously set to 'complete'`)
-                            error = true
                             break
                         }
 
@@ -185,7 +184,6 @@ module.exports = (dispatcher) => {
                         this.statusSetOrder[stat].set = true
                         break
 
-
                     case 'error':
                         // when we have error we need to inform what happen, and close the Pocket
                         this._status = stat
@@ -195,9 +193,7 @@ module.exports = (dispatcher) => {
 
                     default:
                         if (this.debug) warn(`id:${this.id},  you set invalid status: ${stat}, nothing changed`)
-                        error = true
                 }
-                return error ? false : true
             })(v)
         }
 

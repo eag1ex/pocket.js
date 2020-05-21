@@ -1,5 +1,4 @@
 module.exports = () => {
-
     const { log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
     const sq = require('simple-q')
     const newPocket = require('./pocket')
@@ -11,14 +10,11 @@ module.exports = () => {
          * @param {*} debug optional
          */
         constructor(opts = {}, debug) {
-
             this.debug = debug || false
             this.async = (opts || {}).async || null
 
             // when set enables dispatcher to communicate directly with `pocket.js`
             this.dispatcher = (opts || {}).dispatcher ? require('../libs/dispatcher')() : null
-
-  
             this.pocket = {} // example this.pocket[`abc::taskName`]
             this.payloadData = {}// each payload by id
             this.lastPocketTimestamp = 0
@@ -45,7 +41,6 @@ module.exports = () => {
             }
         }
 
-        
         // ───────────────────────────────────────────────────────────────────────────────────────
         //   :::::: U S E R   A P P L I C A T I O N   C A L L I N G   M E T H O D S : :  :   :    : 
         // ───────────────────────────────────────────────────────────────────────────────────────
@@ -125,18 +120,18 @@ module.exports = () => {
          */
         ready(id) {
             id = validID(id)
+
             if (!id) throw (`id must be set`)
-            if(!this._ready[id]){
-                throw(`ready[id] is not set, maybe you called it before payload()`)
-            }
+
+            if (!this._ready[id]) throw (`ready[id] is not set, maybe you called it before payload()`)
+
             return this._ready[id].promise()
         }
-        
+
         //
         // ──────────────────────────────────────────────────────
         //   :::::: E N D : :  :   :    :     :        :          
         // ──────────────────────────────────────────────────────
-
 
         // each pocket props that can be available and send on ready
         get pocketProps() {
@@ -155,7 +150,7 @@ module.exports = () => {
 
             if (!Object.entries(this.pocket).length) {
                 const msg = `[setDefer] pocket is empty, so nothing set, id:${id}`
-                if (this.debug) error(msg)
+                if (this.debug) onerror(msg)
                 this._ready[id].reject(msg)
                 return null
             }
@@ -163,7 +158,7 @@ module.exports = () => {
             const pocketSet = Object.values(this.pocket).filter(z => z.id.indexOf(id) !== -1)
             if (!pocketSet.length) {
                 const msg = `[setDefer] no pocketSet found for id:${id} `
-                if (this.debug) error(msg)
+                if (this.debug) onerror(msg)
                 this._ready[id].reject(msg)
                 return null
             }
@@ -188,18 +183,17 @@ module.exports = () => {
                     this._ready[id].resolve(output)
                 }, err => {
                     // should unlikely happen since we dont have any rejects set
-                    error(`[setDefer] Promise.all`, err)
+                    onerror(`[setDefer] Promise.all`, err)
                 })
 
                 return true
-
             } catch (err) {
-                error(`[setDefer]`, err)
+                onerror(`[setDefer]`, err)
             }
 
             return false
-
         }
+
         /**
          * - distribute payloadData, each to `new Pocket()`
          * - set `pocketSetRef`
@@ -219,7 +213,6 @@ module.exports = () => {
             }
             return this
         }
-
 
         /**
          * - every new pocket `id` must be: format `id:::taskName`
