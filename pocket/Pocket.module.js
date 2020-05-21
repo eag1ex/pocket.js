@@ -114,6 +114,20 @@ module.exports = () => {
         }
 
         /**
+         * ### activeTasks
+         * - list any active tasks for assigned Pockets
+         * @param {*} id optional, when set will only filter thru given job id (NOT Pocket ID!)
+         */
+        activeTasks(id = null) {
+            if (!Object.entries(this.pocket).length) return []
+            return Object.entries(this.pocket).reduce((n, [pocketID, pocket]) => {
+                if (pocketID.indexOf(id || '') === 0 && id && this.payloadData[id]) n.push(pocket['task'])
+                else if (!id) n.push(pocket['task'])
+                return n
+            }, [])
+        }
+
+        /**
          * - resolves currently active `payload(...)`
          * - `after completion of PocketSet, all instance data for all Pockets is deleted`
          * @param {*} id `required`

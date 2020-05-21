@@ -25,11 +25,12 @@ async function init(){
         setTimeout(()=>{
             pc.$get('abc123::required').data='another data'
         },300)
+
         setTimeout(()=>{
             
             pc.$get('abc123::grab').status = 'complete'
         },2000)
-       
+       console.log('pc activeTasks', pc.activeTasks())
     }
     
     //setTimeout(()=>{
