@@ -1,7 +1,7 @@
 
 const Pocket = require('./pocket/Pocket.module')()
 const DEBUG = true
-const pc = new Pocket({async:false, disposeAfterReady:true}, DEBUG)
+const pc = new Pocket({async:false,dispatcher:true}, DEBUG)
 const data = {
     id: 'abc123',
     // NOTE each task is a pocket
@@ -11,17 +11,14 @@ const data = {
 
 async function init(){
 
-    if (!pc.payload(data)) {
+    if (!pc.$payload(data)) {
         console.log(' payload not send')
     } else {
        
         setTimeout(()=>{
-            pc.$get('abc123::required').data='new data'
+            pc.$update('abc123::required',{data:'new data', status:'complete','id':'any'})
         },500)
-        setTimeout(()=>{
-            pc.$get('abc123::required').status = 'complete'
-        },1000)
-      
+
         setTimeout(()=>{
             pc.$get('abc123::required').data='another data'
         },300)
@@ -30,11 +27,11 @@ async function init(){
             
             pc.$get('abc123::grab').status = 'complete'
         },2000)
-       console.log('pc activeTasks', pc.activeTasks())
+       console.log('pc activeTasks', pc.$activeTasks())
     }
     
     //setTimeout(()=>{
-        pc.ready('abc123').then(z => {
+        pc.$ready('abc123').then(z => {
             console.log('pocketSet [abc123] ready', z)
       //  },2000)
     })

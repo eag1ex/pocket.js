@@ -1,4 +1,4 @@
-
+// const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
 const { isString, warn, log, isNumber, onerror } = require('./utils')
 const sq = require('simple-q')
 /**

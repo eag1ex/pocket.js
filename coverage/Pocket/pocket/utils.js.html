@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">59.09% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/22</span>
+                <span class='fraction'>13/22</span>
             </div>
         
             
@@ -117,13 +117,9 @@
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
 <a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L61'></a><a href='#L61'>61</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,13 +132,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">26x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -182,14 +178,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* eslint-disable no-proto */
-&nbsp;
 const util = require('util')
 const color = require('bash-color')
 /**
  * @Utils
  * my own lodash/like `Utils`
  */
-&nbsp;
 &nbsp;
 /**
 * make class copy by refs[...]
@@ -198,11 +192,11 @@ exports.copyBy = <span class="fstat-no" title="function not covered" >(o</span>b
 <span class="cstat-no" title="statement not covered" >    if (obj[el] !== undefined) <span class="cstat-no" title="statement not covered" >n[el] = obj[el]</span></span>
 <span class="cstat-no" title="statement not covered" >    return n</span>
 }, {})
-exports.validID = (id) =&gt; !(id || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span> ? <span class="branch-0 cbranch-no" title="branch not covered" >null </span>: (id || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.toString().toLowerCase()
+exports.validID = (id) =&gt; !(id || '') ? null : (id || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.toString().toLowerCase()
 exports.isNumber = (n) =&gt; n !== undefined ? (n).__proto__ === Number.prototype : <span class="branch-1 cbranch-no" title="branch not covered" >false</span>
 exports.isPromise = (defer) =&gt; Promise.prototype === (defer || <span class="branch-1 cbranch-no" title="branch not covered" >{})</span>.__proto__
 exports.uniq = <span class="fstat-no" title="function not covered" >(a</span>rr) =&gt; <span class="cstat-no" title="statement not covered" >arr.filter(<span class="fstat-no" title="function not covered" >(e</span>l, i, all) =&gt; <span class="cstat-no" title="statement not covered" >all.indexOf(el) === i)</span></span>
-exports.isObject = (obj) =&gt; !obj ? <span class="branch-0 cbranch-no" title="branch not covered" >false </span>: (Object.prototype === (obj).__proto__ || (obj) instanceof Object)
+exports.isObject = (obj) =&gt; !obj ? false : (Object.prototype === (obj).__proto__ || <span class="branch-1 cbranch-no" title="branch not covered" >(obj) instanceof Object)</span>
 exports.isArray = (arr) =&gt; !arr ? <span class="branch-0 cbranch-no" title="branch not covered" >false </span>: Array.prototype === (arr).__proto__
 exports.isString = (str) =&gt; !str ? false : String.prototype === (str).__proto__
 exports.isFunction = <span class="fstat-no" title="function not covered" >(e</span>l) =&gt; <span class="cstat-no" title="statement not covered" >typeof el === 'function'</span>
@@ -250,7 +244,7 @@ exports.errorMessages = <span class="fstat-no" title="function not covered" >(m<
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 20 2020 22:31:44 GMT+0700 (Novosibirsk Standard Time)
+                at Fri May 22 2020 00:40:11 GMT+0700 (Novosibirsk Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

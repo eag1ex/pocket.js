@@ -1,11 +1,12 @@
 module.exports = () => {
+    // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
     const { log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
     const sq = require('simple-q')
     const newPocket = require('./pocket')
 
     class PocketModule {
         /**
-         * @param {*} opts.async, when set, allow payload(`data`) to be async object
+         * @param {*} opts.async, when set, allow $payload(`data`) to be async object
          * @param {*} opts.dispatcher, when set to true, loads external library `Dispatcher`
          * @param {*} debug optional
          */
@@ -47,7 +48,7 @@ module.exports = () => {
         //
 
         /**
-         * ### payload
+         * ### $payload
          * @prop {*} data `required`
          * @prop {*} async `override current opts.sync for this payload`
          * 
@@ -60,7 +61,7 @@ module.exports = () => {
 
          * - `call distributor and setDefer`
          */
-        payload(data = {}, async) {
+        $payload(data = {}, async) {
             // validate payload format
             if (!isObject(data)) return false
             const keys = Object.keys(data)
@@ -114,11 +115,68 @@ module.exports = () => {
         }
 
         /**
-         * ### activeTasks
+         * ### $update
+         * - update Pocket/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
+         * @param {*} id required PocketID
+         * @param {*} dataFrom required, must specify what to update on the Pocket, example: `dataFrom:{data:'coke',status:'complete',compaign:'cocacola'}`
+         * @prop {*} mergeData optional if `true` will merge: `Object.assing({},pocket[id].data,mergeData['data'])`
+         */
+        $update(id, dataFrom, mergeData = null) {
+            id = validID(id)
+
+            if (!id) {
+                if (this.debug) onerror(`[$update] must specify id`)
+                return false
+            }
+
+            if (!isObject(dataFrom)) {
+                if (this.debug) warn(`[$update] dataFrom must be an `)
+                return false
+            }
+
+            if (!this.pocket[id]) {
+                if (this.debug) onerror(`[$update] this.pocket with id:${id} not found`)
+                return false
+            }
+
+            const propsObj = this.pocketProps.reduce((n, el) => {
+                n[el] = true
+                return n
+            }, {})
+
+            let updated = false
+            for (let key in dataFrom) {
+                if ((key !== 'id' && key !== 'task') &&
+                    propsObj[key] &&
+                    this.pocket[id][key] !== undefined &&
+                    dataFrom[key] !== undefined
+                ) {
+                    if (key === 'data') {
+                        // NOTE only can update : `data, status`
+                        if (mergeData === true) {
+                            this.pocket[id][key] = Object.assign({}, this.pocket[id][key], dataFrom[key])
+                            updated = true
+                        } else {
+                            this.pocket[id][key] = dataFrom[key]
+                            updated = true
+                        }
+                    }
+
+                    continue
+                } else {
+                    if (this.debug) warn(`[$update] not a valid propName: ${key}`)
+                }
+            }
+
+            return updated
+        }
+
+        /**
+         * ### $activeTasks
          * - list any active tasks for assigned Pockets
          * @param {*} id optional, when set will only filter thru given job id (NOT Pocket ID!)
          */
-        activeTasks(id = null) {
+        $activeTasks(id = null) {
             if (!Object.entries(this.pocket).length) return []
             return Object.entries(this.pocket).reduce((n, [pocketID, pocket]) => {
                 if (pocketID.indexOf(id || '') === 0 && id && this.payloadData[id]) n.push(pocket['task'])
@@ -128,16 +186,17 @@ module.exports = () => {
         }
 
         /**
-         * - resolves currently active `payload(...)`
+         * ### $ready
+         * - resolves currently active `$payload(...)`
          * - `after completion of PocketSet, all instance data for all Pockets is deleted`
          * @param {*} id `required`
          */
-        ready(id) {
+        $ready(id) {
             id = validID(id)
 
             if (!id) throw (`id must be set`)
 
-            if (!this._ready[id]) throw (`ready[id] is not set, maybe you called it before payload()`)
+            if (!this._ready[id]) throw (`ready[id] is not set, maybe you called it before $payload()`)
 
             return this._ready[id].promise()
         }
@@ -153,7 +212,7 @@ module.exports = () => {
         }
 
         /**
-         * - sets defer for `ready()` initially after calling payload 
+         * - sets defer for `$ready()` initially after calling payload 
          * @param {*} id required
          */
         setDefer(id) {
@@ -247,7 +306,6 @@ module.exports = () => {
                 opts.id = uid
                 const p = new this.Pocket(opts, this.debug)
                 this.pocket[uid] = p
-                console.log(`this.pocket[${uid}] issued`)
             } catch (err) {
                 onerror(err)
                 return null
@@ -308,15 +366,22 @@ module.exports = () => {
         /**
          * - extend payload async data handling
          */
-        payload(data, async) {
+        $payload(data, async) {
             const asAsync = async !== undefined ? async : this.async // override if set
-            if (asAsync && isPromise(data)) return data.then(z => super.payload(z), err => err)
-            if (!this.async && !isPromise(data)) return super.payload(data)
+            if (asAsync && isPromise(data)) return data.then(z => super.$payload(z), err => err)
+            if (!this.async && !isPromise(data)) return super.$payload(data)
             else {
                 if (this.debug) onerror(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
                 if (asAsync) return Promise.reject()
                 else return false
             }
+        }
+        
+        $ready(id) {
+            return super.$ready(id).then(z => {
+                this.deletePocketSet(id)
+                return z
+            }, err => Promise.reject(err))
         }
     }
 }

@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "example": "node ./examples.js",
-    "mocha": "mocha ./test/tests.js --colors ",
-    "lint": "./node_modules/.bin/eslint  --ext .js pocket",
+    "mocha": "mocha ./test/tests.js --colors --delay",
+    "lint": "./node_modules/.bin/eslint  --ext .js pocket libs",
     "test": "nyc --reporter=html --port=2222 --reporter=text mocha ./test/tests.js --colors --delay"
   },
   "author": "",

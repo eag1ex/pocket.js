@@ -2,8 +2,8 @@
 /**
  * requirejs global event handler
  */
-module.exports = function(uid, debug = null) {
-    return (new function() {
+module.exports = function (uid, debug = null) {
+    return (new function () {
         const plugin = `[dispatcher]`
         this.uid = (uid || '').toString() || new Date().getTime()
         this.debug = debug
@@ -14,7 +14,6 @@ module.exports = function(uid, debug = null) {
             this.Dispatch()
             return this
         }
-
         /**
          * @next
          * send next data to the `batchReady` callback
@@ -36,7 +35,7 @@ module.exports = function(uid, debug = null) {
         this.Dispatch = () => {
             if (this.dispatchInstance[this.uid]) return this
             const self = this
-            const D = function() {
+            const D = function () {
                 this.uid = self.uid
                 this.data = null
 
@@ -48,8 +47,8 @@ module.exports = function(uid, debug = null) {
                          */
                     if ((data || {}).type === 'cb') {
                         if (typeof data.cb === 'function') {
-                        // when calling next before batchReady is initiated
-                        // collect cb from .next
+                            // when calling next before batchReady is initiated
+                            // collect cb from .next
                             if (!self.cbQueue[self.uid]) self.cbQueue[self.uid] = data.cb
                             if (this.data) data.cb(this.data, self.uid)
                         }
@@ -76,7 +75,7 @@ module.exports = function(uid, debug = null) {
             delete this.dispatchInstance[this.uid]
 
             if (!this.cbQueue[this.uid] && !this.dispatchInstance[this.uid]) {
-            // if (this.debug) console.log(`cbQueue and dispatchInstance for uid ${this.uid} deleted`)
+                // if (this.debug) console.log(`cbQueue and dispatchInstance for uid ${this.uid} deleted`)
             }
             return this
         }
@@ -94,8 +93,8 @@ module.exports = function(uid, debug = null) {
                 return this
             }
             if (!this.dispatchInstance[this.uid]) {
-            // this means batchReady was executed prior to `Dispatch`, because it has forward with next
-            // it will get executed anyway
+                // this means batchReady was executed prior to `Dispatch`, because it has forward with next
+                // it will get executed anyway
                 this.Dispatch()
             }
             if (this.dispatchInstance[this.uid]) this.dispatchInstance[this.uid].next({ type: 'cb', cb })
