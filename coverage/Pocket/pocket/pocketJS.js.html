@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.02% </span>
+                <span class="strong">76.97% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>124/161</span>
+                <span class='fraction'>127/165</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">65.52% </span>
+                <span class="strong">65.25% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>76/116</span>
+                <span class='fraction'>77/118</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.84% </span>
+                <span class="strong">90.08% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>115/128</span>
+                <span class='fraction'>118/131</span>
             </div>
         
             
@@ -357,7 +357,12 @@
 <a name='L298'></a><a href='#L298'>298</a>
 <a name='L299'></a><a href='#L299'>299</a>
 <a name='L300'></a><a href='#L300'>300</a>
-<a name='L301'></a><a href='#L301'>301</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -467,6 +472,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -658,7 +668,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-const { isString, warn, log, isNumber, onerror,last,copy } = require('./utils')
+const { isString, warn, log, isNumber, onerror, last, copy } = require('./utils')
 const sq = require('simple-q')  // nice and simple promise/defer by `eaglex.net`
 /**
  * Set new pocket model
@@ -713,14 +723,14 @@ module.exports = (dispatcher) =&gt; {
                 return
             }
             <span class="missing-if-branch" title="if path not taken" >I</span>if (!v) <span class="cstat-no" title="statement not covered" >throw ('id is required')</span>
-            <span class="missing-if-branch" title="if path not taken" >I</span>if(v.split(' ').length&gt;1) <span class="cstat-no" title="statement not covered" >throw ('each id cannot have spaces')</span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (v.split(' ').length &gt; 1) <span class="cstat-no" title="statement not covered" >throw ('each id cannot have spaces')</span>
             <span class="missing-if-branch" title="if path not taken" >I</span>if (v.indexOf(`::`) === -1) <span class="cstat-no" title="statement not covered" >throw ('each id must be of format id::taskName')</span>
             <span class="missing-if-branch" title="if path not taken" >I</span>if (v.indexOf(`:::`) !== -1) <span class="cstat-no" title="statement not covered" >throw ('each id must be of format id::taskName')</span>
-            
+&nbsp;
             // validate chars
             const pat = /[`~!@#$%^&amp;*()\=?;'",.&lt;&gt;\{\}\[\]\\\/]/gi
-            const regx = new RegExp(pat,'gi')
-            <span class="missing-if-branch" title="if path not taken" >I</span>if(regx.test(v)) <span class="cstat-no" title="statement not covered" >throw(`your id is invalid, allowed chars: ${pat}`)</span>
+            const regx = new RegExp(pat, 'gi')
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (regx.test(v)) <span class="cstat-no" title="statement not covered" >throw (`your id is invalid, allowed chars: ${pat}`)</span>
 &nbsp;
             v = v.replace(/ /gi, '_').toLowerCase()
 &nbsp;
@@ -767,6 +777,11 @@ module.exports = (dispatcher) =&gt; {
             }
             <span class="missing-if-branch" title="if path not taken" >I</span>if (v.indexOf("::") !== -1) <span class="cstat-no" title="statement not covered" >throw ('task seperator :: is restricted')</span>
             <span class="missing-if-branch" title="if path not taken" >I</span>if (v.split(' ').length &gt; 1) <span class="cstat-no" title="statement not covered" >throw ('task cannot have spaces, use seperators: _+')</span>
+            const pat = /[`~!@#$%^&amp;*()\=?;'",.&lt;&gt;\{\}\[\]\\\/]/gi
+            const regx = new RegExp(pat, 'gi')
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (regx.test(v)) <span class="cstat-no" title="statement not covered" >throw (`your task is invalid, allowed chars: ${pat}`)</span>
+&nbsp;
+&nbsp;
 &nbsp;
             this._task = v.replace(/ /gi, '_').toLowerCase()// every task must be valid with required 
         }
@@ -842,8 +857,8 @@ module.exports = (dispatcher) =&gt; {
                         if (this._status === 'updated') {
                             <span class="missing-if-branch" title="if path not taken" >I</span>if (this.debug) <span class="cstat-no" title="statement not covered" >warn(`cannot set status back to open once set to updated`)</span>
                             break
-                        }                    
-                        this._status = stat                       
+                        }
+                        this._status = stat
                         this.statusStackOrder[stat].set = true
                         this.onOpenStatus(v) // emit pocket when status opens
                         this.setStatusAsync = stat
@@ -856,7 +871,7 @@ module.exports = (dispatcher) =&gt; {
                         }
 &nbsp;
                         <span class="missing-if-branch" title="else path not taken" >E</span>if (this._dataIndex &gt; 0) {
-                            this._status = stat                           
+                            this._status = stat
                             this.statusStackOrder[stat].set = true
                             this.setStatusAsync = stat
                             <span class="missing-if-branch" title="if path not taken" >I</span>if (this.debug) <span class="cstat-no" title="statement not covered" >log(`id:${this.id}, data updated`)</span>
@@ -865,10 +880,10 @@ module.exports = (dispatcher) =&gt; {
                         break
 &nbsp;
                     case 'complete':
-                        this._status = stat                       
+                        this._status = stat
                         this.statusStackOrder[stat].set = true
                         this.onComplete(v) // resolve pocket when status complete
-                        this.setStatusAsync = stat                     
+                        this.setStatusAsync = stat
                         break
 &nbsp;
                     case 'send':
@@ -876,15 +891,15 @@ module.exports = (dispatcher) =&gt; {
                             <span class="missing-if-branch" title="if path not taken" >I</span>if (this.debug) <span class="cstat-no" title="statement not covered" >warn(`cannot update status to 'send' then previously not set to 'complete'`)</span>
                             break
                         }
-<span class="cstat-no" title="statement not covered" >                        this._status = stat             </span>
+<span class="cstat-no" title="statement not covered" >                        this._status = stat</span>
 <span class="cstat-no" title="statement not covered" >                        this.statusStackOrder[stat].set = true</span>
 <span class="cstat-no" title="statement not covered" >                        this.setStatusAsync = stat</span>
 <span class="cstat-no" title="statement not covered" >                        break</span>
 &nbsp;
                     case 'error':
-                        <span class="missing-if-branch" title="if path not taken" >I</span>if(this._status==='complete') <span class="cstat-no" title="statement not covered" >return</span>
+                        <span class="missing-if-branch" title="if path not taken" >I</span>if (this._status === 'complete') <span class="cstat-no" title="statement not covered" >return</span>
                         // when we have error we need to inform what happen, and close the PocketJS
-                        this._status = stat           
+                        this._status = stat
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
                         this.onComplete(v) // resolve pocket when status complete                     
@@ -896,7 +911,7 @@ module.exports = (dispatcher) =&gt; {
             })(v)
         }
 &nbsp;
-    
+&nbsp;
         /**
          * - works with `statusAsync`
          * - (1.) setter creates our new sq() promise every time, and allows use or resolve 
@@ -964,7 +979,7 @@ module.exports = (dispatcher) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 22 2020 20:17:14 GMT+0700 (Novosibirsk Standard Time)
+                at Fri May 22 2020 21:05:14 GMT+0700 (Novosibirsk Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

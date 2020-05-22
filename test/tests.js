@@ -23,7 +23,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
         // task name and id are required to create new Pocket
         tasks: [{ task: 'required', data: { 'value': 0, type: 'payment' }, }, { task: 'final', data: { 'value': 0, type: 'fee' } }]
     }
-    const asyncData = pc.$payload(Promise.resolve(payloadData))
+    const asyncData = pc.$payload(Promise.resolve(payloadData)).d
     let payloadOK = null
 
     // initialize payload
@@ -86,7 +86,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
                 tasks: [{ task: 'required', data: { 'value': -1, type: 'payment' }, }, { task: 'final', data: { 'value': 0, type: 'fee' } }]
             }
 
-            const payload = pc.$payload(plData, false)
+            const payload = pc.$payload(plData, false).d
 
             it(`$payload(...) cannot not be set over existing tasks`, function (done) {
                 expect(payload).false
@@ -180,7 +180,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
                 //: ${payloadData.id} is send, ready, and disposed, with valid data
                 it(`be ready/resolved`, function (done) {
 
-                    pc.$ready(payloadData.id).then(z => {
+                    pc.$ready(payloadData.id).d.then(z => {
                         expect(z).to.have.lengthOf(2);
                         resolvePromise(z)
                         done()
@@ -212,7 +212,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
             })
         })
         run();
-    }, 1500);
+    }, 100);
     /// end of setTimeout
 })
 
@@ -231,7 +231,7 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
         })
 
         it(`$payload() should fail`, function (done) {
-            expect(pc.$payload(payloadData)).to.be.false;
+            expect(pc.$payload(payloadData).d).to.be.false;
             done()
         })
 
@@ -241,9 +241,9 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
         })
 
         it(`$update() should fail`, function (done) {
-            expect(pc.$update()).to.be.false;
-            expect(pc.$update('1')).to.be.false;
-            expect(pc.$update('1','')).to.be.false;
+            expect(pc.$update().d).to.be.false;
+            expect(pc.$update('1').d).to.be.false;
+            expect(pc.$update('1','').d).to.be.false;
             done()
         })
 
@@ -253,14 +253,14 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
         })
 
         it(`$activeTasks() be empty`, function (done) {
-            expect(pc.$activeTasks()).to.have.lengthOf(0)
+            expect(pc.$activeTasks().d).to.have.lengthOf(0)
             done()
         })   
 
         it(`$ready() promise should fail`, function (done) {
    
-            expect(()=>pc.$ready()).to.throw('payloadID must be set');
-            expect(()=>pc.$ready('wrong')).to.throw('ready[payloadID] is not set, maybe you called it before $payload()');
+            expect(()=>pc.$ready().d).to.throw('payloadID must be set');
+            expect(()=>pc.$ready('wrong').d).to.throw('ready[payloadID] is not set, maybe you called it before $payload()');
             done()
         })   
 
@@ -276,7 +276,7 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
         })
 
         it(`$payload() success`, function (done) {
-            expect(pc.$payload(payloadData)).to.be.true;
+            expect(pc.$payload(payloadData).d).to.be.true;
             done()
         })
 
@@ -301,8 +301,8 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
             })
 
             it(`$activeTasks() display current [2] tasks`, function (done) {
-                expect(pc.$activeTasks()).to.have.lengthOf(2);
-                expect(pc.$activeTasks(payloadData.id)).to.have.lengthOf(2);
+                expect(pc.$activeTasks().d).to.have.lengthOf(2);
+                expect(pc.$activeTasks(payloadData.id).d).to.have.lengthOf(2);
                 done()
             })
 
@@ -315,7 +315,7 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
                 const startValue = pc.$get(`${payloadData.id}::start`).data['value']
                 const endValue = pc.$get(pocketID).data.value
                 const newData = Object.assign({}, pc.$get(pocketID).data, { value: startValue + endValue })
-                pc.$update(pocketID,{ data: Object.assign({}, pc.$get(pocketID).data, newData) })
+                pc.$update(pocketID,{ data: Object.assign({}, pc.$get(pocketID).data, newData) }).d
                 expect(pc.$get(pocketID).data).to.have.property('value').equal(startValue + endValue)
                 done()
             })
@@ -344,7 +344,7 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
                 })
 
                 it(`PocketSet id:'job-one' should be ready`, function (done) {
-                    pc.$ready(payloadData.id).then(z => {
+                    pc.$ready(payloadData.id).d.then(z => {
                         z.forEach((el, i) => {
                             expect(el).to.have.property('data')
                         })

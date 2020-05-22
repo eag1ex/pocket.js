@@ -11,7 +11,7 @@ const data = {
 
 async function init(){
 
-    if (!pc.$payload(data)) {
+    if (!pc.$payload(data).d) {
         console.log(' payload not send')
     } else {
       //  pc.$get('abc123::required').status='error'
@@ -27,7 +27,7 @@ async function init(){
             
         //     pc.$get('abc123::grab').status = 'complete'
         // },2000)
-       console.log('pc activeTasks', pc.$activeTasks())
+       console.log('pc activeTasks', pc.$activeTasks().d)
     }
     
     //setTimeout(()=>{
@@ -37,6 +37,8 @@ async function init(){
     })
 }
 init()
+
+
 function testPocketJS() {
   const PocketJS = require('./pocket/pocketJS')(null)
 
@@ -62,6 +64,5 @@ function testPocketJS() {
   poc.getStatusAsync.then(z=>{
     console.log('getStatusAsync /last',z)
   })
-  
 }
 //testPocketJS()

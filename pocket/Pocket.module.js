@@ -20,7 +20,7 @@ module.exports = () => {
             this.payloadData = {}// each payload by id
             this.lastPocketTimestamp = 0
             this._ready = {} // collect all ready example: `{id:Promise}`
-
+            this.d = undefined // user dynamic value
             if (this.dispatcher) {
                 this.dispatcher.initListener().subscribe(z => {
                     const { pocket, status } = z || {}
@@ -62,12 +62,13 @@ module.exports = () => {
          * - `call distributor and setDefer`
          */
         $payload(data = {}, async) {
+            this.d = null
             // validate payload format
             if (!isObject(data)) return false
             const keys = Object.keys(data)
             // must match all keys
             if (keys.every(el => ['id', 'tasks'].indexOf(el) === -1)) return false
-            if (!isArray(data['tasks'])) return false
+            if (!isArray(data['tasks']))  return false
             // make sure our id's all are lowercase
             data.id = validID(data.id)
             if (!data.id) return false
@@ -116,9 +117,15 @@ module.exports = () => {
          * @param {*} pocketID 
          */
         $pocketStatusAsync(pocketID){
+
+            const returnAs = (val)=>{
+                this.d = val
+                return this
+            }
+
             pocketID = this.validPocket(pocketID)
-            if(!pocketID) return null
-            return this.pocket[pocketID].getStatusAsync
+            if(!pocketID) return returnAs(null)
+            return returnAs(this.pocket[pocketID].getStatusAsync)
         }
 
         /**
@@ -131,19 +138,23 @@ module.exports = () => {
         $update(pocketID, dataFrom, mergeData = null) {
             let id = this.validPocket(pocketID)
 
+            const returnAs = (val)=>{
+                this.d = val
+                return this
+            }
             if (!id) {
                 if (this.debug) onerror(`[$update] must specify id`)
-                return false
+                return returnAs(false)
             }
 
             if (!isObject(dataFrom)) {
                 if (this.debug) warn(`[$update] dataFrom must be an `)
-                return false
+                return returnAs(false)
             }
 
             if (!this.pocket[id]) {
                 if (this.debug) onerror(`[$update] this.pocket with id:${id} not found`)
-                return false
+                return returnAs(false)
             }
 
             let updated = false
@@ -171,7 +182,7 @@ module.exports = () => {
                 }
             }
 
-            return updated
+            return returnAs(updated)
         }
 
         /**
@@ -180,12 +191,18 @@ module.exports = () => {
          * @param {*} payloadID optional, when set will only filter thru given job id (NOT Pocket ID!)
          */
         $activeTasks(payloadID = null) {
-            if (!Object.entries(this.pocket).length) return []
-            return Object.entries(this.pocket).reduce((n, [pocketID, pocket]) => {
+
+            const returnAs = (val)=>{
+                this.d = val
+                return this
+            }
+            if (!Object.entries(this.pocket).length) return returnAs([])
+            let tasks = Object.entries(this.pocket).reduce((n, [pocketID, pocket]) => {
                 if (pocketID.indexOf(payloadID || '') === 0 && payloadID && this.payloadData[payloadID]) n.push(pocket['task'])
                 else if (!payloadID) n.push(pocket['task'])
                 return n
             }, [])
+            return returnAs(tasks)
         }
 
         /**
@@ -195,6 +212,7 @@ module.exports = () => {
          * @param {*} payloadID `required`
          */
         $ready(payloadID) {
+            this.d = null
             payloadID = validID(payloadID)
 
             if (!payloadID) throw (`payloadID must be set`)
@@ -393,21 +411,33 @@ module.exports = () => {
          * - extend payload async data handling
          */
         $payload(data, async) {
+            const returnAs = (val)=>{
+                this.d = val
+                return this
+            }
             const asAsync = async !== undefined ? async : this.async // override if set
-            if (asAsync && isPromise(data)) return data.then(z => super.$payload(z), err => err)
-            if (!this.async && !isPromise(data)) return super.$payload(data)
+            if (asAsync && isPromise(data)) return returnAs(data.then(z => super.$payload(z), err => err))
+            if (!this.async && !isPromise(data)) return returnAs(super.$payload(data))
             else {
                 if (this.debug) onerror(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
-                if (asAsync) return Promise.reject()
-                else return false
+                if (asAsync) return returnAs(Promise.reject())
+                else return returnAs(false)
             }
         }
 
         $ready(payloadID) {
-            return super.$ready(payloadID).then(z => {
+
+            const returnAs = (val)=>{
+                this.d = val
+                return this
+            }
+
+           const p = super.$ready(payloadID).then(z => {
                 this.deletePocketSet(payloadID)
                 return z
             }, err => Promise.reject(err))
+
+           return returnAs(p) 
         }
     }
 }

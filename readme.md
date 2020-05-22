@@ -22,10 +22,11 @@
 * Re/Distribution of data/scheduled assignments
 * Data status management
 * Creative flexibility - *make your work easy and justifiable*
+* Easy to use, user friendly, chaining methology
 
 #### Stack
 
-* Node.js, ES6, JavaScript, data-management, state/management, Promise, prototyping, Istanbul/nyc, Eslint, Mocha/Chai, Custom Utils, debug/error exception handling, user/friendly logging.
+* Node.js, ES6, JavaScript, data-management, state/management, Promise, prototyping, class chaining, Istanbul/nyc, Eslint, Mocha/Chai, Custom Utils, debug/error exception handling, user/friendly logging.
 
 
 #### About the code:
@@ -61,11 +62,11 @@ Working examples can be found at `'./samples/**`
 
 
 #### PocketModule methods:
-- **$payload( data ):Boolean** : top level method to initiate requested tasks, returns true when succesfull, and false on error.
+- **$payload( data ).d:Boolean** : top level method to initiate requested tasks, returns true when succesfull, and false on error.
     - `data.id:String`: payload id that identifies this payload
     - `data.tasks:Array[]`: specifies required format of tasks to perform. Specifications for this can be found in `./example.js` and in `./samples/**`
 
-- **$pocketStatusAsync( pocketID )** : returns last status changed via sync method, the promise is reset everytime new status is updated, so it can be called many times, returns status name
+- **$pocketStatusAsync( pocketID ).d:promise** : returns last status changed via sync method, the promise is reset everytime new status is updated, so it can be called many times, returns status name
     - `pocketID`: must provide pocketID example: `${payloadID}::${task}`, for the status
 
 - **Pocket.getStatusAsync** : same as ^^above^^, the method can be on each Pocket/tast instance, good for checking latest status in question, where its needed :) 
@@ -74,20 +75,19 @@ Working examples can be found at `'./samples/**`
     - `pocketID:String`: provided format must be, example: `${payloadID}::${task}`
 
 
-- **$update(pocketID, dataFrom, mergeData):Boolean** : will select currently available Pocket/tast by `id`, and update its data, only available fields found on Pocket cen be updated according to setter/getter requirements 
+- **$update(pocketID, dataFrom, mergeData).d:Boolean** : will select currently available Pocket/tast by `id`, and update its data, only available fields found on Pocket cen be updated according to setter/getter requirements 
     - `pocketID:String`: required PocketID, each pocket `pocketID` makes up this format: `${payload.id}::${task}`, dynamicly created uppon `$payload(..)===true`
     - `dataFrom:{}`: format of `dataFrom` and avaialble fields example: `dataFrom:{data:'some cola', compaign:'cocacola',status:'complete'}`, will perform an update on Pocket[id][data],Pocket[id][compaign], etc. Validation is sensitive.
     - `mergeData`: when specified and `dataFrom.data` field is set,  will merge both
 
 
-- **$activeTasks( payloadID ):Array**: returns an `array['taskA','tastB']` of current job payload, will only be available before `$ready(..)` is resolved, and before PocketSet tasks are completed.
+- **$activeTasks( payloadID ).d:Array**: returns an `array['taskA','tastB']` of current job payload, will only be available before `$ready(..)` is resolved, and before PocketSet tasks are completed.
 
 
-- **$ready(payloadID):Promise**: last calling method, when all your `PocketSet` tasks have been completed, example: `Pocket[id][status]='complete'` only then, it will resolve(), otherwise pending Pocket/tasks will remain and `$ready()` will expire, this is the desired effect, most logical behaviour.
+- **$ready(payloadID).d:Promise**: last calling method, when all your `PocketSet` tasks have been completed, example: `Pocket[id][status]='complete'` only then, it will resolve(), otherwise pending Pocket/tasks will remain and `$ready()` will expire, this is the desired effect, most logical behaviour.
 
 - *Final note: All user/interaction methods are prefixed with '$'*
-
-
+- *Note: Most user $methods require `...).d` for access to values, to allows chaining*
 
 
 #### Start / Examples

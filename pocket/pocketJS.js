@@ -108,6 +108,11 @@ module.exports = (dispatcher) => {
             }
             if (v.indexOf("::") !== -1) throw ('task seperator :: is restricted')
             if (v.split(' ').length > 1) throw ('task cannot have spaces, use seperators: _+')
+            const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
+            const regx = new RegExp(pat, 'gi')
+            if (regx.test(v)) throw (`your task is invalid, allowed chars: ${pat}`)
+
+
 
             this._task = v.replace(/ /gi, '_').toLowerCase()// every task must be valid with required 
         }

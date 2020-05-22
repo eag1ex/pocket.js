@@ -5,11 +5,11 @@ const DEBUG = true
 
 const pk = new Pocket({ async: false, dispatcher: false }, DEBUG)
 const data = {
-    id: 'worldjobone', // sensitive
+    id: 'new-world-order', // sensitive
     tasks: [
-        { task: 'china', data: { 'assets': 1, type: 'trillion' }, compaign: 'Donation' },
-        { task: 'covid19', data: { 'assets': 100, type: 'million', message: 'in damages' }, compaign: 'Vaccine' },
-        { task: 'world', data: { 'assets': 0 }, compaign: 'Justice' }]
+        { task: 'china', data: { 'assets': 1, type: 'trillion', message:'profits from covid-19' }, compaign: 'Dominance' },
+        { task: 'covid19', data: { 'assets': 500, type: 'billions', message: 'in damages' }, compaign: 'Vaccine' },
+        { task: 'world', data: { 'assets': 500, type:'billions', message:'in damages' }, compaign: 'Claim' }]
 }
 
 if (!pk.$payload(data)) log('payload not send')
@@ -29,3 +29,4 @@ else {
 
 pk.$ready('abc123').then(z => {
     console.log('pocketSet [abc123] ready', z)
+})
