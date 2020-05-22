@@ -221,7 +221,7 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
     const pc = new Pocket({ async: false, dispatcher:true }, DEBUG)
     let payloadData = null
 
-    describe(`should not set $payload() with missing id, or any new Pocket, and`, function () {
+    describe(`should fail executing user $methods`, function () {
 
         before(async function () {
             return payloadData = {
@@ -246,6 +246,24 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
             expect(pc.$update('1','')).to.be.false;
             done()
         })
+
+        it(`$get() should fail`, function (done) {
+            expect(pc.$get()).to.be.null;
+            done()
+        })
+
+        it(`$activeTasks() be empty`, function (done) {
+            expect(pc.$activeTasks()).to.have.lengthOf(0)
+            done()
+        })   
+
+        it(`$ready() promise should fail`, function (done) {
+   
+            expect(()=>pc.$ready()).to.throw('payloadID must be set');
+            expect(()=>pc.$ready('wrong')).to.throw('ready[payloadID] is not set, maybe you called it before $payload()');
+            done()
+        })   
+
     })
 
 
@@ -336,5 +354,75 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
                 })
             })
         })
+    })
+})
+
+/**
+
+         * @param {*} opts.id required, case sensitive, all will be toLowerCase() 
+         * @param {*} opts.task once set cannot be changed
+         * @param {*} opts.compaign optional, once set cannot be changed
+         * @param {*} opts.data optional any value except undefind, cannot be change once status set to `complete` or send
+         * @param {*} opts.status required to control Pocket actions
+         * @param {*} debug 
+       
+ */
+
+// NOTE test `pocketJS.js intependantly, outside PocketModule, for all states`
+describe(`Independant new PocketJS({}) tests`, function () {
+
+    const PocketJS = require('../pocket/pocketJS')(false)
+    const config = {
+        id: 'cocacola::drink',
+        task: 'drink',
+        data: { order: 10, value: 0 },
+        compaign: 'charity'
+    }
+
+    const poc = new PocketJS(config)
+
+    describe(`PocketJS/id: ${config.id} should:`,function(){
+        it(`fail to change compaign name`,function(done){
+            poc.compaign = 'Donald Trump'
+            expect(poc.compaign).not.equal(`Donald Trump`)
+            done()
+        })
+
+        it(`fail to change id`,function(done){
+            poc.id = 'cocacola::drink'
+            expect(poc.compaign).not.equal(`Donald Trump`)
+            done()
+        })
+
+        it(`fail to change id`,function(done){
+            poc.id = 'cocacola::drink'
+            expect(poc.compaign).not.equal(`Donald Trump`)
+            done()
+        })
+
+        it(`status should change to 'updated when data is updated again'`,function(done){
+            poc.data = { order: 50, value: 0 }
+            expect(poc.status).equal(`updated`)
+            done()
+        })
+
+        it(`status should change to 'complete => send'`,function(done){
+
+            poc.status = 'complete'
+            poc.getStatusAsync.then(z => {
+                expect(poc.status === z && z === 'send' ? 'send' : poc.status).equal(`send`)
+                done()
+            })
+        })
+
+        it(`status not change any status once complete/send`,function(done){
+            poc.status = 'open'
+            expect(poc.status).equal(`send`)
+            poc.status = 'updated'
+            expect(poc.status).equal(`send`)
+            poc.status = 'error'
+            expect(poc.status).equal(`send`)
+            done()
+        })  
     })
 })

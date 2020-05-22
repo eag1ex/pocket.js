@@ -56,6 +56,10 @@
     - `data.id:String`: payload id that identifies this payload
     - `data.tasks:Array[]`: specifies required format of tasks to perform. Specifications for this can be found in `./example.js` and in `./samples/**`
 
+- **$pocketStatusAsync( pocketID )** : returns last status changed via sync method, the promise is reset everytime new status is updated, so it can be called many times, returns status name
+    - `pocketID`: must provide pocketID example: `${payloadID}::${task}`, for the status
+
+- **Pocket.getStatusAsync** : same as ^^above^^, the method can be on each Pocket/tast instance, good for checking latest status in question, where its needed :) 
 
 - **$get( pocketID ):Pocket**: will return an active instance of your Pocket/task => `$get(pocketID).status='complete'`, you can also use it instead of `$update()`
     - `pocketID:String`: provided format must be, example: `${payloadID}::${task}`

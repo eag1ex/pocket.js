@@ -1,8 +1,8 @@
 module.exports = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
     const { log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
-    const sq = require('simple-q')
-    const newPocket = require('./pocket')
+    const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
+    const newPocketJS = require('./pocketJS')
 
     class PocketModule {
         /**
@@ -104,15 +104,21 @@ module.exports = () => {
           * @param {*} pocketID required, example format: `${payload.id}::taskName`
          */
         $get(pocketID) {
-            pocketID = validID(pocketID)
+            pocketID = this.validPocket(pocketID)
             if (!pocketID) return null
 
-            if (!this.pocket[pocketID]) {
-                if (this.debug) warn(`[get] did not find pocket with pocketID ${id}`)
-                return null
-            }
-            if (pocketID.indexOf(`::`) === -1) return null
             return this.pocket[pocketID]
+        }
+
+        /**
+         * ### $pocketStatusAsync
+         * - return last pocket status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
+         * @param {*} pocketID 
+         */
+        $pocketStatusAsync(pocketID){
+            pocketID = this.validPocket(pocketID)
+            if(!pocketID) return null
+            return this.pocket[pocketID].getStatusAsync
         }
 
         /**
@@ -123,7 +129,7 @@ module.exports = () => {
          * @prop {*} mergeData optional if `true` will merge: `Object.assing({},pocket[id].data,mergeData['data'])`
          */
         $update(pocketID, dataFrom, mergeData = null) {
-           let id = validID(pocketID)
+            let id = this.validPocket(pocketID)
 
             if (!id) {
                 if (this.debug) onerror(`[$update] must specify id`)
@@ -140,32 +146,25 @@ module.exports = () => {
                 return false
             }
 
-            const propsObj = this.pocketProps.reduce((n, el) => {
-                n[el] = true
-                return n
-            }, {})
-
             let updated = false
-            for (let key in dataFrom) {
-                if ((key !== 'id' && key !== 'task') &&
-                    propsObj[key] &&
-                    this.pocket[id][key] !== undefined &&
-                    dataFrom[key] !== undefined
-                ) {
-                    if (key === 'data') {
-                        // NOTE only can update : `data, status`
-                        if (mergeData === true) {
-                            this.pocket[id][key] = Object.assign({}, this.pocket[id][key], dataFrom[key])
-                            updated = true
-                        } else {
-                            this.pocket[id][key] = dataFrom[key]
-                            updated = true
-                        }
-                    } else {                      
-                        this.pocket[id][key] = dataFrom[key]
-                        updated = true
-                    }
 
+            // reorder dataFrom, make sure if `status` exists, it is shifted to last position, so the Pocket doent change state before other values got chance to do so, nice!
+
+            // we need to convert dataFrom{} to dataFrom[]>array to achieve this
+            dataFrom = Object.entries(dataFrom).reduce((n, [key, value]) => {
+                const pos = this.pocketProps.indexOf(key)  // new order
+                if (this.pocketProps[pos] === key) n.push({ inx: pos, data: { [key]: value } })
+                return n
+            }, [])
+
+            for (let inx = 0; inx < dataFrom.length; inx++) {
+                if ((dataFrom[inx] || {})['data'] === undefined) continue
+                const [key, value] = Object.entries(dataFrom[inx]['data'])[0]
+                if ((key !== 'id' && key !== 'task') && this.pocket[id][key] !== undefined) {
+                    if (key === 'data') {
+                        if (mergeData === true) this.pocket[id][key] = Object.assign({}, this.pocket[id][key], value)
+                        else this.pocket[id][key] = value
+                    } else this.pocket[id][key] = value
                     continue
                 } else {
                     if (this.debug) warn(`[$update] not a valid propName: ${key}`)
@@ -210,9 +209,32 @@ module.exports = () => {
         //   :::::: E N D : :  :   :    :     :        :          
         // ──────────────────────────────────────────────────────
 
-        // each pocket props that can be available and send on ready
+        /**
+         * ### validPocket
+         * - returns a valid pocket
+         * @param {*} pocketID required
+         */
+        validPocket(pocketID){
+            pocketID = validID(pocketID)
+            if (!pocketID) return null
+
+            if (!this.pocket[pocketID]) {
+                if (this.debug) warn(`[get] did not find pocket with pocketID ${id}`)
+                return null
+            }
+            if (pocketID.indexOf(`::`) === -1) return null
+            return pocketID
+        }
+
+
+        /**
+         * ### pocketProps
+         * - `each pocket props that can be available and send on ready`
+         * - `order is important, keep 'status' last`
+         * - only updatable props are: `'compaign', 'data', 'status'(limited)`
+         */
         get pocketProps() {
-            return ['compaign', 'data', 'status', 'id', 'task']
+            return ['compaign', 'data', 'task', 'id', 'status']  
         }
 
         /**
@@ -329,7 +351,7 @@ module.exports = () => {
          * - `Pocket` is resolved once `sq.resolve()` is called, sq => `Simple Q` our plugin
          */
         get Pocket() {
-            return newPocket(this)
+            return newPocketJS(this)
         }
 
         /**
@@ -380,7 +402,7 @@ module.exports = () => {
                 else return false
             }
         }
-        
+
         $ready(payloadID) {
             return super.$ready(payloadID).then(z => {
                 this.deletePocketSet(payloadID)

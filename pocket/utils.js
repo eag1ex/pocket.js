@@ -6,9 +6,9 @@ const color = require('bash-color')
  * my own lodash/like `Utils`
  */
 
-/**
-* make class copy by refs[...]
-*/
+
+
+exports.last = (arr)=> (arr && Array.prototype === (arr).__proto__) ? arr[arr.length-1]:null,
 exports.copyBy = (obj, refs) => refs.reduce((n, el, i) => {
     if (obj[el] !== undefined) n[el] = obj[el]
     return n
