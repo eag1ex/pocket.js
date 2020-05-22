@@ -6,8 +6,8 @@ const chai = require('chai');
 const expect = chai.expect;
 
 // asset
-// const { log } = require('../pocket/utils')
-const Pocket = require('../index')()
+// const { log } = require('../Pocket/utils')
+const Pocket = require('../index').pocket()
 const DEBUG = false
 
 // help: https://mochajs.org/
@@ -16,11 +16,11 @@ const DEBUG = false
 
 describe('PocketSet/asyncData should succeed with tasks: [required, final]', function () {
 
-    const pc = new Pocket({ async: true}, DEBUG)
+    const pc = new Pocket({ async: true }, DEBUG)
     const payloadData = {
         id: 'job-two',
-        // NOTE each task is a pocket
-        // task name and id are required to create new Pocket
+        // NOTE each task is a probe
+        // task name and id are required to create new Probe
         tasks: [{ task: 'required', data: { 'value': 0, type: 'payment' }, }, { task: 'final', data: { 'value': 0, type: 'fee' } }]
     }
     const asyncData = pc.$payload(Promise.resolve(payloadData)).d
@@ -56,21 +56,21 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
 
             for (let i = 0; i < tasks.length; i++) {
                 const task = tasks[i].task
-                const pocketID = `${job}::${task}`
-                const pocket = pc.$get(pocketID)
+                const probeID = `${job}::${task}`
+                const probe = pc.$get(probeID)
 
                 it(`task: ${task}, status 'open', ok`, function (done) {
-                    assert.equal(pocket.status, 'open')
-                    expect(pc.$get(pocketID).data).not.equal(null)
+                    assert.equal(probe.status, 'open')
+                    expect(pc.$get(probeID).data).not.equal(null)
                     done()
                 })
 
                 it(`task: ${task}, should update status`, function (done) {
-                    pocket.data = {
+                    probe.data = {
                         'value': 10000,
                         'fee': 500
                     }
-                    expect(pc.$get(pocketID).status).equal('updated')
+                    expect(pc.$get(probeID).status).equal('updated')
                     done()
                 })
             }
@@ -81,8 +81,8 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
 
             const plData = {
                 id: 'job-two',
-                // NOTE each task is a pocket
-                // task name and id are required to create new Pocket
+                // NOTE each task is a probe
+                // task name and id are required to create new Probe
                 tasks: [{ task: 'required', data: { 'value': -1, type: 'payment' }, }, { task: 'final', data: { 'value': 0, type: 'fee' } }]
             }
 
@@ -95,55 +95,55 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
 
             for (let i = 0; i < plData.tasks.length; i++) {
                 const item = plData.tasks[i]
-                const pocketID = `${plData.id}::${item.task}`
+                const probeID = `${plData.id}::${item.task}`
 
-                it(`Pocket/task: '${pocketID}' id cannot be changed`, function (done) {
-                    pc.$get(pocketID).id = 'wrong'
-                    expect(pc.pocket[pocketID].id).not.equal('wrong')
+                it(`Probe/task: '${probeID}' id cannot be changed`, function (done) {
+                    pc.$get(probeID).id = 'wrong'
+                    expect(pc.pocket[probeID].id).not.equal('wrong')
                     done()
                 })
 
-                it(`Pocket/task: '${pocketID}' status cannot be set to 'open'`, function (done) {
-                    pc.$get(pocketID).status = 'open'
-                    expect(pc.pocket[pocketID].status).not.equal('open')
+                it(`Probe/task: '${probeID}' status cannot be set to 'open'`, function (done) {
+                    pc.$get(probeID).status = 'open'
+                    expect(pc.pocket[probeID].status).not.equal('open')
                     done()
                 })
 
-                it(`Pocket/task: '${pocketID}' status cannot be set to 'send' directly`, function (done) {
-                    pc.$get(pocketID).status = 'send'
-                    expect(pc.pocket[pocketID].status).not.equal('send')
+                it(`Probe/task: '${probeID}' status cannot be set to 'send' directly`, function (done) {
+                    pc.$get(probeID).status = 'send'
+                    expect(pc.pocket[probeID].status).not.equal('send')
                     done()
                 })
 
-                it(`Pocket/task: '${pocketID}' task cannot be changed`, function (done) {
-                    pc.$get(pocketID).task = 'wrong'
-                    expect(pc.pocket[pocketID].task).not.equal('wrong')
+                it(`Probe/task: '${probeID}' task cannot be changed`, function (done) {
+                    pc.$get(probeID).task = 'wrong'
+                    expect(pc.pocket[probeID].task).not.equal('wrong')
                     done()
                 })
             }
         })
 
-        describe(`Pocket/task should not update 'data' if status is set to 'complete'`, function () {
+        describe(`Probe/task should not update 'data' if status is set to 'complete'`, function () {
 
             const tasks = payloadData.tasks
             const job = payloadData.id
 
             it(`first pocket: ${tasks[0].task} should set status to 'error' and complete/send`, function (done) {
-                const pocketID = `${job}::${tasks[0].task}`
-                const pocket = pc.$get(pocketID)
-                pocket.status = 'error'
-                expect(pc.pocket[pocketID].status).equal('send')
+                const probeID = `${job}::${tasks[0].task}`
+                const probe = pc.$get(probeID)
+                probe.status = 'error'
+                expect(pc.pocket[probeID].status).equal('send')
                 done()
             })
 
             for (let i = 0; i < tasks.length; i++) {
                 const task = tasks[i].task
-                const pocketID = `${job}::${task}`
-                const pocket = pc.$get(pocketID)
-                it(`pocket: ${pocketID} 'data' not updated`, function (done) {
-                    pocket.status = 'complete'
-                    pocket.data = false
-                    expect(pc.pocket[pocketID].data).not.equal(false)
+                const probeID = `${job}::${task}`
+                const probe = pc.$get(probeID)
+                it(`pocket: ${probeID} 'data' not updated`, function (done) {
+                    probe.status = 'complete'
+                    probe.data = false
+                    expect(pc.pocket[probeID].data).not.equal(false)
                     done()
                 })
             }
@@ -155,17 +155,17 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
 
             for (let i = 0; i < tasks.length; i++) {
                 const task = tasks[i].task
-                const pocketID = `${job}::${task}`
-                const pocket = pc.$get(pocketID)
+                const probeID = `${job}::${task}`
+                const probe = pc.$get(probeID)
 
-                it(`pocket: ${pocketID} from complete to 'send'`, function (done) {
-                    pocket.status = 'complete'
-                    expect(pc.$get(pocketID).status).equal('send')
+                it(`pocket: ${probeID} from complete to 'send'`, function (done) {
+                    probe.status = 'complete'
+                    expect(pc.$get(probeID).status).equal('send')
                     done()
                 })
             }
 
-            describe(`Pocket/task in PocketSet id: '${payloadData.id}', should:`, function () {
+            describe(`Probe/task in PocketSet id: '${payloadData.id}', should:`, function () {
                 let resolvePromise = null
                 let rejectPromise = null
 
@@ -201,7 +201,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
                     }, done)
                 })
 
-                it(`each Pocket instance should already be disposed`, function (done) {
+                it(`each Probe instance should already be disposed`, function (done) {
                     readyData.then(z => {
                         z.forEach((el, inx) => {
                             expect(pc.pocket[el.id]).undefined
@@ -218,7 +218,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
 
 describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
 
-    const pc = new Pocket({ async: false, dispatcher:true }, DEBUG)
+    const pc = new Pocket({ async: false, dispatcher: true }, DEBUG)
     let payloadData = null
 
     describe(`should fail executing user $methods`, function () {
@@ -243,7 +243,7 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
         it(`$update() should fail`, function (done) {
             expect(pc.$update().d).to.be.false;
             expect(pc.$update('1').d).to.be.false;
-            expect(pc.$update('1','').d).to.be.false;
+            expect(pc.$update('1', '').d).to.be.false;
             done()
         })
 
@@ -255,14 +255,14 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
         it(`$activeTasks() be empty`, function (done) {
             expect(pc.$activeTasks().d).to.have.lengthOf(0)
             done()
-        })   
+        })
 
         it(`$ready() promise should fail`, function (done) {
-   
-            expect(()=>pc.$ready().d).to.throw('payloadID must be set');
-            expect(()=>pc.$ready('wrong').d).to.throw('ready[payloadID] is not set, maybe you called it before $payload()');
+
+            expect(() => pc.$ready().d).to.throw('payloadID must be set');
+            expect(() => pc.$ready('wrong').d).to.throw('ready[payloadID] is not set, maybe you called it before $payload()');
             done()
-        })   
+        })
 
     })
 
@@ -287,16 +287,16 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
 
         describe(`Pocket/task 'start' should:`, function () {
             it(`add value '5000'`, function (done) {
-                const pocketID = `${payloadData.id}::start`
-                pc.$get(pocketID).data = Object.assign({}, pc.$get(pocketID).data, { value: 5000 })
-                expect(pc.$get(pocketID).data).to.have.property('value')
-                expect(pc.$get(pocketID).data['value']).to.equal(5000);
+                const probeID = `${payloadData.id}::start`
+                pc.$get(probeID).data = Object.assign({}, pc.$get(probeID).data, { value: 5000 })
+                expect(pc.$get(probeID).data).to.have.property('value')
+                expect(pc.$get(probeID).data['value']).to.equal(5000);
                 done()
             })
 
             it(`change status to updated`, function (done) {
-                const pocketID = `${payloadData.id}::start`
-                expect(pc.$get(pocketID).status).to.equal('updated')
+                const probeID = `${payloadData.id}::start`
+                expect(pc.$get(probeID).status).to.equal('updated')
                 done()
             })
 
@@ -311,35 +311,35 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
         describe(`Pocket/task 'end' should:`, function () {
             it(`combine values from Pocket/task 'start'`, function (done) {
                 // initial payload data
-                const pocketID = `${payloadData.id}::end`
+                const probeID = `${payloadData.id}::end`
                 const startValue = pc.$get(`${payloadData.id}::start`).data['value']
-                const endValue = pc.$get(pocketID).data.value
-                const newData = Object.assign({}, pc.$get(pocketID).data, { value: startValue + endValue })
-                pc.$update(pocketID,{ data: Object.assign({}, pc.$get(pocketID).data, newData) }).d
-                expect(pc.$get(pocketID).data).to.have.property('value').equal(startValue + endValue)
+                const endValue = pc.$get(probeID).data.value
+                const newData = Object.assign({}, pc.$get(probeID).data, { value: startValue + endValue })
+                pc.$update(probeID, { data: Object.assign({}, pc.$get(probeID).data, newData) }).d
+                expect(pc.$get(probeID).data).to.have.property('value').equal(startValue + endValue)
                 done()
             })
 
             it(`have status: 'updated'`, function (done) {
-                const pocketID = `${payloadData.id}::end`
-                expect(pc.$get(pocketID).status).to.equal('updated')
+                const probeID = `${payloadData.id}::end`
+                expect(pc.$get(probeID).status).to.equal('updated')
                 done()
             })
         })
 
-        describe(`both Pocket/tasks [start,end] should`, function () {
+        describe(`both Probe/tasks [start,end] should`, function () {
             describe(`complete => send => ready`, function () {
                 it(`task 'start'`, function (done) {
-                    const pocketID = `${payloadData.id}::start`
-                    pc.$get(pocketID).status = 'complete'
-                    expect(pc.$get(pocketID).status).to.equal('send')
+                    const probeID = `${payloadData.id}::start`
+                    pc.$get(probeID).status = 'complete'
+                    expect(pc.$get(probeID).status).to.equal('send')
                     done()
                 })
 
                 it(`task 'end'`, function (done) {
-                    const pocketID = `${payloadData.id}::end`
-                    pc.$get(pocketID).status = 'complete'
-                    expect(pc.$get(pocketID).status).to.equal('send')
+                    const probeID = `${payloadData.id}::end`
+                    pc.$get(probeID).status = 'complete'
+                    expect(pc.$get(probeID).status).to.equal('send')
                     done()
                 })
 
@@ -357,21 +357,11 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
     })
 })
 
-/**
 
-         * @param {*} opts.id required, case sensitive, all will be toLowerCase() 
-         * @param {*} opts.task once set cannot be changed
-         * @param {*} opts.compaign optional, once set cannot be changed
-         * @param {*} opts.data optional any value except undefind, cannot be change once status set to `complete` or send
-         * @param {*} opts.status required to control Pocket actions
-         * @param {*} debug 
-       
- */
+// NOTE test `Probe.js intependantly, outside PocketModule, for all states`
+describe(`Independant new Probe({}) tests`, function () {
 
-// NOTE test `pocketJS.js intependantly, outside PocketModule, for all states`
-describe(`Independant new PocketJS({}) tests`, function () {
-
-    const PocketJS = require('../pocket/pocketJS')(false)
+    const Probe = require('../index').probe(false)
     const config = {
         id: 'cocacola::drink',
         task: 'drink',
@@ -379,50 +369,50 @@ describe(`Independant new PocketJS({}) tests`, function () {
         compaign: 'charity'
     }
 
-    const poc = new PocketJS(config)
+    const prob = new Probe(config)
 
-    describe(`PocketJS/id: ${config.id} should:`,function(){
-        it(`fail to change compaign name`,function(done){
-            poc.compaign = 'Donald Trump'
-            expect(poc.compaign).not.equal(`Donald Trump`)
+    describe(`Probe/id: ${config.id} should:`, function () {
+        it(`fail to change compaign name`, function (done) {
+            prob.compaign = 'Donald Trump'
+            expect(prob.compaign).not.equal(`Donald Trump`)
             done()
         })
 
-        it(`fail to change id`,function(done){
-            poc.id = 'cocacola::drink'
-            expect(poc.compaign).not.equal(`Donald Trump`)
+        it(`fail to change id`, function (done) {
+            prob.id = 'cocacola::drink'
+            expect(prob.compaign).not.equal(`Donald Trump`)
             done()
         })
 
-        it(`fail to change id`,function(done){
-            poc.id = 'cocacola::drink'
-            expect(poc.compaign).not.equal(`Donald Trump`)
+        it(`fail to change id`, function (done) {
+            prob.id = 'cocacola::drink'
+            expect(prob.compaign).not.equal(`Donald Trump`)
             done()
         })
 
-        it(`status should change to 'updated when data is updated again'`,function(done){
-            poc.data = { order: 50, value: 0 }
-            expect(poc.status).equal(`updated`)
+        it(`status should change to 'updated when data is updated again'`, function (done) {
+            prob.data = { order: 50, value: 0 }
+            expect(prob.status).equal(`updated`)
             done()
         })
 
-        it(`status should change to 'complete => send'`,function(done){
+        it(`status should change to 'complete => send'`, function (done) {
 
-            poc.status = 'complete'
-            poc.getStatusAsync.then(z => {
-                expect(poc.status === z && z === 'send' ? 'send' : poc.status).equal(`send`)
+            prob.status = 'complete'
+            prob.getStatusAsync.then(z => {
+                expect(prob.status === z && z === 'send' ? 'send' : prob.status).equal(`send`)
                 done()
             })
         })
 
-        it(`status not change any status once complete/send`,function(done){
-            poc.status = 'open'
-            expect(poc.status).equal(`send`)
-            poc.status = 'updated'
-            expect(poc.status).equal(`send`)
-            poc.status = 'error'
-            expect(poc.status).equal(`send`)
+        it(`status not change any status once complete/send`, function (done) {
+            prob.status = 'open'
+            expect(prob.status).equal(`send`)
+            prob.status = 'updated'
+            expect(prob.status).equal(`send`)
+            prob.status = 'error'
+            expect(prob.status).equal(`send`)
             done()
-        })  
+        })
     })
 })

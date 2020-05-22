@@ -5,7 +5,7 @@ const pc = new Pocket({async:false,dispatcher:false}, DEBUG)
 const data = {
     id: 'abc123',
     // NOTE each task is a pocket
-    // PocketSet[] => task name and id are required to create new Pocket
+    // PocketSet[] => task name and id are required to create new Probe
     tasks: [{ task: 'required', data: { 'value': 'lala' } }, { task: 'grab', data: { 'value': 'lala' } }]
 }
 
@@ -39,8 +39,8 @@ async function init(){
 init()
 
 
-function testPocketJS() {
-  const PocketJS = require('./pocket/pocketJS')(null)
+function testProbe() {
+  const Probe = require('./pocket/probe')(null)
 
   const config = {
     id: 'cocacola::drink',
@@ -48,21 +48,21 @@ function testPocketJS() {
     data: { order: 10, value: 0 },
     compaign: 'charity'
   }
-  const poc = new PocketJS(config)
-  poc.getStatusAsync.then(z=>{
+  const prob = new Probe(config)
+  prob.getStatusAsync.then(z=>{
     console.log('getStatusAsync',z)
   })
-  poc['data']={ order: 20, value: 0 }
+  prob['data']={ order: 20, value: 0 }
 
-  poc.getStatusAsync.then(z=>{
+  prob.getStatusAsync.then(z=>{
     console.log('getStatusAsync',z)
   })
   //setTimeout(()=>{
-    poc['status']='complete'
+    prob['status']='complete'
   //},1000)
   
-  poc.getStatusAsync.then(z=>{
+  prob.getStatusAsync.then(z=>{
     console.log('getStatusAsync /last',z)
   })
 }
-//testPocketJS()
+//testProbe()

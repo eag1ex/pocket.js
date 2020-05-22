@@ -2,7 +2,7 @@ module.exports = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
     const { log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
-    const newPocketJS = require('./pocketJS')
+    const newProbe = require('./Probe')
 
     class PocketModule {
         /**
@@ -13,30 +13,32 @@ module.exports = () => {
         constructor(opts = {}, debug) {
             this.debug = debug || false
             this.async = (opts || {}).async || null
-
-            // when set enables dispatcher to communicate directly with `pocket.js`
+            this.$getChain = (opts || {}).$getChain || null // in case you want to preset chaining thru `$get()`
+            // when set enables dispatcher to communicate directly with `probe.js`
             this.dispatcher = (opts || {}).dispatcher ? require('../libs/dispatcher')() : null
-            this.pocket = {} // example this.pocket[`abc::taskName`]
+            this.pocket = {} // example this.pocket[`abc::taskName`] returns Probe Instance
             this.payloadData = {}// each payload by id
             this.lastPocketTimestamp = 0
+            this.lastPayloadID = null // when chaining access last used id
+            this.lastProbeID = null // when chaining access last used id
             this._ready = {} // collect all ready example: `{id:Promise}`
             this.d = undefined // user dynamic value
             if (this.dispatcher) {
                 this.dispatcher.initListener().subscribe(z => {
-                    const { pocket, status } = z || {}
+                    const { probe, status } = z || {}
 
                     if (status === 'error') {
                         // NOTE dispatch data out
-                        if (this.debug) log(`[dispatcher] pocket id:${pocket.id} error`)
+                        if (this.debug) log(`[dispatcher] probe id:${probe.id} error`)
                     }
 
                     if (status === 'open') {
-                        if (this.debug) log(`[dispatcher] pocket id:${pocket.id} created`)
+                        if (this.debug) log(`[dispatcher] probe id:${probe.id} created`)
                     }
 
                     if (status === 'complete') {
                         // NOTE dispatch data out
-                        if (this.debug) log(`[dispatcher] pocket id:${pocket.id} completed`)
+                        if (this.debug) log(`[dispatcher] probe id:${probe.id} completed`)
                     }
                 })
             }
@@ -63,17 +65,48 @@ module.exports = () => {
          */
         $payload(data = {}, async) {
             this.d = null
+
             // validate payload format
             if (!isObject(data)) return false
+            
             const keys = Object.keys(data)
             // must match all keys
-            if (keys.every(el => ['id', 'tasks'].indexOf(el) === -1)) return false
-            if (!isArray(data['tasks']))  return false
+            if (keys.every(el => ['id', 'tasks'].indexOf(el) === -1)) {
+                if(this.debug) onerror(`[$payload] id and tasks are required`)
+                return false
+            }
+            if (!isArray(data['tasks']))  {
+                if(this.debug) onerror(`[$payload] data.tasks must be an array`)
+                return false
+            }
             // make sure our id's all are lowercase
             data.id = validID(data.id)
-            if (!data.id) return false
 
-            // NOTE validate our pocketSet values before generating each `new Pocket()`
+            const idDeepTest = (str) => {
+                if ((str ||'').split(' ').length > 1) return false
+                const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
+                const regx = new RegExp(pat, 'gi')
+                if (regx.test(str)) {
+                    if(this.debug) onerror(`[$payload] data.id invalid regx: ${regx}`)
+                    return false
+                }
+                return true
+            }
+
+            if(!idDeepTest(data.id)) return false
+
+            if (!data.id) {
+                if(this.debug) onerror(`[$payload] data.id invalid`)
+                return false
+            }
+
+            if(this.payloadData[data.id]){
+                if(this.debug) warn(`[$payload] this payload.id already exists`)
+                return false
+            }
+
+            this.lastProbeID = null
+            // NOTE validate our pocket values before generating each `new Probe()`
             for (let val of data['tasks'].values()) {
                 if (!val['task']) {
                     if (this.debug) log('task must be set for your tasks')
@@ -90,53 +123,71 @@ module.exports = () => {
                 this.lastPocketTimestamp = this.payloadData[data.id]['timestamp']
             }
             if (this.payloadData[data.id]) {
+                this.lastPayloadID = data.id
                 this.distributor()
                     .setDefer(data.id)
-
+                    
                 return true
             } else return false
+            
         }
 
         /**
          * ### $get
-          * - `get pocket by 'id::taskName'`
-          * - `returns instance a Pocket`
+          * - `get probe by 'id::taskName'`
+          * - `returns instance`
           *  methods:`{get,all}` props: `{id,data,tasks,status}`
-          * @param {*} pocketID required, example format: `${payload.id}::taskName`
+          * @param {*} probeID required, example format: `${payload.id}::taskName`
+          * @param {*} self optional, in case you want to chain, and access `Probe` through `...).d`
          */
-        $get(pocketID) {
-            pocketID = this.validPocket(pocketID)
-            if (!pocketID) return null
+        $get(probeID = '', self = null) {
 
-            return this.pocket[pocketID]
+            if(!probeID) probeID = this.lastProbeID
+            probeID = this.validProbe(probeID)
+            if(probeID) this.lastProbeID = probeID
+            if (!probeID) return null
+
+            self = (self === false) ? false : this.$getChain
+            if (self) {
+                this.d = this.pocket[probeID]
+                return this
+            }
+                  
+           return this.pocket[probeID]
         }
 
         /**
-         * ### $pocketStatusAsync
-         * - return last pocket status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
-         * @param {*} pocketID 
+         * ### $probeStatusAsync
+         * - return last probe status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
+         * @param {*} probeID 
          */
-        $pocketStatusAsync(pocketID){
+        $probeStatusAsync(probeID=''){
+
+            if(!probeID) probeID = this.lastProbeID   
+            probeID = this.validProbe(probeID)
+            if(!probeID) this.lastProbeID = probeID
 
             const returnAs = (val)=>{
                 this.d = val
                 return this
             }
 
-            pocketID = this.validPocket(pocketID)
-            if(!pocketID) return returnAs(null)
-            return returnAs(this.pocket[pocketID].getStatusAsync)
+            if(!probeID) return returnAs(null)
+            return returnAs(this.pocket[probeID].getStatusAsync)
         }
 
         /**
          * ### $update
-         * - update Pocket/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
-         * @param {*} pocketID required, example format: `${payload.id}::taskName`
-         * @param {*} dataFrom required, must specify what to update on the Pocket, example: `dataFrom:{data:'coke',status:'complete',compaign:'cocacola'}`
-         * @prop {*} mergeData optional if `true` will merge: `Object.assing({},pocket[id].data,mergeData['data'])`
+         * - update Probe/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
+         * @param {*} probeID required, example format: `${payload.id}::taskName`
+         * @param {*} dataFrom required, must specify what to update on the Probe, example: `dataFrom:{data:'coke',status:'complete',compaign:'cocacola'}`
+         * @prop {*} mergeData optional if `true` will merge: `Object.assing({},probe[id].data,mergeData['data'])`
          */
-        $update(pocketID, dataFrom, mergeData = null) {
-            let id = this.validPocket(pocketID)
+        $update(probeID='', dataFrom, mergeData = null) {
+
+            if(!probeID) probeID = this.lastProbeID
+            let id = this.validProbe(probeID)
+            if(id) this.lastProbeID = id
 
             const returnAs = (val)=>{
                 this.d = val
@@ -156,15 +207,14 @@ module.exports = () => {
                 if (this.debug) onerror(`[$update] this.pocket with id:${id} not found`)
                 return returnAs(false)
             }
-
+            
             let updated = false
-
-            // reorder dataFrom, make sure if `status` exists, it is shifted to last position, so the Pocket doent change state before other values got chance to do so, nice!
+            // reorder dataFrom, make sure if `status` exists, it is shifted to last position, so the Probe doent change state before other values got chance to do so, nice!
 
             // we need to convert dataFrom{} to dataFrom[]>array to achieve this
             dataFrom = Object.entries(dataFrom).reduce((n, [key, value]) => {
-                const pos = this.pocketProps.indexOf(key)  // new order
-                if (this.pocketProps[pos] === key) n.push({ inx: pos, data: { [key]: value } })
+                const pos = this.probeProps.indexOf(key)  // new order
+                if (this.probeProps[pos] === key) n.push({ inx: pos, data: { [key]: value } })
                 return n
             }, [])
 
@@ -176,30 +226,35 @@ module.exports = () => {
                         if (mergeData === true) this.pocket[id][key] = Object.assign({}, this.pocket[id][key], value)
                         else this.pocket[id][key] = value
                     } else this.pocket[id][key] = value
+
+                    updated = true
                     continue
                 } else {
                     if (this.debug) warn(`[$update] not a valid propName: ${key}`)
                 }
-            }
-
+            }           
             return returnAs(updated)
         }
 
         /**
          * ### $activeTasks
-         * - list any active tasks for assigned Pockets
-         * @param {*} payloadID optional, when set will only filter thru given job id (NOT Pocket ID!)
+         * - list any active tasks for assigned Probes
+         * @param {*} payloadID optional, when set will only filter thru given job id (NOT Probe ID!)
          */
-        $activeTasks(payloadID = null) {
+        $activeTasks(payloadID = '') {
+
+            if(!payloadID) payloadID = this.lastPayloadID 
+            payloadID = validID(payloadID)
+            this.lastPayloadID = payloadID
 
             const returnAs = (val)=>{
                 this.d = val
                 return this
             }
             if (!Object.entries(this.pocket).length) return returnAs([])
-            let tasks = Object.entries(this.pocket).reduce((n, [pocketID, pocket]) => {
-                if (pocketID.indexOf(payloadID || '') === 0 && payloadID && this.payloadData[payloadID]) n.push(pocket['task'])
-                else if (!payloadID) n.push(pocket['task'])
+            let tasks = Object.entries(this.pocket).reduce((n, [probeID, probe]) => {
+                if (probeID.indexOf(payloadID || '') === 0 && payloadID && this.payloadData[payloadID]) n.push(probe['task'])
+                else if (!payloadID) n.push(probe['task'])
                 return n
             }, [])
             return returnAs(tasks)
@@ -208,17 +263,18 @@ module.exports = () => {
         /**
          * ### $ready
          * - resolves currently active `$payload(...)`
-         * - `after completion of PocketSet, all instance data for all Pockets is deleted`
+         * - `after completion of Pocket, instance data for all Probes is deleted`
          * @param {*} payloadID `required`
          */
-        $ready(payloadID) {
+        $ready(payloadID='') {
             this.d = null
+            if(!payloadID) payloadID = this.lastPayloadID
             payloadID = validID(payloadID)
-
+           
             if (!payloadID) throw (`payloadID must be set`)
 
             if (!this._ready[payloadID]) throw (`ready[payloadID] is not set, maybe you called it before $payload()`)
-
+            if(payloadID) this.lastPayloadID = payloadID
             return this._ready[payloadID].promise()
         }
 
@@ -228,30 +284,30 @@ module.exports = () => {
         // ──────────────────────────────────────────────────────
 
         /**
-         * ### validPocket
-         * - returns a valid pocket
-         * @param {*} pocketID required
+         * ### validProbe
+         * - returns a valid probe
+         * @param {*} probeID required
          */
-        validPocket(pocketID){
-            pocketID = validID(pocketID)
-            if (!pocketID) return null
+        validProbe(probeID){
+            probeID = validID(probeID)
+            if (!probeID) return null
 
-            if (!this.pocket[pocketID]) {
-                if (this.debug) warn(`[get] did not find pocket with pocketID ${id}`)
+            if (!this.pocket[probeID]) {
+                if (this.debug) warn(`[get] did not find probe with probeID ${id}`)
                 return null
             }
-            if (pocketID.indexOf(`::`) === -1) return null
-            return pocketID
+            if (probeID.indexOf(`::`) === -1) return null
+            return probeID
         }
 
 
         /**
-         * ### pocketProps
-         * - `each pocket props that can be available and send on ready`
+         * ### probeProps
+         * - `each probe props that can be available and send on ready`
          * - `order is important, keep 'status' last`
          * - only updatable props are: `'compaign', 'data', 'status'(limited)`
          */
-        get pocketProps() {
+        get probeProps() {
             return ['compaign', 'data', 'task', 'id', 'status']  
         }
 
@@ -266,7 +322,7 @@ module.exports = () => {
             if (!this._ready[id]) this._ready[id] = sq()
 
             if (!Object.entries(this.pocket).length) {
-                const msg = `[setDefer] pocket is empty, so nothing set, id:${id}`
+                const msg = `[setDefer] probe is empty, so nothing set, id:${id}`
                 if (this.debug) onerror(msg)
                 this._ready[id].reject(msg)
                 return null
@@ -284,8 +340,8 @@ module.exports = () => {
                 const userOutput = (pock) => {
                     const output = {}
                     if (!isObject(pock)) return null
-                    for (let i = 0; i < this.pocketProps.length; i++) {
-                        const prop = this.pocketProps[i]
+                    for (let i = 0; i < this.probeProps.length; i++) {
+                        const prop = this.probeProps[i]
                         if (pock[prop]) output[prop] = pock[prop]
                     }
                     return output
@@ -293,10 +349,10 @@ module.exports = () => {
                 /**
                  * IMPORTANT:
                  * when our pocketSet for each this.pocket[id] is marked 'complete'
-                 * `Pocket().resolve(...)` is called, and Promise.all is waiting for `pocketSet` to complete
+                 * `Probe().resolve(...)` is called, and Promise.all is waiting for `pocketSet` to complete
                  */
                 Promise.all(pocketSet.map(z => z.sq.promise())).then(z => {
-                    const output = z.map(p => userOutput(p.pocket)).filter(n => !!n)
+                    const output = z.map(p => userOutput(p.probe)).filter(n => !!n)
                     this._ready[id].resolve(output)
                 }, err => {
                     // should unlikely happen since we dont have any rejects set
@@ -312,8 +368,7 @@ module.exports = () => {
         }
 
         /**
-         * - distribute payloadData, each to `new Pocket()`
-         * - set `pocketSetRef`
+         * - distribute payloadData, each to `new Probe()`
          */
         distributor() {
             for (let [key, el] of Object.entries(this.payloadData)) {
@@ -324,31 +379,31 @@ module.exports = () => {
 
                 for (let value of el.value.values()) {
                     const pl = { id: key, ...value }
-                    const pocketSet = this.setPocket(pl)
-                    if (!pocketSet) onerror(`pocket for id:${key} already exists`)
+                    const pocketSet = this.setProbe(pl)
+                    if (!pocketSet) onerror(`probe for id:${key} already exists`)
                 }
             }
             return this
         }
 
         /**
-         * - every new pocket `id` must be: format `id:::taskName`
+         * - every new probe `id` must be: format `id:::taskName`
          * required: `{id,task}`
          * optional: `{compaign}`
          * @param {*} opts
          */
-        setPocket(opts = {}) {
+        setProbe(opts = {}) {
             if (!opts.id || !opts.task) throw ('id and task both must be set')
             if (!validID(opts.id)) throw ('opts.id not valid')
 
             const uid = `${opts.id}::${opts.task}`
             if (this.pocket[uid]) {
-                if (this.debug) log(`[setPocket] pocket: ${uid} already set`)
+                if (this.debug) log(`[setProbe] probe: ${uid} already set`)
                 return null
             }
             try {
                 opts.id = uid
-                const p = new this.Pocket(opts, this.debug)
+                const p = new this.Probe(opts, this.debug)
                 this.pocket[uid] = p
             } catch (err) {
                 onerror(err)
@@ -358,22 +413,22 @@ module.exports = () => {
         }
 
         /**
-         * set new pocket model
-         * - every new task has a set of requirements. Once status is `complete` and data available, pocket sends a dispatch with pocket information `(if opts.dispatcher===true)`.
+         * set new probe model
+         * - every new task has a set of requirements. Once status is `complete` and data available, probe sends a dispatch with probe information `(if opts.dispatcher===true)`.
          * methods:`{get,all}` props: `{id,data,task,status,compaign}`
          * 
          *  @param {*} opts.id required
          *  @param {*} opts.task required
          *  @param {*} opts.compaign optional
          * 
-         * - `Pocket` is resolved once `sq.resolve()` is called, sq => `Simple Q` our plugin
+         * - `Probe` is resolved once `sq.resolve()` is called, sq => `Simple Q` our plugin
          */
-        get Pocket() {
-            return newPocketJS(this)
+        get Probe() {
+            return newProbe(this)
         }
 
         /**
-         * - emit extends with `Dispatcher` to be used by every new Pocket as an emitter `(if opts.dispatcher===true)`
+         * - emit extends with `Dispatcher` to be used by every new Probe as an emitter `(if opts.dispatcher===true)`
          * @param {*} obj required
          */
         _emit(obj) {

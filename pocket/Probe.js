@@ -1,19 +1,19 @@
-// const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-const { isString, warn, log, isNumber, onerror, last, copy } = require('./utils')
-const sq = require('simple-q')  // nice and simple promise/defer by `eaglex.net`
 /**
- * Set new pocket model
- * - every new task has a set of requirements controlled by `statusStackOrder` in status setter. Once status is `complete` and data available, information is send and pocket is blocked.
+ * Set new probe model
+ * - every new task has a set of requirements controlled by `statusStackOrder` in status setter. Once status is `complete` and data available, information is send and probe is blocked.
  * methods:`{get,all}` props: `{id,data,tasks,status}`
  */
 module.exports = (dispatcher) => {
-    return class PocketJS {
+    // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
+    const { isString, warn, log, isNumber, onerror, last, copy } = require('./utils')
+    const sq = require('simple-q')  // nice and simple promise/defer by `eaglex.net`
+    return class Probe {
         /**
          * @param {*} opts.id required, case sensitive, all will be toLowerCase() 
          * @param {*} opts.task once set cannot be changed
          * @param {*} opts.compaign optional, once set cannot be changed
          * @param {*} opts.data optional any value except undefind, cannot be change once status set to `complete` or send
-         * @param {*} opts.status required to control PocketJS actions
+         * @param {*} opts.status required to control Probe actions
          * @param {*} debug 
          */
         constructor(opts = {}, debug) {
@@ -159,10 +159,10 @@ module.exports = (dispatcher) => {
          * allow status: open | updated | complete | send | error
          * `open`: status is set when pocked is initialized
          * `updated`: status is set when data is updated
-         * `complete`: status is set when you want to complete and discard pocket
+         * `complete`: status is set when you want to complete and discard probe
          * `send`: once the status was set `complete` data is resolved first then status is set as `send`.
-         * and PocketJS is locked, cannot be interacted with. Follow the strategic order set by `statusStackOrder`
-         * `error` acts like complete, it will resolve() last available data and block the PocketJS
+         * and Probe is locked, cannot be interacted with. Follow the strategic order set by `statusStackOrder`
+         * `error` acts like complete, it will resolve() last available data and block the Probe
          */
         get status() {
             return this._status
@@ -179,7 +179,7 @@ module.exports = (dispatcher) => {
                 }
 
                 if (this._status === 'complete' || this._status === 'send') {
-                    if (this.debug) log(`cannot update status if already complete`)
+                    if (this.debug) warn(`cannot update status if already complete, id:${this.id}`)
                     return false
                 }
 
@@ -191,7 +191,7 @@ module.exports = (dispatcher) => {
                         }
                         this._status = stat
                         this.statusStackOrder[stat].set = true
-                        this.onOpenStatus(v) // emit pocket when status opens
+                        this.onOpenStatus(v) // emit probe when status opens
                         this.setStatusAsync = stat
                         break
 
@@ -213,8 +213,9 @@ module.exports = (dispatcher) => {
                     case 'complete':
                         this._status = stat
                         this.statusStackOrder[stat].set = true
-                        this.onComplete(v) // resolve pocket when status complete
                         this.setStatusAsync = stat
+                        this.onComplete(v) // resolve probe when status complete
+                       
                         break
 
                     case 'send':
@@ -229,11 +230,11 @@ module.exports = (dispatcher) => {
 
                     case 'error':
                         if (this._status === 'complete') return
-                        // when we have error we need to inform what happen, and close the PocketJS
+                        // when we have error we need to inform what happen, and close the Probe
                         this._status = stat
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
-                        this.onComplete(v) // resolve pocket when status complete                     
+                        this.onComplete(v) // resolve probe when status complete                     
                         break
 
                     default:
@@ -280,11 +281,15 @@ module.exports = (dispatcher) => {
          * @param {*} status
          */
         onComplete(status) {
-            if ((status === 'complete' || status === 'error') && this.status !== 'send' && this._dataIndex > 0) {
-                setTimeout(() => {
-                    if (dispatcher) dispatcher._emit({ pocket: this, status })
-                    this.sq.resolve({ pocket: this.all() })
-                })
+            if ((status === 'complete' || status === 'error') && this._status !== 'send' && this._dataIndex > 0) {
+               
+                if (dispatcher){
+                    setTimeout(() => {
+                        if (dispatcher) dispatcher._emit({ probe: this, status })                   
+                    })
+                }
+                
+                this.sq.resolve({ probe: this.all() })
                 this._status = 'send'
             }
         }
@@ -295,9 +300,9 @@ module.exports = (dispatcher) => {
          */
         onOpenStatus(status) {
             if (status === 'open') {
-                // return this pocket and update it when its complete
+                // return this probe and update it when its complete
                 setTimeout(() => {
-                    if (dispatcher) dispatcher._emit({ pocket: this, status: 'open' })
+                    if (dispatcher) dispatcher._emit({ probe: this, status: 'open' })
                 })
             }
         }
