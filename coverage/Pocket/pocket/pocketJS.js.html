@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.52% </span>
+                <span class="strong">77.02% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>117/149</span>
+                <span class='fraction'>124/161</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.98% </span>
+                <span class="strong">65.52% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>71/106</span>
+                <span class='fraction'>76/116</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.26% </span>
+                <span class="strong">89.84% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>108/121</span>
+                <span class='fraction'>115/128</span>
             </div>
         
             
@@ -347,7 +347,17 @@
 <a name='L288'></a><a href='#L288'>288</a>
 <a name='L289'></a><a href='#L289'>289</a>
 <a name='L290'></a><a href='#L290'>290</a>
-<a name='L291'></a><a href='#L291'>291</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a>
+<a name='L294'></a><a href='#L294'>294</a>
+<a name='L295'></a><a href='#L295'>295</a>
+<a name='L296'></a><a href='#L296'>296</a>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -402,6 +412,13 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -442,11 +459,14 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -693,7 +713,14 @@ module.exports = (dispatcher) =&gt; {
                 return
             }
             <span class="missing-if-branch" title="if path not taken" >I</span>if (!v) <span class="cstat-no" title="statement not covered" >throw ('id is required')</span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if(v.split(' ').length&gt;1) <span class="cstat-no" title="statement not covered" >throw ('each id cannot have spaces')</span>
             <span class="missing-if-branch" title="if path not taken" >I</span>if (v.indexOf(`::`) === -1) <span class="cstat-no" title="statement not covered" >throw ('each id must be of format id::taskName')</span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (v.indexOf(`:::`) !== -1) <span class="cstat-no" title="statement not covered" >throw ('each id must be of format id::taskName')</span>
+            
+            // validate chars
+            const pat = /[`~!@#$%^&amp;*()\=?;'",.&lt;&gt;\{\}\[\]\\\/]/gi
+            const regx = new RegExp(pat,'gi')
+            <span class="missing-if-branch" title="if path not taken" >I</span>if(regx.test(v)) <span class="cstat-no" title="statement not covered" >throw(`your id is invalid, allowed chars: ${pat}`)</span>
 &nbsp;
             v = v.replace(/ /gi, '_').toLowerCase()
 &nbsp;
@@ -732,11 +759,14 @@ module.exports = (dispatcher) =&gt; {
                 return
             }
 &nbsp;
+&nbsp;
             <span class="missing-if-branch" title="if path not taken" >I</span>if (!v) <span class="cstat-no" title="statement not covered" >return</span>
             <span class="missing-if-branch" title="if path not taken" >I</span>if (!isString(v)) {
 <span class="cstat-no" title="statement not covered" >                if (this.debug) <span class="cstat-no" title="statement not covered" >warn(`task must be a string`)</span></span>
 <span class="cstat-no" title="statement not covered" >                return</span>
             }
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (v.indexOf("::") !== -1) <span class="cstat-no" title="statement not covered" >throw ('task seperator :: is restricted')</span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (v.split(' ').length &gt; 1) <span class="cstat-no" title="statement not covered" >throw ('task cannot have spaces, use seperators: _+')</span>
 &nbsp;
             this._task = v.replace(/ /gi, '_').toLowerCase()// every task must be valid with required 
         }
@@ -934,7 +964,7 @@ module.exports = (dispatcher) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 22 2020 19:44:48 GMT+0700 (Novosibirsk Standard Time)
+                at Fri May 22 2020 20:17:14 GMT+0700 (Novosibirsk Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

@@ -37,6 +37,15 @@
 - In depth `Mocha` tests.
 
 
+#### Test / Mocha and coverage
+- To run a Mocha test: `npm run mocha`
+- To run full coverage test with Instanbul: `npm run test`
+- Coverage can be found in `./coverage/index.html`
+
+#### Examples
+Working examples can be found at `'./samples/**`
+
+
 #### PocketModule config/opts and status logic:
 - `PocketModule.opts{}`: available options on constructor to be set with instance creation.
     - `opts.async:Boolean`: when set will handle `await payload(asyncData)` as Promise. 
@@ -80,11 +89,6 @@
 
 
 
-#### Test / Mocha and coverage
-- To run a Mocha test: `npm run mocha`
-- To run full coverage test with Instanbul: `npm run test`
-- Coverage can be found in `./coverage/index.html`
-
 
 #### Start / Examples
 - Ready case examples available in `./examples.js` or `npm run example`
@@ -121,9 +125,10 @@ console.log('pocketSet [abc123] ready', z)
 }
 init()
 ```
-#### TODO
+#### TODO on future Premium release:
 
-*  **(add)** add typescript support in the later version.
+*  **(add)** typescript support in the later version.
+*  **(add)** browser version support.
 
 ##### Contact
 

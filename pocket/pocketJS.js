@@ -1,5 +1,5 @@
 // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-const { isString, warn, log, isNumber, onerror,last,copy } = require('./utils')
+const { isString, warn, log, isNumber, onerror, last, copy } = require('./utils')
 const sq = require('simple-q')  // nice and simple promise/defer by `eaglex.net`
 /**
  * Set new pocket model
@@ -54,7 +54,14 @@ module.exports = (dispatcher) => {
                 return
             }
             if (!v) throw ('id is required')
+            if (v.split(' ').length > 1) throw ('each id cannot have spaces')
             if (v.indexOf(`::`) === -1) throw ('each id must be of format id::taskName')
+            if (v.indexOf(`:::`) !== -1) throw ('each id must be of format id::taskName')
+
+            // validate chars
+            const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
+            const regx = new RegExp(pat, 'gi')
+            if (regx.test(v)) throw (`your id is invalid, allowed chars: ${pat}`)
 
             v = v.replace(/ /gi, '_').toLowerCase()
 
@@ -93,11 +100,14 @@ module.exports = (dispatcher) => {
                 return
             }
 
+
             if (!v) return
             if (!isString(v)) {
                 if (this.debug) warn(`task must be a string`)
                 return
             }
+            if (v.indexOf("::") !== -1) throw ('task seperator :: is restricted')
+            if (v.split(' ').length > 1) throw ('task cannot have spaces, use seperators: _+')
 
             this._task = v.replace(/ /gi, '_').toLowerCase()// every task must be valid with required 
         }
@@ -173,8 +183,8 @@ module.exports = (dispatcher) => {
                         if (this._status === 'updated') {
                             if (this.debug) warn(`cannot set status back to open once set to updated`)
                             break
-                        }                    
-                        this._status = stat                       
+                        }
+                        this._status = stat
                         this.statusStackOrder[stat].set = true
                         this.onOpenStatus(v) // emit pocket when status opens
                         this.setStatusAsync = stat
@@ -187,7 +197,7 @@ module.exports = (dispatcher) => {
                         }
 
                         if (this._dataIndex > 0) {
-                            this._status = stat                           
+                            this._status = stat
                             this.statusStackOrder[stat].set = true
                             this.setStatusAsync = stat
                             if (this.debug) log(`id:${this.id}, data updated`)
@@ -196,10 +206,10 @@ module.exports = (dispatcher) => {
                         break
 
                     case 'complete':
-                        this._status = stat                       
+                        this._status = stat
                         this.statusStackOrder[stat].set = true
                         this.onComplete(v) // resolve pocket when status complete
-                        this.setStatusAsync = stat                     
+                        this.setStatusAsync = stat
                         break
 
                     case 'send':
@@ -207,15 +217,15 @@ module.exports = (dispatcher) => {
                             if (this.debug) warn(`cannot update status to 'send' then previously not set to 'complete'`)
                             break
                         }
-                        this._status = stat             
+                        this._status = stat
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
                         break
 
                     case 'error':
-                        if(this._status==='complete') return
+                        if (this._status === 'complete') return
                         // when we have error we need to inform what happen, and close the PocketJS
-                        this._status = stat           
+                        this._status = stat
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
                         this.onComplete(v) // resolve pocket when status complete                     
@@ -227,7 +237,7 @@ module.exports = (dispatcher) => {
             })(v)
         }
 
-    
+
         /**
          * - works with `statusAsync`
          * - (1.) setter creates our new sq() promise every time, and allows use or resolve 
