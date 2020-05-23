@@ -1,6 +1,6 @@
 module.exports = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
+    const {objectSize, log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     const PocketLibs = require('./Pocket.libs')()
     const newProbe = require('./Probe')
@@ -178,8 +178,8 @@ module.exports = () => {
             }
 
             payloadID = this.lastProjectID(payloadID)
-
-            if (!Object.entries(this.pocket).length) return returnAs([])
+            
+            if (!objectSize(this.pocket)) return returnAs([])
             let tasks = Object.entries(this.pocket).reduce((n, [probeID, probe]) => {
                 if (probeID.indexOf(payloadID || '') === 0 && payloadID && this.payloadData[payloadID]) n.push(probe['task'])
                 else if (!payloadID) n.push(probe['task'])
@@ -281,8 +281,8 @@ module.exports = () => {
             if (!id) throw 'id must be set'
 
             if (!this._ready[id]) this._ready[id] = sq()
-
-            if (!Object.entries(this.pocket).length) {
+            
+            if (!objectSize(this.pocket)) {
                 const msg = `[setDefer] probe is empty, so nothing set, id:${id}`
                 if (this.debug) onerror(msg)
                 this._ready[id].reject(msg)

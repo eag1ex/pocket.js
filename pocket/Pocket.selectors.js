@@ -2,6 +2,7 @@
 /**
  * ### PocketSelectors
  * - Extends PocketModule using selectors for better access to Probes
+ * - allow selecttion to refference by, example:  `taskName`, `::taskName` and `${projectID}::taskName`, thanks to `selectByTask()` method
  */
 module.exports = (PocketModule) => {
     const { copy, warn, log, onerror, objectSize } = require('../Pocket/utils')
@@ -91,7 +92,7 @@ module.exports = (PocketModule) => {
          */
         $of(probeID = '') {
             // allow use of short ref names example: `::cocalola`
-            this.selectByTask(probeID, true)
+            console.log('$of',this.selectByTask(probeID, true))
             return this
         }
 

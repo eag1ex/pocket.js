@@ -3,7 +3,7 @@
  * - Top of the stack class of `PocketModule`, all `opt` initial `properties` are set here
  */
 module.exports = () => {
-    const { onerror, warn, validID, copy, log } = require('./utils')
+    const { objectSize, warn, validID, copy, log } = require('./utils')
     return class PocketLibs {
         /**
          * @param {*} opts.async, when set, allow $payload(`data`) to be async object
@@ -85,8 +85,8 @@ module.exports = () => {
                 }
                 return n
             }, {})
-
-            if (!Object.entries(coundCache).length) return {}
+            
+            if (!objectSize(coundCache)) return {}
             else return coundCache
         }
 
@@ -94,13 +94,14 @@ module.exports = () => {
 
         /**
          * ### selectByTask
-         * - works with `PocketSelectors class`, when `::taskNames, taskName` are specified, extracts full probeID by matching previous pointer references and update `lastProbeID()` method        
+         * - works with `PocketSelectors class`, when `::taskNames, taskName` are specified, extracts full probeID by matching previous pointer reference and updates `lastProbeID()`        
          * - returns valid probeID or null
-         * @param {*} probeID {*} required
+         * @param {*} probeID {*} required, but optional
          */
         selectByTask(taskOrProbeID = '', updateLastProbeID = null) {
 
-            if (!this.idRegexValid(taskOrProbeID)) return null
+            taskOrProbeID = taskOrProbeID ||''
+            if (!this.idRegexValid(taskOrProbeID) && taskOrProbeID) return null
 
             if (taskOrProbeID.indexOf(':') > 0 && !this.pocket[taskOrProbeID]) {
                 if (this.debug) warn(`[selectByTask] when using '::' prefix selector, it should come at 0 index`)
@@ -113,7 +114,10 @@ module.exports = () => {
             }
 
             if (updateLastProbeID) this.lastProbeID(taskOrProbeID, true) // if a match we receive below updated `_lastProbeID` 
-            if (this.pocket[taskOrProbeID]) return taskOrProbeID // we have a valid ref so use that
+            if (this.pocket[taskOrProbeID]) {
+                if(updateLastProbeID)  this.lastProbeID(taskOrProbeID)
+                return taskOrProbeID // we have a valid ref so use that
+            }
 
             /**
              * - generate valid probeID `${projectID}::${probeTaskName}` //
@@ -125,10 +129,11 @@ module.exports = () => {
                 else if (this._lastProjectID && n) return this._lastProjectID + `::` + n
                 return this._lastProbeID
             }
+
             const newProbeID = dynamicProbeID(taskOrProbeID)
             if (!newProbeID) {
                 if (this.debug) warn(`[selectByTask] newProbeID was not found from taskOrProbeID: ${taskOrProbeID}`)
-            } else this.lastProbeID(taskOrProbeID, updateLastProbeID)
+            } else if (updateLastProbeID) this.lastProbeID(newProbeID)
             return newProbeID
         }
 

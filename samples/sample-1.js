@@ -29,27 +29,27 @@ const data = {
 
 if (pocket.$payload(data)) {
 
-    const worldProbe = pocket.$get(`${data.id}::world`,true) // grab created Pocket
-        .$update({ data: { assets: 50 } }, true) // update it
-       .$update({status:'complete'})
+    // const worldProbe = pocket.$get(`${data.id}::world`,true) // grab created Pocket
+    //     .$update({ data: { assets: 50 } }, true) // update it
+    //    .$update({status:'complete'})
        // .$get() // get latest update data   
 
     // shortcut to above
-    pocket.$of(`${data.id}::covid19` )
+    pocket.$of(`::covid19`)
            .$update({ data: { assets: 50 } })
             .$update({status:'complete'}) 
 
     
-          //  .$update({ data: { assets: 0 } }, true)
-         //   .$update({status:'complete'})
-        pocket.$of(`${data.id}::china`)
-         .$update({ data: { assets: 100 } }, true)
-         .$transfer() 
+    //       //  .$update({ data: { assets: 0 } }, true)
+    //      //   .$update({status:'complete'})
+    //     pocket.$of(`${data.id}::china`)
+    //      .$update({ data: { assets: 100 } }, true)
+    //      .$transfer() 
 
-        setTimeout(()=>{
-            pocket.$of(`${data.id}::china`).$to(`${data.id}::covid19`,false)
-                    .$update({status:'complete'})
-        },90)
+    //     setTimeout(()=>{
+    //         pocket.$of(`${data.id}::china`).$to(`${data.id}::covid19`,false)
+    //                 .$update({status:'complete'})
+    //     },90)
 
 
 
