@@ -1,5 +1,5 @@
 
-### Pocket.js
+### Pocket.js (P/p)
 ####  [ Developed by Eaglex ](http://eaglex.net)
 
 ##### LICENSE
@@ -82,7 +82,7 @@ Working examples can be found at `'./samples/**`
     - `probeID:String`: provided format must be, example: `${payloadID}::${task}`
 
 
-- **$update(probeID, dataFrom, mergeData).d:Boolean** : will select currently available Probe/task by `id`, and update its data, only available fields found on Probe can be updated according to setter/getter requirements 
+- **$update( dataFrom, mergeData,probeID).d:Boolean** : will select currently available Probe/task by `id`, and update its data, only available fields found on Probe can be updated according to setter/getter requirements 
     - `probeID:String`: required probeID, each probe `probeID` makes up: `${payload.id}::${task}`, dynamicly created uppon `$payload(..)===true`
     - `dataFrom:{}`: avaialble fields example: `dataFrom:{data:'some cola', compaign:'cocacola',status:'complete'}`, will perform an update on Probe[id][data],Probe[id][compaign], etc. Validation is sensitive.
     - `mergeData`: when specified and `dataFrom.data` field is set,  will merge both

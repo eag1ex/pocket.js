@@ -315,7 +315,7 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
                 const startValue = pc.$get(`${payloadData.id}::start`).data['value']
                 const endValue = pc.$get(probeID).data.value
                 const newData = Object.assign({}, pc.$get(probeID).data, { value: startValue + endValue })
-                pc.$update(probeID, { data: Object.assign({}, pc.$get(probeID).data, newData) }).d
+                pc.$update({ data: Object.assign({}, pc.$get(probeID).data, newData) },null,probeID).d
                 expect(pc.$get(probeID).data).to.have.property('value').equal(startValue + endValue)
                 done()
             })

@@ -127,6 +127,7 @@ module.exports = (dispatcher) => {
             */
             const complete = this.status === 'complete' || this.status === 'send'
             if (complete) {
+                // NOTE this can also happen if you are using $transfer().$to from `PocketModule` that is a delayed
                 if (this.debug) warn(`you cannot update data once the status is complete or send`)
                 return null
             }
@@ -211,10 +212,14 @@ module.exports = (dispatcher) => {
                         break
 
                     case 'complete':
-                        this._status = stat
+                        
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
-                        this.onComplete(v) // resolve probe when status complete
+                       // setTimeout(()=>{
+                            this._status = stat
+                            this.onComplete(v) // resolve probe when status complete
+                      //  })
+
                        
                         break
 
@@ -231,7 +236,7 @@ module.exports = (dispatcher) => {
                     case 'error':
                         if (this._status === 'complete') return
                         // when we have error we need to inform what happen, and close the Probe
-                        this._status = stat
+                        
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
                         this.onComplete(v) // resolve probe when status complete                     

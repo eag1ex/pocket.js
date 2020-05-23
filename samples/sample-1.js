@@ -29,23 +29,32 @@ const data = {
 
 if (pocket.$payload(data)) {
 
-    const worldProbe = pocket.$get(`${data.id}::world`) // grab created Pocket
-        .$update(null, { data: { assets: 50 } }, true) // update it
-        .$update(null,{status:'complete'})
+    const worldProbe = pocket.$get(`${data.id}::world`,true) // grab created Pocket
+        .$update({ data: { assets: 50 } }, true) // update it
+       .$update({status:'complete'})
        // .$get() // get latest update data   
 
     // shortcut to above
-    pocket.$update(`${data.id}::covid19`, { data: { assets: 50 } }, true)
-            .$update(null,{status:'complete'}) 
-    pocket.$update(`${data.id}::china`, { data: { assets: 0 } }, true)
-            .$update(null,{status:'updated'})
+    pocket.$of(`${data.id}::covid19` )
+           .$update({ data: { assets: 50 } })
+            .$update({status:'complete'}) 
 
-    // chinaProbe.d['status'] = 'complete'
-    // covid19.d['status'] = 'complete'
-    // worldProbe.d['status'] = 'complete'
+    
+          //  .$update({ data: { assets: 0 } }, true)
+         //   .$update({status:'complete'})
+        pocket.$of(`${data.id}::china`)
+         .$update({ data: { assets: 100 } }, true)
+         .$transfer() 
+                //.$update({status:'complete'})   
+  setTimeout(()=>{
+       pocket.$of(`${data.id}::china`).$to(`${data.id}::covid19`)
+            .$update({status:'complete'})
+   },90)
 
-    pocket.$probeStatusAsync(`${data.id}::covid19`).d.then(z=>{
-        log('covid19/getStatusAsync',z)
+
+
+    pocket.$probeStatusAsync(`${data.id}::china`).d.then(z=>{
+        log('china/getStatusAsync',z)
     })
 
     pocket.$ready(data.id).d.then(z => {

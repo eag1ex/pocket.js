@@ -7,12 +7,12 @@ const color = require('bash-color')
  */
 
 
-
-exports.last = (arr)=> (arr && Array.prototype === (arr).__proto__) ? arr[arr.length-1]:null,
-exports.copyBy = (obj, refs) => refs.reduce((n, el, i) => {
-    if (obj[el] !== undefined) n[el] = obj[el]
-    return n
-}, {})
+exports.objectSize = (obj) => (obj && (Object.prototype === (obj).__proto__)) ? Object.entries(obj).length : 0
+exports.last = (arr) => (arr && Array.prototype === (arr).__proto__) ? arr[arr.length - 1] : null,
+    exports.copyBy = (obj, refs) => refs.reduce((n, el, i) => {
+        if (obj[el] !== undefined) n[el] = obj[el]
+        return n
+    }, {})
 exports.validID = (id) => !(id || '') ? null : (id || '').toString().toLowerCase()
 exports.isNumber = (n) => n !== undefined ? (n).__proto__ === Number.prototype : false
 exports.isPromise = (defer) => Promise.prototype === (defer || {}).__proto__
