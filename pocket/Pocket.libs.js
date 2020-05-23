@@ -3,7 +3,7 @@
  * - Top of the stack class of `PocketModule`, all `opt` initial `properties` are set here
  */
 module.exports = () => {
-    const { onerror, warn, validID, copy,log } = require('./utils')
+    const { onerror, warn, validID, copy, log } = require('./utils')
     return class PocketLibs {
         /**
          * @param {*} opts.async, when set, allow $payload(`data`) to be async object
@@ -20,6 +20,7 @@ module.exports = () => {
             this.lastPocketTimestamp = 0
             this._lastProjectID = null // last cached reference
             this._lastProbeID = null // last cached reference
+            this.$transfer_lastID = '' // set when we call `$transfer()` and reset after `$to()`
             this._ready = {} // collect all ready example: `{id:Promise}`
             this.d = undefined // NOTE user reference data, carefull when using selectors from previous target, always access last
             this._transferCached = [ /** {timestamp,fromProbeID,data} */]
@@ -54,9 +55,8 @@ module.exports = () => {
          * @param {*} fromProbeID  required
          * @param {*} data required
          */
-        storeTransfers(fromProbeID,data){
-           
-            this._transferCached.push({timestamp:new Date().getTime(),fromProbeID,data })
+        storeTransfers(fromProbeID, data) {
+            this._transferCached.push({ timestamp: new Date().getTime(), fromProbeID, data })
             return this._transferCached
         }
 
@@ -70,7 +70,7 @@ module.exports = () => {
 
             this._transferCached.sort((a, b) => a.timestamp - b - timestamp)
             const transferCachedCopy = copy(this._transferCached)
-            
+
             const coundCache = transferCachedCopy.reduce((n, el, i) => {
                 const { timestamp, fromProbeID, data } = el
 
@@ -91,17 +91,57 @@ module.exports = () => {
         }
 
 
-        
+
+        /**
+         * ### selectByTask
+         * - works with `PocketSelectors class`, when `::taskNames, taskName` are specified, extracts full probeID by matching previous pointer references and update `lastProbeID()` method        
+         * - returns valid probeID or null
+         * @param {*} probeID {*} required
+         */
+        selectByTask(taskOrProbeID = '', updateLastProbeID = null) {
+
+            if (!this.idRegexValid(taskOrProbeID)) return null
+
+            if (taskOrProbeID.indexOf(':') > 0 && !this.pocket[taskOrProbeID]) {
+                if (this.debug) warn(`[selectByTask] when using '::' prefix selector, it should come at 0 index`)
+                return null
+            }
+
+            if (taskOrProbeID.split(":").length > 3 || taskOrProbeID.split(":").length === 2) {
+                if (this.debug) warn(`[selectByTask] wrong taskName :${taskOrProbeID}, allowed prefix is '::taskName'`)
+                return null
+            }
+
+            if (updateLastProbeID) this.lastProbeID(taskOrProbeID, true) // if a match we receive below updated `_lastProbeID` 
+            if (this.pocket[taskOrProbeID]) return taskOrProbeID // we have a valid ref so use that
+
+            /**
+             * - generate valid probeID `${projectID}::${probeTaskName}` //
+             */
+            const dynamicProbeID = (name) => {
+                const n = name.split("::")[1] || name  // in case we are using prefixed taskName, example "::cocacola"
+                const matchByProbeID = (this._lastProbeID || '').indexOf(n) > 0
+                if (matchByProbeID && n) return this._lastProbeID
+                else if (this._lastProjectID && n) return this._lastProjectID + `::` + n
+                return this._lastProbeID
+            }
+            const newProbeID = dynamicProbeID(taskOrProbeID)
+            if (!newProbeID) {
+                if (this.debug) warn(`[selectByTask] newProbeID was not found from taskOrProbeID: ${taskOrProbeID}`)
+            } else this.lastProbeID(taskOrProbeID, updateLastProbeID)
+            return newProbeID
+        }
+
 
         /**
          * ### lastProjectID
          * - every project is a job initiated by payload, so `payload.id === lastProjectID()`
          */
-        lastProjectID(projectID = '') {
+        lastProjectID(projectID = '', debug = null) {
             if (!projectID && this._lastProbeID) projectID = this._lastProjectID
-            projectID = this.validProjectID(projectID)
+            projectID = this.validProjectID(projectID, debug)
             if (!projectID) return null
-            this._lastProjectID = projectID // cache last reference
+            if (this.payloadData[projectID]) this._lastProjectID = projectID // cache last reference
             return projectID
         }
 
@@ -111,11 +151,12 @@ module.exports = () => {
          * - cache with `_lastProbeID`
          * @param {*} probeID 
          */
-        lastProbeID(probeID = '') {
+        lastProbeID(probeID = '', debug = null) {
             if (!probeID && this._lastProbeID) probeID = this._lastProbeID
-            probeID = this.validProbe(probeID)
+            probeID = this.validProbe(probeID, debug)
+
             if (!probeID) return null
-            this._lastProbeID = probeID // cache last reference
+            if (this.pocket[probeID]) this._lastProbeID = probeID // cache last reference         
             return probeID
         }
 
@@ -125,17 +166,23 @@ module.exports = () => {
          * - return valid id
          * @param {*} id required
          */
-        validProjectID(id) {
+        validProjectID(id, debug = null) {
             id = validID(id)
             if (!id) return null
             if ((id || '').split(' ').length > 1) return null
+            if (!this.idRegexValid(id)) return null
+            return id
+        }
+
+        idRegexValid(str) {
             const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
             const regx = new RegExp(pat, 'gi')
-            if (regx.test(id)) {
-                if (this.debug) onerror(`[validProjectID] id with invalid regx: ${regx}`)
+            if (regx.test(str)) {
+                // NOT ALWAYS NEEDED TO DISPLAY THE ERROR
+                // if (this.debug) onerror(`your id is invalid, allowed chars: ${pat}`)
                 return null
             }
-            return id
+            return true
         }
 
         /**
@@ -143,21 +190,14 @@ module.exports = () => {
          * - returns a valid probe
          * @param {*} probeID required
          */
-        validProbe(probeID) {
+        validProbe(probeID, debug = null) {
             probeID = validID(probeID)
             if (!probeID) return null
 
-            const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
-            const regx = new RegExp(pat, 'gi')
-            if (regx.test(probeID)) {
-                // NOT ALWAYS NEEDED TO DISPLAY THE ERROR
-                // if (this.debug) onerror(`your id is invalid, allowed chars: ${pat}`)
-                return null
-            }
-
+            if (!this.idRegexValid(probeID)) return
             if (probeID.indexOf(`::`) === -1) return null
             if (!this.pocket[probeID]) {
-                if (this.debug) warn(`[get] did not find probe with probeID ${id}`)
+                if (this.debug && debug === null) warn(`[get] did not find probe with probeID ${probeID}`)
                 return null
             }
             return probeID

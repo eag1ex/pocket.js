@@ -45,11 +45,11 @@ if (pocket.$payload(data)) {
         pocket.$of(`${data.id}::china`)
          .$update({ data: { assets: 100 } }, true)
          .$transfer() 
-                //.$update({status:'complete'})   
-  setTimeout(()=>{
-       pocket.$of(`${data.id}::china`).$to(`${data.id}::covid19`)
-            .$update({status:'complete'})
-   },90)
+
+        setTimeout(()=>{
+            pocket.$of(`${data.id}::china`).$to(`${data.id}::covid19`,false)
+                    .$update({status:'complete'})
+        },90)
 
 
 

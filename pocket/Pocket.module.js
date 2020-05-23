@@ -67,7 +67,7 @@ module.exports = () => {
                 return false
             }
 
-            data.id = this.lastProjectID(data.id)
+            data.id = this.validProjectID(data.id)
 
             if (!data.id) {
                 if (this.debug) onerror(`[$payload] data.id invalid`)
@@ -96,7 +96,7 @@ module.exports = () => {
                 this.lastPocketTimestamp = this.payloadData[data.id]['timestamp']
             }
             if (this.payloadData[data.id]) {
-
+                this.lastProjectID(data.id)
                 this.distributor()
                     .setDefer(data.id)
 
@@ -111,7 +111,7 @@ module.exports = () => {
           * - `returns instance`
           *  methods:`{get,all}` props: `{id,data,tasks,status}`
           * @param {*} probeID required, example format: `${payload.id}::taskName`
-          * @param {*} self = false optional, in case you want to chain, and access `Probe` through `...).d`
+          * @param {*} self = false optional, in case you want to chain, and access `Probe{}` through `...).d`
          */
         $get(probeID = '', self = false) {
 
@@ -151,7 +151,7 @@ module.exports = () => {
          * @param {*} probeID required, example format: `${payload.id}::taskName`
          */
         $update(dataFrom, mergeData = null, probeID = '') {
-            return this._setUpdate(dataFrom, mergeData, probeID,'update')
+            return this._setUpdate(dataFrom, mergeData, probeID, 'update')
         }
 
         /**
@@ -168,7 +168,7 @@ module.exports = () => {
         /**
          * ### $activeTasks
          * - list any active tasks for assigned Probes
-         * @param {*} payloadID optional, when set will only filter thru given job id (NOT Probe ID!)
+         * @param {*} payloadID optional, when set will only filter thru given job id (NOT Probe{} ID!)
          */
         $activeTasks(payloadID = '') {
 
@@ -210,7 +210,7 @@ module.exports = () => {
         // ──────────────────────────────────────────────────────  
 
         // extends  `$update` and `$set`
-        _setUpdate(dataFrom, mergeData = null, probeID = '', type='update'){
+        _setUpdate(dataFrom, mergeData = null, probeID = '', type = 'update') {
 
             const returnAs = (val) => {
                 this.d = val
@@ -234,7 +234,7 @@ module.exports = () => {
             }
 
             let updated = false
-            // reorder dataFrom, make sure if `status` exists, it is shifted to last position, so the Probe doent change state before other values got chance to do so, nice!
+            // reorder dataFrom, make sure if `status` exists, it is shifted to last position, so the Probe{} doent change state before other values got chance to do so, nice!
 
             // we need to convert dataFrom{} to dataFrom[]>array to achieve this
             dataFrom = Object.entries(dataFrom).reduce((n, [key, value]) => {
@@ -258,9 +258,13 @@ module.exports = () => {
                     if (this.debug) warn(`[$update] not a valid propName: ${key}`)
                 }
             }
-            // when setting new data, using `$set()` we should clear any cached Probes
-            if(updated && type==='set') this.clearStoreTransfers(id)
+            // when setting new data, using `$set()` we should clear any cached Probes and realated data
+            if (updated && type === 'set') {
+                this.clearStoreTransfers(id)
+                if (this.$transfer_lastID === id) this.$transfer_lastID = ''
+            }
 
+            // if(updated && type==='update') { }
 
             return returnAs(updated)
         }
@@ -385,7 +389,7 @@ module.exports = () => {
         }
 
         /**
-         * - emit extends with `Dispatcher` to be used by every new Probe as an emitter `(if opts.dispatcher===true)`
+         * - emit extends with `Dispatcher` to be used by every new Probe{} as an emitter `(if opts.dispatcher===true)`
          * @param {*} obj required
          */
         _emit(obj) {
@@ -413,10 +417,10 @@ module.exports = () => {
             if (this._ready[id]) delete this._ready[id]
 
             // empty self
-            this.clearStoreTransfers(id)  
+            this.clearStoreTransfers(id)
         }
     }
-    
+
 
     class PocketModuleExt extends PocketModule {
         constructor(opts, debug) {
