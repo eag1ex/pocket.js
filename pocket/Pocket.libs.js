@@ -3,7 +3,7 @@
  * - Top of the stack class of `PocketModule`, all `opt` initial `properties` are set here
  */
 module.exports = () => {
-    const { onerror, warn, validID, copy } = require('./utils')
+    const { onerror, warn, validID, copy,log } = require('./utils')
     return class PocketLibs {
         /**
          * @param {*} opts.async, when set, allow $payload(`data`) to be async object
@@ -15,7 +15,7 @@ module.exports = () => {
             this.async = (opts || {}).async || null
             // when set enables dispatcher to communicate directly with `probe.js`
             this.dispatcher = (opts || {}).dispatcher ? require('../libs/dispatcher')() : null
-            this.pocket = {} // example this.pocket[`abc::taskName`] returns Probe Instance
+            this.pocket = {} // example this.pocket[`abc::taskName`] returns Probe{} Instance
             this.payloadData = {}// each payload by id
             this.lastPocketTimestamp = 0
             this._lastProjectID = null // last cached reference
@@ -25,6 +25,28 @@ module.exports = () => {
             this._transferCached = [ /** {timestamp,fromProbeID,data} */]
         }
 
+
+        /**
+         * ### clearStoreTransfers
+         * - clear any pending transfers
+         * @param {*} projectID required
+         */
+        clearStoreTransfers(projectID = '') {
+            if (!projectID) return
+            let cleared = false
+            if (this._transferCached.length) {
+                this._transferCached.forEach((element, i) => {
+                    const { fromProbeID } = element || {}
+                    if (!fromProbeID) return
+                    if (fromProbeID.indexOf(projectID) !== -1) {
+                        this._transferCached.splice(i, 1)
+                        cleared = true
+                        if (this.debug) log(`[clearStoreTransfers] transferCached for probeID: ${fromProbeID} has been removed`)
+                    }
+                });
+            }
+            return cleared
+        }
         /**
          * ### storeTransfers
          * - caches pending transfers when using `$transfer` with `$to()`
@@ -67,6 +89,9 @@ module.exports = () => {
             if (!Object.entries(coundCache).length) return {}
             else return coundCache
         }
+
+
+        
 
         /**
          * ### lastProjectID

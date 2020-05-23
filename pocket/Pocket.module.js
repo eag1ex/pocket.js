@@ -146,60 +146,23 @@ module.exports = () => {
         /**
          * ### $update
          * - update Probe/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
-         * @param {*} dataFrom required, must specify what to update on the Probe, example: `dataFrom:{data:'coke',status:'complete',compaign:'cocacola'}`
+         * @param {*} dataFrom required, must specify what to update on Probe{}, example: `dataFrom:{data:'coke',status:'complete',compaign:'cocacola'}`
          * @prop {*} mergeData optional if `true` will merge: `Object.assing({},probe[id].data,mergeData['data'])`
          * @param {*} probeID required, example format: `${payload.id}::taskName`
          */
         $update(dataFrom, mergeData = null, probeID = '') {
+            return this._setUpdate(dataFrom, mergeData, probeID,'update')
+        }
 
-            const returnAs = (val) => {
-                this.d = val
-                return this
-            }
-
-            let id = this.lastProbeID(probeID)
-            console.log('$update/probeID',id)
-            if (!id) {
-                if (this.debug) onerror(`[$update] must specify id`)
-                return returnAs(false)
-            }
-
-            if (!isObject(dataFrom)) {
-                if (this.debug) warn(`[$update] dataFrom must be an `)
-                return returnAs(false)
-            }
-
-            if (!this.pocket[id]) {
-                if (this.debug) onerror(`[$update] this.pocket with id:${id} not found`)
-                return returnAs(false)
-            }
-
-            let updated = false
-            // reorder dataFrom, make sure if `status` exists, it is shifted to last position, so the Probe doent change state before other values got chance to do so, nice!
-
-            // we need to convert dataFrom{} to dataFrom[]>array to achieve this
-            dataFrom = Object.entries(dataFrom).reduce((n, [key, value]) => {
-                const pos = this.probeProps.indexOf(key)  // new order
-                if (this.probeProps[pos] === key) n.push({ inx: pos, data: { [key]: value } })
-                return n
-            }, [])
-
-            for (let inx = 0; inx < dataFrom.length; inx++) {
-                if ((dataFrom[inx] || {})['data'] === undefined) continue
-                const [key, value] = Object.entries(dataFrom[inx]['data'])[0]
-                if ((key !== 'id' && key !== 'task') && this.pocket[id][key] !== undefined) {
-                    if (key === 'data') {
-                        if (mergeData === true) this.pocket[id][key] = Object.assign({}, this.pocket[id][key], value)
-                        else this.pocket[id][key] = value
-                    } else this.pocket[id][key] = value
-
-                    updated = true
-                    continue
-                } else {
-                    if (this.debug) warn(`[$update] not a valid propName: ${key}`)
-                }
-            }
-            return returnAs(updated)
+        /**
+         * ### $set
+         * - as name suggest sets up new new data for Probe/task, it derives from `$update` 
+         * @param {*} dataFrom required, must specify what to set on Probe{}, example: `dataFrom:{data:'coke',status:'complete',compaign:'cocacola'}`
+         * - we should only use `$set` for initialization, this action also calls `clearStoreTransfers`
+         * @param {*} probeID required, example format: `${payload.id}::taskName`
+         */
+        $set(dataFrom, probeID = '') {
+            return this._setUpdate(dataFrom, mergeData = null, probeID, 'set')
         }
 
         /**
@@ -245,6 +208,65 @@ module.exports = () => {
         // ──────────────────────────────────────────────────────
         //   :::::: E N D : :  :   :    :     :        :          
         // ──────────────────────────────────────────────────────  
+
+        // extends  `$update` and `$set`
+        _setUpdate(dataFrom, mergeData = null, probeID = '', type='update'){
+
+            const returnAs = (val) => {
+                this.d = val
+                return this
+            }
+
+            let id = this.lastProbeID(probeID)
+            if (!id) {
+                if (this.debug) onerror(`[$update] must specify id`)
+                return returnAs(false)
+            }
+
+            if (!isObject(dataFrom)) {
+                if (this.debug) warn(`[$update] dataFrom must be an `)
+                return returnAs(false)
+            }
+
+            if (!this.pocket[id]) {
+                if (this.debug) onerror(`[$update] this.pocket with id:${id} not found`)
+                return returnAs(false)
+            }
+
+            let updated = false
+            // reorder dataFrom, make sure if `status` exists, it is shifted to last position, so the Probe doent change state before other values got chance to do so, nice!
+
+            // we need to convert dataFrom{} to dataFrom[]>array to achieve this
+            dataFrom = Object.entries(dataFrom).reduce((n, [key, value]) => {
+                const pos = this.probeProps.indexOf(key)  // new order
+                if (this.probeProps[pos] === key) n.push({ inx: pos, data: { [key]: value } })
+                return n
+            }, [])
+
+            for (let inx = 0; inx < dataFrom.length; inx++) {
+                if ((dataFrom[inx] || {})['data'] === undefined) continue
+                const [key, value] = Object.entries(dataFrom[inx]['data'])[0]
+                if ((key !== 'id' && key !== 'task') && this.pocket[id][key] !== undefined) {
+                    if (key === 'data') {
+                        if (mergeData === true) this.pocket[id][key] = Object.assign({}, this.pocket[id][key], value)
+                        else this.pocket[id][key] = value
+                    } else this.pocket[id][key] = value
+
+                    updated = true
+                    continue
+                } else {
+                    if (this.debug) warn(`[$update] not a valid propName: ${key}`)
+                }
+            }
+            // when setting new data, using `$set()` we should clear any cached Probes
+            if(updated && type==='set') this.clearStoreTransfers(id)
+
+
+            return returnAs(updated)
+        }
+
+
+
 
         /**
          * - sets defer for `$ready()` initially after calling payload 
@@ -391,15 +413,10 @@ module.exports = () => {
             if (this._ready[id]) delete this._ready[id]
 
             // empty self
-            if(this._transferCached.length){
-                this._transferCached.forEach((element,i) => {
-                    const {fromProbeID} = element ||{}
-                    if(!fromProbeID) return
-                    if(fromProbeID.indexOf(id)!==-1) this._transferCached.splice(i,1)
-                });
-            }       
+            this.clearStoreTransfers(id)  
         }
     }
+    
 
     class PocketModuleExt extends PocketModule {
         constructor(opts, debug) {

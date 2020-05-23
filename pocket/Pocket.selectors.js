@@ -138,6 +138,5 @@ module.exports = (PocketModule) => {
             if (!this.pocket[probeID]) return null
             return copy(this.pocket[probeID].all())
         }
-
     }
 }
