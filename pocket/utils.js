@@ -6,7 +6,7 @@ const color = require('bash-color')
  * my own lodash/like `Utils`
  */
 
-
+exports.uniq = (arr) => arr.filter((v, i, all) => all.indexOf(v) === i)
 exports.objectSize = (obj) => (obj && (Object.prototype === (obj).__proto__)) ? Object.entries(obj).length : 0
 exports.last = (arr) => (arr && Array.prototype === (arr).__proto__) ? arr[arr.length - 1] : null,
     exports.copyBy = (obj, refs) => refs.reduce((n, el, i) => {

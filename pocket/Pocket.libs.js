@@ -20,6 +20,7 @@ module.exports = () => {
             this.lastPocketTimestamp = 0
             this._lastProjectID = null // last cached reference
             this._lastProbeID = null // last cached reference
+            this._$cached_data = {/**id:{} */ }// stores last captured data when calling `$data(..)`
             this.$transfer_lastID = '' // set when we call `$transfer()` and reset after `$to()`
             this._ready = {} // collect all ready example: `{id:Promise}`
             this.d = undefined // NOTE user reference data, carefull when using selectors from previous target, always access last
@@ -85,12 +86,10 @@ module.exports = () => {
                 }
                 return n
             }, {})
-            
+
             if (!objectSize(coundCache)) return {}
             else return coundCache
         }
-
-
 
         /**
          * ### selectByTask
@@ -100,7 +99,7 @@ module.exports = () => {
          */
         selectByTask(taskOrProbeID = '', updateLastProbeID = null) {
 
-            taskOrProbeID = taskOrProbeID ||''
+            taskOrProbeID = taskOrProbeID || ''
             if (!this.idRegexValid(taskOrProbeID) && taskOrProbeID) return null
 
             if (taskOrProbeID.indexOf(':') > 0 && !this.pocket[taskOrProbeID]) {
@@ -115,7 +114,7 @@ module.exports = () => {
 
             if (updateLastProbeID) this.lastProbeID(taskOrProbeID, true) // if a match we receive below updated `_lastProbeID` 
             if (this.pocket[taskOrProbeID]) {
-                if(updateLastProbeID)  this.lastProbeID(taskOrProbeID)
+                if (updateLastProbeID) this.lastProbeID(taskOrProbeID)
                 return taskOrProbeID // we have a valid ref so use that
             }
 
@@ -178,6 +177,46 @@ module.exports = () => {
             if (!this.idRegexValid(id)) return null
             return id
         }
+
+        /**
+         * ### dataPropSelector
+         * - works with `$data()` and `$cached()` user selectors 
+         * - refer to `PocketSelectors` module
+         * @param {*} probeID required
+         * @param {*} dataProp optional
+         * @param {*} self optional
+         * @param {*} probeData{} required our referencing probeData{}
+         */
+        dataPropSelector(type = 'data()', probeID = '', dataProp = {}, self = false, probeData = {}) {
+            let selectedData
+            /**
+             * NOTE if calling via `$cached()`, the probeData already comes as `this._$cached_data` so dont need to ccha it again!
+             */
+            try {
+                /**
+                  * NOTE IMPORTANT
+                  * assembly  order: `dataProp < probeData > selectedData`
+                  * if are asking for multiple, example `selectedData:{a,b,value:1111}`, then will return those available 
+                  * as an Object{}. But if  asking for only 1 `selectedData:{value:1111}`, will return the value `11111`, only because we know what we are asking for specified
+                  */
+                selectedData = Object.entries(dataProp).reduce((n, [k, val], i) => {
+                    if (probeData[k] !== undefined) n[k] = probeData[k]
+                    return n
+                }, {})
+
+                if (!objectSize(selectedData)) selectedData = undefined
+                if (objectSize(selectedData) === 1 && objectSize(dataProp) === 1) selectedData = Object.values(selectedData).shift()
+
+                // if comming from `$data()` we need to cache our data 
+                if (type === 'data()') this._$cached_data[probeID] = selectedData
+                return self ? this : selectedData
+            } catch (err) {
+                if (this.debug) warn(`[$data] no dataProp found on probeID: ${probeID}`)
+                if (type === 'data()') this._$cached_data[probeID] = selectedData || null
+                return self ? this : (selectedData || null)
+            }
+        }
+
 
         idRegexValid(str) {
             const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi

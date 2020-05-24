@@ -5,6 +5,10 @@ process.on('uncaughtException', function (err) {
 })
 
 
+/**
+ * Example, exchange of data regarding `china => covid19 => world`
+ */
+
 const { log, warn } = require('../pocket/utils')
 const Pocket = require('../pocket/Pocket.module')()
 const DEBUG = true
@@ -15,10 +19,10 @@ const data = {
     tasks: [
         {
             task: 'china', data: { 'assets': 100, type: 'billions', message: 'profits from covid-19' },
-            compaign: 'Dominance'
+           // compaign: 'Dominance'
         },
         {
-            task: 'covid19', data: { 'assets': 0, type: 'billions', message: 'in damages' },
+            task: 'covid19', /*data: { 'assets': 0, type: 'billions', message: 'in damages' },*/
             compaign: 'Vaccine'
         },
         {
@@ -34,11 +38,38 @@ if (pocket.$payload(data)) {
     //    .$update({status:'complete'})
        // .$get() // get latest update data   
 
-    // shortcut to above
-    pocket.$of(`::covid19`)
-           .$update({ data: { assets: 50 } })
-            .$update({status:'complete'}) 
+    pocket
+        .$select(`new-world-order`)
+        .$of(`::china`) 
+        .$update({ data: { assets: 105 }, compaign: 'Dominance' },true)
 
+
+    function someEnclosure(cb) {
+        const t = (new function () {
+            this.order = {
+                masks: 10000,
+                cost: 1000000,
+                currency: `CNY`,
+                symbol: `¥`
+            }
+            this.purchase = cb
+        }())
+        return Object.assign({}, t)
+    }
+
+    someEnclosure(function () {
+        this.order.masks = 1000
+        pocket.$of(`::china`).$data(['assets'], null, true)
+           // .$update({ data: { assets: pocket.$cached() + this.order.cost } }) 
+
+        console.log('china/assets',pocket.$cached('type'))
+           
+        // do it
+    }).purchase()
+
+
+            //.$update({status:'complete'}) 
+        // log(`::china/task`,pocket.$of(`::china`).$data())
     
     //       //  .$update({ data: { assets: 0 } }, true)
     //      //   .$update({status:'complete'})
@@ -53,13 +84,13 @@ if (pocket.$payload(data)) {
 
 
 
-    pocket.$probeStatusAsync(`${data.id}::china`).d.then(z=>{
-        log('china/getStatusAsync',z)
-    })
+    // pocket.$probeStatusAsync(`${data.id}::china`).d.then(z=>{
+    //     log('china/getStatusAsync',z)
+    // })
 
-    pocket.$ready(data.id).d.then(z => {
-       log('Pocket ready', z)
-    })
+    // pocket.$ready(data.id).d.then(z => {
+    //    log('Pocket ready', z)
+    // })
 
     
     //log(`world`, pocket.$get(`${data.id}::world`).d)

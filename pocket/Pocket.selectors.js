@@ -5,7 +5,7 @@
  * - allow selecttion to refference by, example:  `taskName`, `::taskName` and `${projectID}::taskName`, thanks to `selectByTask()` method
  */
 module.exports = (PocketModule) => {
-    const { copy, warn, log, onerror, objectSize } = require('../Pocket/utils')
+    const { copy, warn, isArray, log, onerror, objectSize, isString, uniq } = require('../Pocket/utils')
     return class PocketSelectors extends PocketModule {
         constructor(opts, debug) {
             super(opts, debug)
@@ -92,21 +92,69 @@ module.exports = (PocketModule) => {
          */
         $of(probeID = '') {
             // allow use of short ref names example: `::cocalola`
-            console.log('$of',this.selectByTask(probeID, true))
+            console.log('$of', this.selectByTask(probeID, true))
             return this
         }
 
         /**
          * ### $data
          * - returns Object copy of `Probe['data']`
+         * @param {*} dataProp optional, if you know what you are asking for example: `{assets:true}`,or `array['assets]`, it has catch error exception, so you wont receive any errors just `null`
+         * will return all available matched within our `Probe{}['data]`. Multiples of `dataProp{}/([])/(',')` will return an object, if only one specified, only value will be retured
          * @param {*} probeID optional/sensitive, select new point of reference
+         * @param {*} self optional,if you want to $cached() last data enquiry and return `self` to keep chaining, nice!
          */
-        $data(probeID) {
+        $data(dataProp = null/**{}||[] */, probeID = '', self = false) {
             // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)
-            if (!this.pocket[probeID]) return null
-            return copy(this.pocket[probeID]['data'])
+            if (!this.pocket[probeID]) return self ? this : null
+
+            // NOTE can provide as an array
+            if (isArray(dataProp) && (dataProp || []).length) {
+                dataProp = uniq(dataProp).reduce((n, el) => {
+                    if (el !== undefined) n[el.trim()] = true
+                    return n
+                }, {})
+            }
+
+            if (!dataProp || !objectSize(dataProp)) {
+                this._$cached_data[probeID] = copy(this.pocket[probeID]['data'])
+                return self ? this : this._$cached_data[probeID]
+            }
+            return this.dataPropSelector("data()", probeID, dataProp, self, copy(this.pocket[probeID]['data']))
         }
+
+        /**
+         * ### cached
+         * - grabs last cached `$data(...)` from Probe{}
+         * @param {*} dataProp{}/String optional, know what you are asking for example: ` {assets:true}/ or > 'assets,values,somethingElse'`, it has catch error exception, so you wont receive any errors just `null`
+         * will return all available matched within our `_$cached_data[probeID]`. Multiples of `dataProp{}/([])/(',')` will return an object, if only one specified, only value will be retured
+         * @param {*} probeID 
+         */
+        $cached(dataProp = {}/** ='' */, probeID = '') {
+            probeID = this.selectByTask(probeID, true)
+            if (!this.pocket[probeID]) return null
+            const hasValue = this._$cached_data[probeID] !== undefined && this._$cached_data[probeID] !== null
+            if (!hasValue) return null
+            // if you provided a string make it an object
+            if (isString(dataProp) && (dataProp || '').length) {
+                dataProp = uniq(dataProp.trim().replace(/ /gi, '').split(',')).reduce((n, el) => {
+                    if (el !== undefined) n[el] = true
+                    return n
+                }, {})
+            }
+
+            if (!objectSize(this._$cached_data[probeID]) && hasValue) {
+                if (objectSize(dataProp)) return undefined // our cache not an object, but we are asking for dataProp reference, so should return undefined
+                else return this._$cached_data[probeID]
+            }
+
+            if (!dataProp || !objectSize(dataProp)) {
+                return this._$cached_data[probeID] === undefined ? undefined : this._$cached_data[probeID]
+            }
+            else return this.dataPropSelector("cached()", probeID, dataProp, false, this._$cached_data[probeID])
+        }
+
 
         /**
          * ### $compaign

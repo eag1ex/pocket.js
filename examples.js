@@ -36,7 +36,7 @@ async function init(){
       //  },2000)
     })
 }
-init()
+//init()
 
 
 function testProbe() {
@@ -66,3 +66,10 @@ function testProbe() {
   })
 }
 //testProbe()
+
+const test = Object.values(['mike',''].reduce((n,el,i,all)=>{
+  if(el!==undefined) n[el] = true
+  return n
+},{}))//.shift()
+
+console.log('test',test)

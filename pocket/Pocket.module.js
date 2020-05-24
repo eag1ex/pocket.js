@@ -262,6 +262,7 @@ module.exports = () => {
             if (updated && type === 'set') {
                 this.clearStoreTransfers(id)
                 if (this.$transfer_lastID === id) this.$transfer_lastID = ''
+                if(this._$cached_data[id]) delete this._$cached_data[id]
             }
 
             // if(updated && type==='update') { }
@@ -410,7 +411,8 @@ module.exports = () => {
         deletePocketSet(id) {
             if (Object.values(this.pocket).length) {
                 for (let poc of Object.values(this.pocket)) {
-                    if (poc.id.includes(id)) delete this.pocket[poc.id]
+                    if (this._$cached_data[poc.id]) delete this._$cached_data[poc.id]
+                    if (poc.id.includes(id)) delete this.pocket[poc.id]           
                 }
             }
             if (this.payloadData[id]) delete this.payloadData[id]
