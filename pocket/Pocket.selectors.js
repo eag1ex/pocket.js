@@ -31,7 +31,6 @@ module.exports = (PocketModule) => {
 
             // allow use of short ref names example: `::cocalola`
             fromProbeID = this.selectByTask(fromProbeID, true)
-            console.log('$transfe/fromProbeID', fromProbeID)
             fromProbeID = this.lastProbeID(fromProbeID)
             if (!this.pocket[fromProbeID]) {
                 if (this.debug) warn(`[$transfer] no Probe{} found for this id fromProbeID:${fromProbeID}`)
@@ -92,7 +91,7 @@ module.exports = (PocketModule) => {
          */
         $of(probeID = '') {
             // allow use of short ref names example: `::cocalola`
-            console.log('$of', this.selectByTask(probeID, true))
+            this.selectByTask(probeID, true)
             return this
         }
 
@@ -107,7 +106,7 @@ module.exports = (PocketModule) => {
         $data(dataProp = null/**{}||[] */, probeID = '', self = false) {
             // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)
-            if (!this.pocket[probeID]) return self ? this : null
+            if (!this.pocket[probeID]) return self ? this : undefined
 
             // NOTE can provide as an array
             if (isArray(dataProp) && (dataProp || []).length) {
@@ -133,9 +132,9 @@ module.exports = (PocketModule) => {
          */
         $cached(dataProp = {}/** ='' */, probeID = '') {
             probeID = this.selectByTask(probeID, true)
-            if (!this.pocket[probeID]) return null
+            if (!this.pocket[probeID]) return undefined
             const hasValue = this._$cached_data[probeID] !== undefined && this._$cached_data[probeID] !== null
-            if (!hasValue) return null
+            if (!hasValue) return undefined
             // if you provided a string make it an object
             if (isString(dataProp) && (dataProp || '').length) {
                 dataProp = uniq(dataProp.trim().replace(/ /gi, '').split(',')).reduce((n, el) => {
@@ -143,18 +142,17 @@ module.exports = (PocketModule) => {
                     return n
                 }, {})
             }
-
+            // return cached data if its not an object, or undefined
             if (!objectSize(this._$cached_data[probeID]) && hasValue) {
                 if (objectSize(dataProp)) return undefined // our cache not an object, but we are asking for dataProp reference, so should return undefined
                 else return this._$cached_data[probeID]
             }
-
+            // no selection at all, so just return whats available
             if (!dataProp || !objectSize(dataProp)) {
                 return this._$cached_data[probeID] === undefined ? undefined : this._$cached_data[probeID]
             }
             else return this.dataPropSelector("cached()", probeID, dataProp, false, this._$cached_data[probeID])
         }
-
 
         /**
          * ### $compaign

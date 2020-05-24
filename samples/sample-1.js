@@ -59,14 +59,14 @@ if (pocket.$project(data)) {
 
     someEnclosure(function () {
         this.order.masks = 1000
-        pocket.$of(`::china`).$data(['assets'], null, true)
+        pocket.$of(`::china`).$data(['assetss'], null, true)
            // .$update({ data: { assets: pocket.$cached() + this.order.cost } })         
         // do it
     }).purchase()
 
 
             //.$update({status:'complete'}) 
-        // log(`::china/task`,pocket.$of(`::china`).$data())
+        log(`::china/task`,pocket.$of(`::china`).$cached())
     
     //       //  .$update({ data: { assets: 0 } }, true)
     //      //   .$update({status:'complete'})

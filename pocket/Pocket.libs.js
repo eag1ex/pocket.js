@@ -27,7 +27,6 @@ module.exports = () => {
             this._transferCached = [ /** {timestamp,fromProbeID,data} */]
         }
 
-
         /**
          * ### clearStoreTransfers
          * - clear any pending transfers
@@ -190,14 +189,14 @@ module.exports = () => {
         dataPropSelector(type = 'data()', probeID = '', dataProp = {}, self = false, probeData = {}) {
             let selectedData
             /**
-             * NOTE if calling via `$cached()`, the probeData already comes as `this._$cached_data` so dont need to ccha it again!
+             * NOTE if calling via `$cached()`,  `probeData` already comes as `this._$cached_data` so dont need to cache  it again!
              */
             try {
                 /**
                   * NOTE IMPORTANT
-                  * assembly  order: `dataProp < probeData > selectedData`
-                  * if are asking for multiple, example `selectedData:{a,b,value:1111}`, then will return those available 
-                  * as an Object{}. But if  asking for only 1 `selectedData:{value:1111}`, will return the value `11111`, only because we know what we are asking for specified
+                  * assembly order: `dataProp < probeData > selectedData`
+                  * if are asking for multiple, example `selectedData:{a,b,value:1111}`, will return those available 
+                  * as an Object{}. But if asking for only 1 `selectedData:{value:1111}`, will return the value `11111`, only because we know what we asked for initially
                   */
                 selectedData = Object.entries(dataProp).reduce((n, [k, val], i) => {
                     if (probeData[k] !== undefined) n[k] = probeData[k]
@@ -205,15 +204,17 @@ module.exports = () => {
                 }, {})
 
                 if (!objectSize(selectedData)) selectedData = undefined
-                if (objectSize(selectedData) === 1 && objectSize(dataProp) === 1) selectedData = Object.values(selectedData).shift()
 
-                // if comming from `$data()` we need to cache our data 
+                // selct only value if `dataProp` === `selectedData` is size ( 1 + 1 === 2 )
+                if (objectSize(selectedData) + objectSize(dataProp) === 2) selectedData = Object.values(selectedData).shift()
+
+                // if coming from `$data()` we cache our data 
                 if (type === 'data()') this._$cached_data[probeID] = selectedData
                 return self ? this : selectedData
             } catch (err) {
                 if (this.debug) warn(`[$data] no dataProp found on probeID: ${probeID}`)
-                if (type === 'data()') this._$cached_data[probeID] = selectedData || null
-                return self ? this : (selectedData || null)
+                if (type === 'data()') this._$cached_data[probeID] = selectedData
+                return self ? this : selectedData
             }
         }
 
