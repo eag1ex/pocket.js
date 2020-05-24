@@ -270,9 +270,6 @@ module.exports = () => {
             return returnAs(updated)
         }
 
-
-
-
         /**
          * - sets defer for `$ready()` initially after calling payload 
          * @param {*} id required
@@ -423,7 +420,6 @@ module.exports = () => {
         }
     }
 
-
     class PocketModuleExt extends PocketModule {
         constructor(opts, debug) {
             super(opts, debug)
@@ -446,6 +442,15 @@ module.exports = () => {
                 if (asAsync) return returnAs(Promise.reject())
                 else return returnAs(false)
             }
+        }
+
+        /**
+         * ### $project
+         * - `an alias on $payload(...), can use either`
+         * - refer to `$payload` for specifications :)
+         */
+        $project(...args) {
+            return this.$payload.apply(this, args)
         }
 
         $ready(payloadID) {

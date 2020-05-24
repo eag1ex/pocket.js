@@ -31,7 +31,7 @@ const data = {
         }]
 }
 
-if (pocket.$payload(data)) {
+if (pocket.$project(data)) {
 
     // const worldProbe = pocket.$get(`${data.id}::world`,true) // grab created Pocket
     //     .$update({ data: { assets: 50 } }, true) // update it
@@ -60,10 +60,7 @@ if (pocket.$payload(data)) {
     someEnclosure(function () {
         this.order.masks = 1000
         pocket.$of(`::china`).$data(['assets'], null, true)
-           // .$update({ data: { assets: pocket.$cached() + this.order.cost } }) 
-
-        console.log('china/assets',pocket.$cached('type'))
-           
+           // .$update({ data: { assets: pocket.$cached() + this.order.cost } })         
         // do it
     }).purchase()
 
