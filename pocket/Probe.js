@@ -5,7 +5,7 @@
  */
 module.exports = (dispatcher) => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { isString, warn, log, isNumber, onerror, last, copy } = require('./utils')
+    const { isString, warn, log, isNumber, onerror, last, copy, isObject } = require('./utils')
     const sq = require('simple-q')  // nice and simple promise/defer by `eaglex.net`
     return class Probe {
         /**
@@ -135,6 +135,26 @@ module.exports = (dispatcher) => {
             this._dataIndex++
             if (this.status === 'open' && this._data !== null && this._dataIndex > 1) this.status = 'updated'
             this._data = v
+        }
+
+        /**
+         * ### update
+         * - update data of current Probe{}.data
+         * @param {*} data:any, required
+         * @param {*} merge:Boolean, optional for merging object to this.data
+         */
+        update(data, merge = null) {
+            if (this.status === 'complete' || this.status === 'send') {
+                if (this.debug) warn(`[Probe][update] cannot update data on complete status`)
+                return this
+            }
+            if (!isObject(data) && merge) {
+                if (this.debug) warn(`[Probe][update] cannot update none object 'data' with option 'merge=true' set`)
+                return this
+            }
+            if (isObject(data) && merge) this.data = Object.assign({}, this.data, data)
+            else if (data !== undefined) this.data = data
+            return this
         }
 
         get data() {

@@ -11,12 +11,70 @@ module.exports = (PocketModule) => {
             super(opts, debug)
         }
 
+        // extending original `$probeStatusAsync`
+        $probeStatusAsync(probeID = ''){
+             // allow use of short ref names example: `::cocalola`
+            probeID = this.selectByTask(probeID, true)
+            let lastProbeID = this.lastProbeID(probeID)
+            return super.$probeStatusAsync(lastProbeID)
+        }
+
+        // extending original `$get`
+        $get(probeID, self) {
+            // allow use of short ref names example: `::cocalola`
+            probeID = this.selectByTask(probeID, true)
+            let lastProbeID = this.lastProbeID(probeID)
+            return super.$get(lastProbeID, self)
+        }
+
+        // extending original `$set`
+        $set(dataFrom, probeID) {
+            // allow use of short ref names example: `::cocalola`
+            probeID = this.selectByTask(probeID, true)
+            let lastProbeID = this.lastProbeID(probeID)
+            return super.$set(dataFrom, lastProbeID)
+        }
+
+
+        /**
+         * ### $probe
+         * - return me as Probe{}, similar as $get(...), although does additional check for instanceOf Probe{}
+         * @param {*} probeID 
+         */
+        $probe(probeID = '') {
+            // allow use of short ref names example: `::cocalola`
+            probeID = this.selectByTask(probeID, true)
+            let lastProbeID = this.lastProbeID(probeID)
+            if (!this.pocket[lastProbeID]) {
+                if (this.debug) warn(`[$probe] not found for probeID: ${probeID}`)
+                return undefined
+            }
+
+            if (this.pocket[lastProbeID].constructor.name !== 'Probe') {
+                if (this.debug) onerror(`[$probe] probeID: ${probeID} is not an instance of Probe{}`)
+                return undefined
+            }
+
+            return this.pocket[lastProbeID]
+        }
+
+
+        // extending original `$update`
+        $update(dataFrom, mergeData, probeID) {
+            // allow use of short ref names example: `::cocalola`
+            probeID = this.selectByTask(probeID, true)
+            let lastProbeID = this.lastProbeID(probeID)
+            return super.$update(dataFrom, mergeData, lastProbeID)
+        }
+
+
         /**
          * ### $select
          * - select current payloadID/project/job by id you are working on
          * @param {*} projectID optional/sensitive, selects new point of reference.
          */
         $select(projectID = '') {
+            projectID = !isString(projectID) ? '': projectID
             this.lastProjectID(projectID) // also updates last selector reference
             return this
         }
@@ -28,7 +86,6 @@ module.exports = (PocketModule) => {
          * @param {*} fromProbeID optional/sensitive, selects new point of reference.
          */
         $transfer(fromProbeID = '') {
-
             // allow use of short ref names example: `::cocalola`
             fromProbeID = this.selectByTask(fromProbeID, true)
             fromProbeID = this.lastProbeID(fromProbeID)

@@ -3,7 +3,7 @@
  * - Top of the stack class of `PocketModule`, all `opt` initial `properties` are set here
  */
 module.exports = () => {
-    const { objectSize, warn, validID, copy, log } = require('./utils')
+    const { objectSize, warn, validID, copy, log, isString } = require('./utils')
     return class PocketLibs {
         /**
          * @param {*} opts.async, when set, allow $payload(`data`) to be async object
@@ -97,10 +97,10 @@ module.exports = () => {
          * @param {*} probeID {*} required, but optional
          */
         selectByTask(taskOrProbeID = '', updateLastProbeID = null) {
-
-            taskOrProbeID = taskOrProbeID || ''
+            
+            taskOrProbeID = !isString(taskOrProbeID) ?  '': taskOrProbeID
             if (!this.idRegexValid(taskOrProbeID) && taskOrProbeID) return null
-
+            console.log('what is taskOrProbeID',taskOrProbeID)
             if (taskOrProbeID.indexOf(':') > 0 && !this.pocket[taskOrProbeID]) {
                 if (this.debug) warn(`[selectByTask] when using '::' prefix selector, it should come at 0 index`)
                 return null

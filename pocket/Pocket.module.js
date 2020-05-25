@@ -5,6 +5,11 @@ module.exports = () => {
     const PocketLibs = require('./Pocket.libs')()
     const newProbe = require('./Probe')
 
+    /**
+     * TODO ADD to $update `// action/[merge], action/+-*` using regEx
+     */
+
+
     class PocketModule extends PocketLibs {
 
         constructor(opts, debug) {
@@ -82,9 +87,15 @@ module.exports = () => {
             // NOTE validate our pocket values before generating each `new Probe()`
             for (let val of data['tasks'].values()) {
                 if (!val['task']) {
-                    if (this.debug) log('task must be set for your tasks')
+                    if (this.debug) warn('[$payload] task must be set for your tasks')
                     continue
                 }
+                // validate task 
+                if(!this.idRegexValid(val['task']) || val['task'].indexOf('::')!==-1){
+                    if (this.debug) warn('[$payload] invalid taskName, failed idRegexValid validation')
+                    continue
+                }
+
                 if (!this.payloadData[data.id]) this.payloadData[data.id] = { value: [], status: 'open', timestamp: new Date().getTime() }
                 const exists = this.payloadData[data.id]['value'].filter(z => z.task.indexOf(val.task) !== -1)
                 if (exists.length) {
@@ -137,12 +148,12 @@ module.exports = () => {
                 this.d = val
                 return this
             }
-
+            
             probeID = this.lastProbeID(probeID)
             if (!probeID) return returnAs(null)
             return returnAs(this.pocket[probeID].getStatusAsync)
         }
-
+        
         /**
          * ### $update
          * - update Probe/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
