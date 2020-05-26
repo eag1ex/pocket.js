@@ -2,6 +2,8 @@ node_modules
 npm-debug.log
 desktop.ini
 
+build
+info.md
 temp
 logcommits.md
 *.env
