@@ -1,6 +1,6 @@
 module.exports = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const {objectSize, log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
+    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     const PocketLibs = require('./Pocket.libs')()
     const newProbe = require('./Probe')
@@ -9,12 +9,9 @@ module.exports = () => {
      * TODO ADD to $update `// action/[merge], action/+-*` using regEx
      */
 
-
     class PocketModule extends PocketLibs {
-
         constructor(opts, debug) {
             super(opts, debug)
-
             if (this.dispatcher) {
                 this.dispatcher.initListener().subscribe(z => {
                     const { probe, status } = z || {}
@@ -91,7 +88,7 @@ module.exports = () => {
                     continue
                 }
                 // validate task 
-                if(!this.idRegexValid(val['task']) || val['task'].indexOf('::')!==-1){
+                if (!this.idRegexValid(val['task']) || val['task'].indexOf('::') !== -1) {
                     if (this.debug) warn('[$payload] invalid taskName, failed idRegexValid validation')
                     continue
                 }
@@ -102,7 +99,6 @@ module.exports = () => {
                     if (this.debug) warn(`the same task "${val.task}" already exists on the payload, you must choose uniq`)
                     continue
                 }
-
                 this.payloadData[data.id]['value'].push(val)
                 this.lastPocketTimestamp = this.payloadData[data.id]['timestamp']
             }
@@ -113,7 +109,6 @@ module.exports = () => {
 
                 return true
             } else return false
-
         }
 
         /**
@@ -125,7 +120,6 @@ module.exports = () => {
           * @param {*} self = false optional, in case you want to chain, and access `Probe{}` through `...).d`
          */
         $get(probeID = '', self = false) {
-
             const returnAs = (val) => {
                 this.d = val
                 return self ? this : this.d
@@ -143,17 +137,16 @@ module.exports = () => {
          * @param {*} probeID 
          */
         $probeStatusAsync(probeID = '') {
-
             const returnAs = (val) => {
                 this.d = val
                 return this
             }
-            
+
             probeID = this.lastProbeID(probeID)
             if (!probeID) return returnAs(null)
             return returnAs(this.pocket[probeID].getStatusAsync)
         }
-        
+
         /**
          * ### $update
          * - update Probe/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
@@ -173,7 +166,7 @@ module.exports = () => {
          * @param {*} probeID required, example format: `${payload.id}::taskName`
          */
         $set(dataFrom, probeID = '') {
-            return this._setUpdate(dataFrom, mergeData = null, probeID, 'set')
+            return this._setUpdate(dataFrom, null, probeID, 'set')
         }
 
         /**
@@ -182,14 +175,12 @@ module.exports = () => {
          * @param {*} payloadID optional, when set will only filter thru given job id (NOT Probe{} ID!)
          */
         $activeTasks(payloadID = '') {
-
             const returnAs = (val) => {
                 this.d = val
                 return this
             }
 
             payloadID = this.lastProjectID(payloadID)
-            
             if (!objectSize(this.pocket)) return returnAs([])
             let tasks = Object.entries(this.pocket).reduce((n, [probeID, probe]) => {
                 if (probeID.indexOf(payloadID || '') === 0 && payloadID && this.payloadData[payloadID]) n.push(probe['task'])
@@ -222,7 +213,6 @@ module.exports = () => {
 
         // extends  `$update` and `$set`
         _setUpdate(dataFrom, mergeData = null, probeID = '', type = 'update') {
-
             const returnAs = (val) => {
                 this.d = val
                 return this
@@ -249,7 +239,7 @@ module.exports = () => {
 
             // we need to convert dataFrom{} to dataFrom[]>array to achieve this
             dataFrom = Object.entries(dataFrom).reduce((n, [key, value]) => {
-                const pos = this.probeProps.indexOf(key)  // new order
+                const pos = this.probeProps.indexOf(key) // new order
                 if (this.probeProps[pos] === key) n.push({ inx: pos, data: { [key]: value } })
                 return n
             }, [])
@@ -273,7 +263,7 @@ module.exports = () => {
             if (updated && type === 'set') {
                 this.clearStoreTransfers(id)
                 if (this.$transfer_lastID === id) this.$transfer_lastID = ''
-                if(this._$cached_data[id]) delete this._$cached_data[id]
+                if (this._$cached_data[id]) delete this._$cached_data[id]
             }
 
             // if(updated && type==='update') { }
@@ -290,7 +280,7 @@ module.exports = () => {
             if (!id) throw 'id must be set'
 
             if (!this._ready[id]) this._ready[id] = sq()
-            
+
             if (!objectSize(this.pocket)) {
                 const msg = `[setDefer] probe is empty, so nothing set, id:${id}`
                 if (this.debug) onerror(msg)
@@ -420,7 +410,7 @@ module.exports = () => {
             if (Object.values(this.pocket).length) {
                 for (let poc of Object.values(this.pocket)) {
                     if (this._$cached_data[poc.id]) delete this._$cached_data[poc.id]
-                    if (poc.id.includes(id)) delete this.pocket[poc.id]           
+                    if (poc.id.includes(id)) delete this.pocket[poc.id]
                 }
             }
             if (this.payloadData[id]) delete this.payloadData[id]

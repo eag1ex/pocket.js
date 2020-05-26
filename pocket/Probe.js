@@ -6,7 +6,7 @@
 module.exports = (dispatcher) => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
     const { isString, warn, log, isNumber, onerror, last, copy, isObject } = require('./utils')
-    const sq = require('simple-q')  // nice and simple promise/defer by `eaglex.net`
+    const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     return class Probe {
         /**
          * @param {*} opts.id required, case sensitive, all will be toLowerCase() 
@@ -28,7 +28,7 @@ module.exports = (dispatcher) => {
             this._compaign = null
             this._dataIndex = 0
             this._statusIndex = 0
-            this._statusAsync = [/**{timestamp:promise} */] // dynamic promise changer
+            this._statusAsync = [/** {timestamp:promise} */] // dynamic promise changer
 
             this.task = opts.task
             this.id = opts.id
@@ -100,7 +100,6 @@ module.exports = (dispatcher) => {
                 return
             }
 
-
             if (!v) return
             if (!isString(v)) {
                 if (this.debug) warn(`task must be a string`)
@@ -111,8 +110,6 @@ module.exports = (dispatcher) => {
             const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
             const regx = new RegExp(pat, 'gi')
             if (regx.test(v)) throw (`your task is invalid, allowed chars: ${pat}`)
-
-
 
             this._task = v.replace(/ /gi, '_').toLowerCase()// every task must be valid with required 
         }
@@ -235,11 +232,10 @@ module.exports = (dispatcher) => {
                         
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
-                       // setTimeout(()=>{
-                            this._status = stat
-                            this.onComplete(v) // resolve probe when status complete
-                      //  })
-
+                        // setTimeout(()=>{
+                        this._status = stat
+                        this.onComplete(v) // resolve probe when status complete
+                        //  })
                        
                         break
 
@@ -267,7 +263,6 @@ module.exports = (dispatcher) => {
                 }
             })(v)
         }
-
 
         /**
          * - works with `statusAsync`
@@ -308,7 +303,7 @@ module.exports = (dispatcher) => {
         onComplete(status) {
             if ((status === 'complete' || status === 'error') && this._status !== 'send' && this._dataIndex > 0) {
                
-                if (dispatcher){
+                if (dispatcher) {
                     setTimeout(() => {
                         if (dispatcher) dispatcher._emit({ probe: this, status })                   
                     })

@@ -5,15 +5,15 @@
  * - allow selecttion to refference by, example:  `taskName`, `::taskName` and `${projectID}::taskName`, thanks to `selectByTask()` method
  */
 module.exports = (PocketModule) => {
-    const { copy, warn, isArray, log, onerror, objectSize, isString, uniq } = require('../Pocket/utils')
+    const { copy, warn, isArray, onerror, objectSize, isString, uniq } = require('../Pocket/utils')
     return class PocketSelectors extends PocketModule {
         constructor(opts, debug) {
             super(opts, debug)
         }
 
         // extending original `$probeStatusAsync`
-        $probeStatusAsync(probeID = ''){
-             // allow use of short ref names example: `::cocalola`
+        $probeStatusAsync(probeID = '') {
+            // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)
             let lastProbeID = this.lastProbeID(probeID)
             return super.$probeStatusAsync(lastProbeID)
@@ -34,7 +34,6 @@ module.exports = (PocketModule) => {
             let lastProbeID = this.lastProbeID(probeID)
             return super.$set(dataFrom, lastProbeID)
         }
-
 
         /**
          * ### $probe
@@ -58,7 +57,6 @@ module.exports = (PocketModule) => {
             return this.pocket[lastProbeID]
         }
 
-
         // extending original `$update`
         $update(dataFrom, mergeData, probeID) {
             // allow use of short ref names example: `::cocalola`
@@ -67,14 +65,13 @@ module.exports = (PocketModule) => {
             return super.$update(dataFrom, mergeData, lastProbeID)
         }
 
-
         /**
          * ### $select
          * - select current payloadID/project/job by id you are working on
          * @param {*} projectID optional/sensitive, selects new point of reference.
          */
         $select(projectID = '') {
-            projectID = !isString(projectID) ? '': projectID
+            projectID = !isString(projectID) ? '' : projectID
             this.lastProjectID(projectID) // also updates last selector reference
             return this
         }
@@ -111,9 +108,8 @@ module.exports = (PocketModule) => {
 
             // allow use of short ref names example: `::cocalola`
             toProbeID = this.selectByTask(toProbeID, pointToThisProbe)
-
             // if (!keepLastPointerReference) toProbeID = this.lastProbeID(toProbeID)
-            if (keepLastPointerReference) toProbeID = this.validProbe(toProbeID)
+            if (pointToThisProbe) toProbeID = this.validProbe(toProbeID)
             if (!toProbeID) {
                 if (this.debug) warn(`[$to] toProbeID is invalid`)
                 return this
@@ -132,8 +128,7 @@ module.exports = (PocketModule) => {
                         this.pocket[fromProbeID]['data'] = null // from $transfer 
                         this.pocket[toProbeID]['data'] = data // $to 
                     }
-                }
-                else {
+                } else {
                     if (this.debug) warn(`[$to] no last valid transfer found`)
                 }
                 this.$transfer_lastID = ''
@@ -160,7 +155,7 @@ module.exports = (PocketModule) => {
          * @param {*} probeID optional/sensitive, select new point of reference
          * @param {*} self optional,if you want to $cached() last data enquiry and return `self` to keep chaining, nice!
          */
-        $data(dataProp = null/**{}||[] */, probeID = '', self = false) {
+        $data(dataProp = null/** {}||[] */, probeID = '', self = false) {
             // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)
             if (!this.pocket[probeID]) return self ? this : undefined
@@ -207,8 +202,7 @@ module.exports = (PocketModule) => {
             // no selection at all, so just return whats available
             if (!dataProp || !objectSize(dataProp)) {
                 return this._$cached_data[probeID] === undefined ? undefined : this._$cached_data[probeID]
-            }
-            else return this.dataPropSelector("cached()", probeID, dataProp, false, this._$cached_data[probeID])
+            } else return this.dataPropSelector("cached()", probeID, dataProp, false, this._$cached_data[probeID])
         }
 
         /**

@@ -2,13 +2,12 @@
   "compileOnSave": false,
   "compilerOptions": {
     "moduleResolution": "node",
-    "module": "es2015",
+    "module": "esnext",
     "target": "es5",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
-    "lib": ["es2017", "dom"],
+    "baseUrl": "."
   },
 
   "include": ["libs"],

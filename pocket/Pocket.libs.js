@@ -20,7 +20,7 @@ module.exports = () => {
             this.lastPocketTimestamp = 0
             this._lastProjectID = null // last cached reference
             this._lastProbeID = null // last cached reference
-            this._$cached_data = {/**id:{} */ }// stores last captured data when calling `$data(..)`
+            this._$cached_data = {/** id:{} */ }// stores last captured data when calling `$data(..)`
             this.$transfer_lastID = '' // set when we call `$transfer()` and reset after `$to()`
             this._ready = {} // collect all ready example: `{id:Promise}`
             this.d = undefined // NOTE user reference data, carefull when using selectors from previous target, always access last
@@ -44,7 +44,7 @@ module.exports = () => {
                         cleared = true
                         if (this.debug) log(`[clearStoreTransfers] transferCached for probeID: ${fromProbeID} has been removed`)
                     }
-                });
+                })
             }
             return cleared
         }
@@ -68,11 +68,11 @@ module.exports = () => {
         accessLastValidTransfer(fromAverageTimeHasPast = 100) {
             if (!this._transferCached.length) return {}
 
-            this._transferCached.sort((a, b) => a.timestamp - b - timestamp)
+            this._transferCached.sort((a, b) => a.timestamp - b.timestamp)
             const transferCachedCopy = copy(this._transferCached)
 
             const coundCache = transferCachedCopy.reduce((n, el, i) => {
-                const { timestamp, fromProbeID, data } = el
+                const { timestamp } = el
 
                 // calculate max wait between transfers, so if we have timeout we can only wait as long as `fromAverageTimeHasPast` 
                 const currentOffset = new Date().getTime() + fromAverageTimeHasPast
@@ -97,10 +97,9 @@ module.exports = () => {
          * @param {*} probeID {*} required, but optional
          */
         selectByTask(taskOrProbeID = '', updateLastProbeID = null) {
-            
-            taskOrProbeID = !isString(taskOrProbeID) ?  '': taskOrProbeID
+            taskOrProbeID = !isString(taskOrProbeID) ? '' : taskOrProbeID
             if (!this.idRegexValid(taskOrProbeID) && taskOrProbeID) return null
-            console.log('what is taskOrProbeID',taskOrProbeID)
+            console.log('what is taskOrProbeID', taskOrProbeID)
             if (taskOrProbeID.indexOf(':') > 0 && !this.pocket[taskOrProbeID]) {
                 if (this.debug) warn(`[selectByTask] when using '::' prefix selector, it should come at 0 index`)
                 return null
@@ -121,7 +120,7 @@ module.exports = () => {
              * - generate valid probeID `${projectID}::${probeTaskName}` //
              */
             const dynamicProbeID = (name) => {
-                const n = name.split("::")[1] || name  // in case we are using prefixed taskName, example "::cocacola"
+                const n = name.split("::")[1] || name // in case we are using prefixed taskName, example "::cocacola"
                 const matchByProbeID = (this._lastProbeID || '').indexOf(n) > 0
                 if (matchByProbeID && n) return this._lastProbeID
                 else if (this._lastProjectID && n) return this._lastProjectID + `::` + n
@@ -134,7 +133,6 @@ module.exports = () => {
             } else if (updateLastProbeID) this.lastProbeID(newProbeID)
             return newProbeID
         }
-
 
         /**
          * ### lastProjectID
@@ -218,7 +216,6 @@ module.exports = () => {
             }
         }
 
-
         idRegexValid(str) {
             const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
             const regx = new RegExp(pat, 'gi')
@@ -238,7 +235,6 @@ module.exports = () => {
         validProbe(probeID, debug = null) {
             probeID = validID(probeID)
             if (!probeID) return null
-
             if (!this.idRegexValid(probeID)) return
             if (probeID.indexOf(`::`) === -1) return null
             if (!this.pocket[probeID]) {
