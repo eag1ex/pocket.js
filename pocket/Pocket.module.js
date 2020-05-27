@@ -1,9 +1,9 @@
-module.exports = () => {
+exports.PocketModule = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
     const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     const PocketLibs = require('./Pocket.libs')()
-    const newProbe = require('./Probe')
+    const newProbe = require('./Probe').Probe
 
     /**
      * TODO ADD to $update `// action/[merge], action/+-*` using regEx
@@ -363,7 +363,8 @@ module.exports = () => {
             }
             try {
                 opts.id = uid
-                const p = new this.Probe(opts, this.debug)
+                const emitter = this.dispatcher !== null ? this._emit.bind(this) : null
+                const p = new this.Probe(opts, emitter, this.debug)
                 this.pocket[uid] = p
             } catch (err) {
                 onerror(err)
@@ -384,7 +385,7 @@ module.exports = () => {
          * - `Probe` is resolved once `sq.resolve()` is called, sq => `Simple Q` our plugin
          */
         get Probe() {
-            return newProbe(this)
+            return newProbe()
         }
 
         /**

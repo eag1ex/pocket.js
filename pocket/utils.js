@@ -1,6 +1,6 @@
 /* eslint-disable no-proto */
-const util = require('util')
-const color = require('bash-color')
+// node.js/browser detection
+
 /**
  * @Utils
  * my own lodash/like `Utils`
@@ -21,23 +21,7 @@ exports.isObject = (obj) => !obj ? false : (Object.prototype === (obj).__proto__
 exports.isArray = (arr) => !arr ? false : Array.prototype === (arr).__proto__
 exports.isString = (str) => !str ? false : String.prototype === (str).__proto__
 exports.isFunction = (el) => typeof el === 'function'
-exports.log = function (...args) {
-    args = [].concat('[Pocket]', args)
-    args = args.map(z => util.inspect(z, false, 3, true))
-    console.log.apply(null, args)
-}
-exports.warn = function (...args) {
-    args = [].concat('[warning]', args)
-    args = args.map(z => color.cyan(util.inspect(z, false, 2, false), true))
-    console.warn.apply(null, args)
-}
-exports.onerror = function (...args) {
-    args = [].concat('[error]', args)
-    args = args.map(z => color.red(util.inspect(z, false, 2, false), true))
-    console.log('  ')
-    console.error.apply(null, args)
-    console.log('  ')
-}
+
 exports.copy = (data) => {
     if (!data) return data
     try {
@@ -57,4 +41,44 @@ exports.errorMessages = (messages) => {
         msgs[k] = { message: v[0], code: k }
     }
     return msgs
+}
+// NOTE for compilation we have `es2015` set
+if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === 'development') {
+
+    exports.log = function (...args) {
+        args = [].concat('[Pocket]', args)
+        console.log.apply(null, args)
+    }
+    exports.warn = function (...args) {
+        args = [].concat('[warning]', args)
+        console.warn.apply(null, args)
+    }
+    exports.onerror = function (...args) {
+        args = [].concat('[error]', args)
+        console.log('  ')
+        console.error.apply(null, args)
+        console.log('  ')
+    }
+} else {
+    // when executing normally with node
+    const util = require('util')
+    const color = require('bash-color')
+
+    exports.log = function (...args) {
+        args = [].concat('[Pocket]', args)
+        args = args.map(z => util.inspect(z, false, 3, true))
+        console.log.apply(null, args)
+    }
+    exports.warn = function (...args) {
+        args = [].concat('[warning]', args)
+        args = args.map(z => color.cyan(util.inspect(z, false, 2, false), true))
+        console.warn.apply(null, args)
+    }
+    exports.onerror = function (...args) {
+        args = [].concat('[error]', args)
+        args = args.map(z => color.red(util.inspect(z, false, 2, false), true))
+        console.log('  ')
+        console.error.apply(null, args)
+        console.log('  ')
+    }
 }

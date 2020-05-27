@@ -6,34 +6,24 @@ const Webpack = require('webpack');
 
 module.exports = {
   entry: {
-    //app: Path.resolve(__dirname, '../index.js')
-    app: Path.resolve(__dirname, '../Pocket/Pocket.module.js')
+    app: ['@babel/polyfill',Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js')]
   },
   output: {
     path: Path.join(__dirname, '../build'),
     filename: 'js/[name].js',
-    library: 'Pocket',
-    libraryTarget: 'window'
+    // library: 'Pocket',
+    // libraryTarget: 'window'
   },
-  // output: {
-  //   path: './www/js/',
-  //   filename: 'index.js',
-  //   library: 'myLibrary',
-  //   libraryTarget: 'var'
+
   plugins: [
     new CleanWebpackPlugin(['build'], { root: Path.resolve(__dirname, '..') }),
     new CopyWebpackPlugin([
       { from: Path.resolve(__dirname, '../public'), to: 'public' }
-    ]),
-    // new Webpack.ProvidePlugin({
-    //   'Pocket': 'Pocket'
-    // })
+    ])
   ],
   resolve: {
     extensions: ['.js'],
-    // alias: {
-    //   'Pocket': Path.resolve(__dirname, '../Pocket/Pocket.module.js')
-    // }
+
   },
   module: {
     rules: [

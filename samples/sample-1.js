@@ -4,12 +4,11 @@ process.on('uncaughtException', function (err) {
     console.log('sample-1.js uncaughtException/error',err);
 })
 
-
 /**
  * Example, exchange of data regarding `china => covid19 => world`
  */
-const { log, warn } = require('../pocket/utils')
-const Pocket = require('../pocket/Pocket.module')()
+const { log, warn } = require('../index').utils
+const Pocket = require('../index').Pocket
 const DEBUG = true
 
 const pock = new Pocket({ async: false, dispatcher: true }, DEBUG)
@@ -94,9 +93,6 @@ if (pock.$project(data)) {
           .getStatusAsync.then(status=>{
               log(`kenya/railway Probe{} status: ${status}`)
           })      
-
-
-
 
 
        // console.log('srilanka',pock.$get(`::srilanka`))     

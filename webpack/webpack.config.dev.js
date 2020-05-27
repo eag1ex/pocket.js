@@ -18,17 +18,16 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.(js)$/,
-        include: Path.resolve(__dirname, '../Pocket/Pocket.module.js'),
+        include: Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js'),
         enforce: 'pre',
         loader: 'eslint-loader',
-        options: {
-          emitWarning: true,
-            presets: ['es2015']
-        }
+        // options: {
+        //    presets: ['es2015']
+        // }
       },
       {
         test: /\.(js)$/,
-        include: Path.resolve(__dirname, '../Pocket/Pocket.module.js'),
+        include: Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js'),
         loader: 'babel-loader'
       }
     ]

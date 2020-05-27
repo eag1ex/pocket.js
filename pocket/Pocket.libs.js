@@ -99,7 +99,6 @@ module.exports = () => {
         selectByTask(taskOrProbeID = '', updateLastProbeID = null) {
             taskOrProbeID = !isString(taskOrProbeID) ? '' : taskOrProbeID
             if (!this.idRegexValid(taskOrProbeID) && taskOrProbeID) return null
-            console.log('what is taskOrProbeID', taskOrProbeID)
             if (taskOrProbeID.indexOf(':') > 0 && !this.pocket[taskOrProbeID]) {
                 if (this.debug) warn(`[selectByTask] when using '::' prefix selector, it should come at 0 index`)
                 return null

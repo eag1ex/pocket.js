@@ -21,7 +21,7 @@ module.exports = merge(common, {
       (compiler) => {
         new TerserPlugin({
           terserOptions: {
-            ecma: 5,
+            ecma: 6,
             compress: {
               passes: 2,
             },

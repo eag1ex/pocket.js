@@ -7,7 +7,7 @@ const expect = chai.expect;
 
 // asset
 // const { log } = require('../Pocket/utils')
-const Pocket = require('../index').pocket()
+const {Pocket} = require('../index')
 const DEBUG = false
 
 // help: https://mochajs.org/
@@ -361,7 +361,7 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
 // NOTE test `Probe.js intependantly, outside PocketModule, for all states`
 describe(`Independant new Probe({}) tests`, function () {
 
-    const Probe = require('../index').probe(false)
+    const {Probe} = require('../index')
     const config = {
         id: 'cocacola::drink',
         task: 'drink',

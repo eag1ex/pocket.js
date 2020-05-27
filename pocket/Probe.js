@@ -3,7 +3,7 @@
  * - every new task has a set of requirements controlled by `statusStackOrder` in status setter. Once status is `complete` and data available, information is send and probe is blocked.
  * methods:`{get,all}` props: `{id,data,tasks,status}`
  */
-module.exports = (dispatcher) => {
+exports.Probe = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
     const { isString, warn, log, isNumber, onerror, last, copy, isObject } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
@@ -14,13 +14,13 @@ module.exports = (dispatcher) => {
          * @param {*} opts.compaign optional, once set cannot be changed
          * @param {*} opts.data optional any value except undefind, cannot be change once status set to `complete` or send
          * @param {*} opts.status required to control Probe actions
+         * @param {*} emitter optional, dispatcher/emmiter available if not null
          * @param {*} debug 
          */
-        constructor(opts = {}, debug) {
+        constructor(opts = {}, emitter, debug) {
             this.debug = debug || false
             if (isNumber(opts.id) || opts.id) opts.id = opts.id.toString()
             if (!opts.task || !isString(opts.task)) throw ('task as string is required')
-
             this._id = null
             this._task = null
             this._status = null
@@ -29,7 +29,7 @@ module.exports = (dispatcher) => {
             this._dataIndex = 0
             this._statusIndex = 0
             this._statusAsync = [/** {timestamp:promise} */] // dynamic promise changer
-
+            this.emitter = emitter || null
             this.task = opts.task
             this.id = opts.id
             this.status = 'open'
@@ -229,14 +229,14 @@ module.exports = (dispatcher) => {
                         break
 
                     case 'complete':
-                        
+
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
                         // setTimeout(()=>{
                         this._status = stat
                         this.onComplete(v) // resolve probe when status complete
                         //  })
-                       
+
                         break
 
                     case 'send':
@@ -252,7 +252,7 @@ module.exports = (dispatcher) => {
                     case 'error':
                         if (this._status === 'complete') return
                         // when we have error we need to inform what happen, and close the Probe
-                        
+
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
                         this.onComplete(v) // resolve probe when status complete                     
@@ -302,13 +302,14 @@ module.exports = (dispatcher) => {
          */
         onComplete(status) {
             if ((status === 'complete' || status === 'error') && this._status !== 'send' && this._dataIndex > 0) {
-               
-                if (dispatcher) {
+
+                if (this.emitter) {
                     setTimeout(() => {
-                        if (dispatcher) dispatcher._emit({ probe: this, status })                   
+                        this.emitter({ probe: this, status })
                     })
                 }
-                
+
+
                 this.sq.resolve({ probe: this.all() })
                 this._status = 'send'
             }
@@ -321,9 +322,11 @@ module.exports = (dispatcher) => {
         onOpenStatus(status) {
             if (status === 'open') {
                 // return this probe and update it when its complete
-                setTimeout(() => {
-                    if (dispatcher) dispatcher._emit({ probe: this, status: 'open' })
-                })
+                if (this.emitter) {
+                    setTimeout(() => {
+                        this.emitter({ probe: this, status: 'open' })
+                    })
+                }
             }
         }
     }

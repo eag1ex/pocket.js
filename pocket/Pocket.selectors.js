@@ -5,7 +5,7 @@
  * - allow selecttion to refference by, example:  `taskName`, `::taskName` and `${projectID}::taskName`, thanks to `selectByTask()` method
  */
 module.exports = (PocketModule) => {
-    const { copy, warn, isArray, onerror, objectSize, isString, uniq } = require('../Pocket/utils')
+    const { copy, warn, isArray, onerror, objectSize, isString, uniq } = require('./utils')
     return class PocketSelectors extends PocketModule {
         constructor(opts, debug) {
             super(opts, debug)
