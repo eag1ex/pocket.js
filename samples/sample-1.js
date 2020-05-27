@@ -36,6 +36,10 @@ const data = {
     ]
 }
 
+pock.$projectSetAsync(`b-r-i`).then(z=>[
+    log(`projectSetAsync is now set :)`,z)
+])
+
 if (pock.$project(data)) {
 
     pock

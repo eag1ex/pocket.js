@@ -13,7 +13,7 @@ exports.PocketModule = () => {
         constructor(opts, debug) {
             super(opts, debug)
             if (this.dispatcher) {
-                this.dispatcher.initListener().subscribe(z => {
+                this.dispatcher.initListener().subscribe((z,id) => {
                     const { probe, status } = z || {}
 
                     if (status === 'error') {
@@ -106,10 +106,33 @@ exports.PocketModule = () => {
                 this.lastProjectID(data.id)
                 this.distributor()
                     .setDefer(data.id)
-
+                    // NOTE required in order for $projectSetAsync to retrun callback to resolve our promise
+                    this.projectSetDispatcher(data.id).initListener().next({projectID:data.id})
                 return true
             } else return false
         }
+
+        /**
+         * ### $projectSetAsync
+         * - usage: to call before `$project()/$payload()` were even called
+         * - for example you have loaded same `Pocket` instance in another part of your code, now checking for it  in future before even created, this method can `await $projectSetAsync(projectID)` and continue with already set `$project(...).$get(..).$update(..)` etc
+         * @param {*} projectID required, this is your `$project/$payload` id
+         */
+        $projectSetAsync(projectID = '') {
+            const self = this
+            if (this._projectSetAsync[projectID]) {
+                return this._projectSetAsync[projectID].promise()
+            }
+            /**
+             * will subscribe when called the first time and set our simple promise then will resolve once the `$payload` is succesfull
+             */
+            this._projectSetAsync[projectID] = sq() 
+            this.projectSetDispatcher(projectID).initListener().subscribe(function (z,id) {
+                self._projectSetAsync[id].resolve(z)
+                this.del() // deletes projectSetDispatcher of self 
+            })
+            return this._projectSetAsync[projectID].promise()
+        } 
 
         /**
          * ### $get
@@ -194,7 +217,7 @@ exports.PocketModule = () => {
          * ### $ready
          * - resolves currently active `$payload(...)`
          * - `after completion of Pocket, instance data for all Probes is deleted`
-         * @param {*} payloadID `required`
+         * @param {*} payloadID ,required
          */
         $ready(payloadID = '') {
             this.d = null
@@ -416,6 +439,10 @@ exports.PocketModule = () => {
             }
             if (this.payloadData[id]) delete this.payloadData[id]
             if (this._ready[id]) delete this._ready[id]
+
+            // these  two are together
+            if (this._projectSetDispatcher[id]!==undefined) delete this._projectSetDispatcher[id]
+            if(this._projectSetAsync[id]) delete this._projectSetAsync[id]
 
             // empty self
             this.clearStoreTransfers(id)

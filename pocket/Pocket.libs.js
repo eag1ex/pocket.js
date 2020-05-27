@@ -3,7 +3,7 @@
  * - Top of the stack class of `PocketModule`, all `opt` initial `properties` are set here
  */
 module.exports = () => {
-    const { objectSize, warn, validID, copy, log, isString } = require('./utils')
+    const { objectSize, warn, validID, copy, log, isString,isFunction } = require('./utils')
     return class PocketLibs {
         /**
          * @param {*} opts.async, when set, allow $payload(`data`) to be async object
@@ -24,9 +24,29 @@ module.exports = () => {
             this.$transfer_lastID = '' // set when we call `$transfer()` and reset after `$to()`
             this._ready = {} // collect all ready example: `{id:Promise}`
             this.d = undefined // NOTE user reference data, carefull when using selectors from previous target, always access last
+            this._projectSet = {/**projectID:promise */}
             this._transferCached = [ /** {timestamp,fromProbeID,data} */]
+            this._projectSetDispatcher = {/**id:dispatcher */}
+            this._projectSetAsync = {/**id:SQ */} // collect all $projectSetAsync promisses
         }
 
+
+        /**
+         * ### projectSetDispatcher
+         * - create new dispather to act as a callback for setting new projects in future
+         * - works with `$projectSetAsync`
+         * @param {*} projectID 
+         */
+        projectSetDispatcher(projectID) {
+            if (!projectID) {
+                if (this.debug) onerror(`[projectSetDispatcher] projectID must be set`)
+                return null
+            }
+            if (this._projectSetDispatcher[projectID]) return this._projectSetDispatcher[projectID]      
+            if (!this._projectSetDispatcher[projectID]) this._projectSetDispatcher[projectID] = require('../libs/dispatcher')(projectID)
+            return this._projectSetDispatcher[projectID]
+        }
+   
         /**
          * ### clearStoreTransfers
          * - clear any pending transfers
