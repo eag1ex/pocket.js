@@ -7,7 +7,7 @@ const common = require('./webpack.comm.js');
 module.exports = merge(common, {
   mode: 'production',
   devtool: 'source-map',
-  stats: 'errors-only',
+  //stats: 'errors-only',
   bail: true,
   output: {
     filename: 'js/[name].[chunkhash:8].js',

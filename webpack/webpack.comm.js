@@ -6,12 +6,14 @@ const Webpack = require('webpack');
 
 module.exports = {
   entry: {
+    // executes es6+ app: ['@babel/polyfill',Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js')]
     app: ['@babel/polyfill',Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js')]
   },
   output: {
     path: Path.join(__dirname, '../build'),
     filename: 'js/[name].js',
-    // library: 'Pocket',
+    // NOTE only use if not setting window.xxx globals for `browser` versions
+    // library: 'Pocket', 
     // libraryTarget: 'window'
   },
 
@@ -21,6 +23,10 @@ module.exports = {
       { from: Path.resolve(__dirname, '../public'), to: 'public' }
     ])
   ],
+  stats: {
+    // Nice colored output
+    colors: true
+  },
   resolve: {
     extensions: ['.js'],
 
