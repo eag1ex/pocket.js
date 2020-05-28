@@ -41,7 +41,6 @@ const data = {
 // ])
 
 if (pock.$project(data)) {
-
     pock
         .$select(`pocket-1`)
         // .$of(`::china`) 
@@ -50,7 +49,7 @@ if (pock.$project(data)) {
             this.data = 'new data'
         })
     console.log('list',pock.$list())  
-    return    
+    //return    
 
     function newEnclosure(cb) {
         const t = (new function () {
@@ -102,6 +101,8 @@ if (pock.$project(data)) {
           .getStatusAsync.then(status=>{
               log(`kenya/railway Probe{} status: ${status}`)
           })      
+
+
 
          // setTimeout(()=>{
       

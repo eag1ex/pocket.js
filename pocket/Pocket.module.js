@@ -40,8 +40,9 @@ exports.PocketModule = () => {
 
         /**
          * ### $payload
-         * @prop {*} data `required`
-         * @prop {*} async `override current opts.sync for this payload`
+         * @param {*} data `required`
+         * @param {*} async `override current opts.sync for this payload`
+         * @param {*} type optional, new/update, `update`: if we call on an existing project we can update `data/status properties` of all assigned tasks at once
          * 
          * - `initialize new payload, for as many tasks`
          * - `sets a multi task with instructions:`
@@ -52,9 +53,9 @@ exports.PocketModule = () => {
 
          * - `call distributor and setDefer`
          */
-        $payload(data = {}, async) {
+        $payload(data = {}, async, type = 'new') {
             this.d = null
-
+            let isUpdated = null
             // validate payload format
             if (!isObject(data)) return false
 
@@ -76,7 +77,7 @@ exports.PocketModule = () => {
                 return false
             }
 
-            if (this.payloadData[data.id]) {
+            if (this.payloadData[data.id] && (!type || type==='new')) {
                 if (this.debug) warn(`[$payload] this payload.id already exists`)
                 return false
             }
@@ -93,15 +94,35 @@ exports.PocketModule = () => {
                     continue
                 }
 
+                if (type === 'update' && this.payloadData[data.id]) {
+                    // NOTE after update, payloadData will differ from new Probe{} data
+                    this.$compute(function () {
+                        if (val['data']) this.data = val['data']
+                        if (val['status']) this.status = val['status']
+                        isUpdated = true
+                    }, data.id)
+
+                    // NOTE do not update `payloadData` it is redundant if we donot need it for anything, only update Probes{}
+                    /// this.payloadData[data.id]['value']
+                    // an existing project do not everride
+                    continue
+                }
+
                 if (!this.payloadData[data.id]) this.payloadData[data.id] = { value: [], status: 'open', timestamp: new Date().getTime() }
                 const exists = this.payloadData[data.id]['value'].filter(z => z.task.indexOf(val.task) !== -1)
                 if (exists.length) {
                     if (this.debug) warn(`the same task "${val.task}" already exists on the payload, you must choose uniq`)
                     continue
                 }
+
                 this.payloadData[data.id]['value'].push(val)
+
                 this.lastPocketTimestamp = this.payloadData[data.id]['timestamp']
             }
+
+            // only when updating existance of Probe{}
+            if (type === 'update' && this.payloadData[data.id]) return isUpdated
+
             if (this.payloadData[data.id]) {
                 this.lastProjectID(data.id)
                 this.distributor()
@@ -135,6 +156,33 @@ exports.PocketModule = () => {
         }
 
         /**
+         * ### $projectSet
+         * - use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
+         * @param {*} projectID required
+         */
+        $projectSet(projectID = '') {
+            projectID = this.validProjectID(projectID)
+            if (this.payloadData[projectID]) return true
+            return false
+        }
+
+        /**
+         * ### $probeStatusAsync
+         * - return last probe status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
+         * @param {*} probeID 
+         */
+        $probeStatusAsync(probeID = '') {
+            const returnAs = (val) => {
+                this.d = val
+                return this
+            }
+
+            probeID = this.lastProbeID(probeID)
+            if (!probeID) return returnAs(null)
+            return returnAs(this.pocket[probeID].getStatusAsync)
+        }
+
+        /**
          * ### $get
           * - `get probe by 'id::taskName'`
           * - `returns instance`
@@ -152,22 +200,6 @@ exports.PocketModule = () => {
             probeID = this.lastProbeID(probeID)
             if (!probeID) return returnAs(null)
             else return returnAs(this.pocket[probeID])
-        }
-
-        /**
-         * ### $probeStatusAsync
-         * - return last probe status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
-         * @param {*} probeID 
-         */
-        $probeStatusAsync(probeID = '') {
-            const returnAs = (val) => {
-                this.d = val
-                return this
-            }
-
-            probeID = this.lastProbeID(probeID)
-            if (!probeID) return returnAs(null)
-            return returnAs(this.pocket[probeID].getStatusAsync)
         }
 
         /**
@@ -226,12 +258,10 @@ exports.PocketModule = () => {
          */
         $compute(cb, projectID = '') {
             projectID = this.lastProjectID(projectID)
-            console.log('compute projectID',projectID)
             if (!isFunction(cb)) {
                 if (this.debug) warn(`[$compute] cb must be a function`)
                 return this
             }
-
             if (!this.payloadData[projectID]) {
                 if (this.debug) warn(`[$compute] no project found fo your/last id projectID:${projectID}`)
                 return this
@@ -261,12 +291,7 @@ exports.PocketModule = () => {
             return returnAs(tasks)
         }
 
-        /**
-         * ### $ready
-         * - resolves currently active `$payload(...)`
-         * - `after completion of Pocket, instance data for all Probes is deleted`
-         * @param {*} payloadID ,required
-         */
+
         $ready(payloadID = '') {
             this.d = null
 
@@ -502,18 +527,16 @@ exports.PocketModule = () => {
             super(opts, debug)
         }
 
-        /**
-         * - extend payload async data handling
-         */
-        $payload(data, async) {
+        // extends from super.$payload
+        $payload(data, async, type) {
 
             const returnAs = (val) => {
                 this.d = val
                 return this
             }
             const asAsync = async !== undefined ? async : this.async // override if set
-            if (asAsync && isPromise(data)) return returnAs(data.then(z => super.$payload(z), err => err))
-            if (!this.async && !isPromise(data)) return returnAs(super.$payload(data))
+            if (asAsync && isPromise(data)) return returnAs(data.then(z => super.$payload(z, false, type), err => err))
+            if (!this.async && !isPromise(data)) return returnAs(super.$payload(data, false, type))
             else {
                 if (this.debug) onerror(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
                 if (asAsync) return returnAs(Promise.reject())
@@ -527,9 +550,15 @@ exports.PocketModule = () => {
          * - refer to `$payload` for specifications :)
          */
         $project(...args) {
-            return this.$payload.apply(this, args)
+            return this.$payload(...args)
         }
 
+        /**
+          * ### $ready
+          * - resolves currently active `$payload(...)`
+          * - `after completion of Pocket, instance data for all Probes is deleted`
+          * @param {*} payloadID ,required
+          */
         $ready(payloadID) {
 
             const returnAs = (val) => {
