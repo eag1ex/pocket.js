@@ -36,9 +36,9 @@ const data = {
     ]
 }
 
-pock.$projectSetAsync(`b-r-i`).then(z=>[
-    log(`projectSetAsync is now set :)`,z)
-])
+// pock.$projectSetAsync(`b-r-i`).then(z=>[
+//     log(`projectSetAsync is now set :)`,z)
+// ])
 
 if (pock.$project(data)) {
 
@@ -46,6 +46,11 @@ if (pock.$project(data)) {
         .$select(`b-r-i`)
         .$of(`::china`) 
         .$update({ data: { assets: 10.55 }})
+        //  .$compute(function(probe,id){        
+        //     this.data = 'new data'
+        // })
+    //  console.log('list',pock.$list())  
+    // return    
 
     function newEnclosure(cb) {
         const t = (new function () {
@@ -97,6 +102,14 @@ if (pock.$project(data)) {
           .getStatusAsync.then(status=>{
               log(`kenya/railway Probe{} status: ${status}`)
           })      
+
+         // setTimeout(()=>{
+      
+         // },1000)
+  
+        // pock.$select(`b-r-i`).$ready().d.then(z=>{
+
+        // })
 
 
        // console.log('srilanka',pock.$get(`::srilanka`))     

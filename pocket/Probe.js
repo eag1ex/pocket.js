@@ -309,7 +309,6 @@ exports.Probe = () => {
                     })
                 }
 
-
                 this.sq.resolve({ probe: this.all() })
                 this._status = 'send'
             }

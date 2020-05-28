@@ -1,6 +1,6 @@
 exports.PocketModule = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
+    const { objectSize, isFunction, log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     const PocketLibs = require('./Pocket.libs')()
     const newProbe = require('./Probe').Probe
@@ -13,7 +13,7 @@ exports.PocketModule = () => {
         constructor(opts, debug) {
             super(opts, debug)
             if (this.dispatcher) {
-                this.dispatcher.initListener().subscribe((z,id) => {
+                this.dispatcher.initListener().subscribe((z, id) => {
                     const { probe, status } = z || {}
 
                     if (status === 'error') {
@@ -106,8 +106,8 @@ exports.PocketModule = () => {
                 this.lastProjectID(data.id)
                 this.distributor()
                     .setDefer(data.id)
-                    // NOTE required in order for $projectSetAsync to retrun callback to resolve our promise
-                    this.projectSetDispatcher(data.id).initListener().next({projectID:data.id})
+                // NOTE required in order for $projectSetAsync to retrun callback to resolve our promise
+                this.projectSetDispatcher(data.id).initListener().next({ projectID: data.id })
                 return true
             } else return false
         }
@@ -126,13 +126,13 @@ exports.PocketModule = () => {
             /**
              * will subscribe when called the first time and set our simple promise then will resolve once the `$payload` is succesfull
              */
-            this._projectSetAsync[projectID] = sq() 
-            this.projectSetDispatcher(projectID).initListener().subscribe(function (z,id) {
+            this._projectSetAsync[projectID] = sq()
+            this.projectSetDispatcher(projectID).initListener().subscribe(function (z, id) {
                 self._projectSetAsync[id].resolve(z)
                 this.del() // deletes projectSetDispatcher of self 
             })
             return this._projectSetAsync[projectID].promise()
-        } 
+        }
 
         /**
          * ### $get
@@ -190,6 +190,54 @@ exports.PocketModule = () => {
          */
         $set(dataFrom, probeID = '') {
             return this._setUpdate(dataFrom, null, probeID, 'set')
+        }
+
+        /**
+         * ### $list
+         * - list active Probes{} by project id, should return all assigned probe/tasks regardless of status
+         * - returns array[] of active Probe{}/tasks or []
+         * @param {*} projectID optional/sensitive, selects new point of reference.
+         * @param {*} cb((probe, probeID)=>) optional, when set will loop thru each Probe{} in callback
+         * @param {*} type optional, set to `list`, will return latest Probes, that includes if initiated cb and made a few changes
+         */
+        $list(projectID = '', cb = null, type = 'self') {
+            projectID = this.lastProjectID(projectID)
+            if (!this.payloadData[projectID]) return []
+            const list = () => {
+                return Object.entries(this.pocket).reduce((n, [key, val], inx) => {
+                    if (val.id.includes(projectID)) n.push(val)
+                    return n
+                }, [])
+            }
+            if (isFunction(cb)) {
+                Object.entries(this.pocket).forEach(([id, probe]) => cb.call(probe, probe, id))
+                if (type === 'self' || !type) return this
+                if (type === 'list') return list()
+            } else {
+                return list()
+            }
+        }
+
+        /**
+         * ### $compute
+         * - iterate thru each Probe{}/ instance in a callback, and make changes to it
+         * @param {*} cb((probe, probeID)=>this/self.data) required
+         * @param {*} projectID optional/sensitive, selects new point of reference.
+         */
+        $compute(cb, projectID = '') {
+            projectID = this.lastProjectID(projectID)
+
+            if (!isFunction(cb)) {
+                if (this.debug) warn(`[$compute] cb must be a function`)
+                return this
+            }
+
+            if (!this.payloadData[projectID]) {
+                if (this.debug) warn(`[$compute] no project found fo your/last id projectID:${projectID}`)
+                return this
+            }
+            Object.entries(this.pocket).forEach(([id, probe]) => cb.call(probe, probe, id))
+            return this
         }
 
         /**
@@ -441,8 +489,8 @@ exports.PocketModule = () => {
             if (this._ready[id]) delete this._ready[id]
 
             // these  two are together
-            if (this._projectSetDispatcher[id]!==undefined) delete this._projectSetDispatcher[id]
-            if(this._projectSetAsync[id]) delete this._projectSetAsync[id]
+            if (this._projectSetDispatcher[id] !== undefined) delete this._projectSetDispatcher[id]
+            if (this._projectSetAsync[id]) delete this._projectSetAsync[id]
 
             // empty self
             this.clearStoreTransfers(id)

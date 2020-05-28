@@ -50,7 +50,7 @@ module.exports = function (uid, debug = null) {
                             // when calling next before batchReady is initiated
                             // collect cb from .next
                             if (!self.cbQueue[self.uid]) self.cbQueue[self.uid] = data.cb
-                            if (this.data) data.cb.call(self,this.data, self.uid)
+                            if (this.data) data.cb.call(self, this.data, self.uid)
                         }
 
                         return
@@ -58,7 +58,7 @@ module.exports = function (uid, debug = null) {
 
                     if (this.data) {
                         if (typeof self.cbQueue[self.uid] === 'function') {
-                            self.cbQueue[self.uid].call(self,this.data, self.uid)
+                            self.cbQueue[self.uid].call(self, this.data, self.uid)
                         }
                     } else {
                         if (this.debug) console.log(`${plugin} no callback data`)
