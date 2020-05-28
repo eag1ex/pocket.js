@@ -527,7 +527,6 @@ exports.PocketModule = () => {
             super(opts, debug)
         }
 
-        // extends from super.$payload
         $payload(data, async, type) {
 
             const returnAs = (val) => {
@@ -577,5 +576,4 @@ exports.PocketModule = () => {
 
     const PocketSelectors = require('./Pocket.selectors')(PocketModuleExt)
     return PocketSelectors
-
 }

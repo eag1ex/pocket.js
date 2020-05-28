@@ -96,6 +96,11 @@ Working examples can be found at `'./samples/**`
 - *Final note: All user/interaction methods are prefixed with '$'*
 - *Note: Most user $methods require `...).d` for access to values, to allows chaining*
 
+#### Code/extentions
+for comments/and linting use: 
+- `Document This`
+- `Add jsdoc comments`
+
 
 #### Acronyms and common definitions
 - What is a Pocket:
