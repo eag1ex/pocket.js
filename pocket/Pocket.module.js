@@ -226,7 +226,7 @@ exports.PocketModule = () => {
          */
         $compute(cb, projectID = '') {
             projectID = this.lastProjectID(projectID)
-
+            console.log('compute projectID',projectID)
             if (!isFunction(cb)) {
                 if (this.debug) warn(`[$compute] cb must be a function`)
                 return this

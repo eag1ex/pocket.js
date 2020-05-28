@@ -157,10 +157,11 @@ module.exports = () => {
          * - every project is a job initiated by payload, so `payload.id === lastProjectID()`
          */
         lastProjectID(projectID = '', debug = null) {
-            if (!projectID && this._lastProbeID) projectID = this._lastProjectID
-            projectID = this.validProjectID(projectID, debug)
+            if (!projectID && this._lastProjectID) projectID = this._lastProjectID
+            if (projectID) projectID = this.validProjectID(projectID, debug)
+            if (projectID && this.payloadData[projectID]) this._lastProjectID = projectID
+            if (!this.payloadData[projectID]) return null
             if (!projectID) return null
-            if (this.payloadData[projectID]) this._lastProjectID = projectID // cache last reference
             return projectID
         }
 
@@ -172,10 +173,10 @@ module.exports = () => {
          */
         lastProbeID(probeID = '', debug = null) {
             if (!probeID && this._lastProbeID) probeID = this._lastProbeID
-            probeID = this.validProbe(probeID, debug)
-
+            if (probeID) probeID = this.validProbe(probeID, debug)
+            if (probeID && this.pocket[probeID]) this._lastProbeID = probeID
             if (!probeID) return null
-            if (this.pocket[probeID]) this._lastProbeID = probeID // cache last reference         
+            if (!this.pocket[probeID]) return null
             return probeID
         }
 
@@ -191,6 +192,23 @@ module.exports = () => {
             if ((id || '').split(' ').length > 1) return null
             if (!this.idRegexValid(id)) return null
             return id
+        }
+
+        /**
+         * ### validProbe
+         * - returns a valid probe
+         * @param {*} probeID required
+         */
+        validProbe(probeID, debug = null) {
+            probeID = validID(probeID)
+            if (!probeID) return null
+            if (!this.idRegexValid(probeID)) return
+            if (probeID.indexOf(`::`) === -1) return null
+            if (!this.pocket[probeID]) {
+                if (this.debug && debug === null) warn(`[get] did not find probe with probeID ${probeID}`)
+                return null
+            }
+            return probeID
         }
 
         /**
@@ -245,22 +263,7 @@ module.exports = () => {
             return true
         }
 
-        /**
-         * ### validProbe
-         * - returns a valid probe
-         * @param {*} probeID required
-         */
-        validProbe(probeID, debug = null) {
-            probeID = validID(probeID)
-            if (!probeID) return null
-            if (!this.idRegexValid(probeID)) return
-            if (probeID.indexOf(`::`) === -1) return null
-            if (!this.pocket[probeID]) {
-                if (this.debug && debug === null) warn(`[get] did not find probe with probeID ${probeID}`)
-                return null
-            }
-            return probeID
-        }
+
 
         /**
          * ### probeProps

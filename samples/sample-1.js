@@ -14,7 +14,7 @@ const DEBUG = true
 const pock = new Pocket({ async: false, dispatcher: true }, DEBUG)
 const data = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
-    id: 'b-r-i', // Belt and Road Initiative
+    id: 'pocket-1', // Belt and Road Initiative
     tasks: [
 
         {
@@ -43,14 +43,14 @@ const data = {
 if (pock.$project(data)) {
 
     pock
-        .$select(`b-r-i`)
-        .$of(`::china`) 
-        .$update({ data: { assets: 10.55 }})
-        //  .$compute(function(probe,id){        
-        //     this.data = 'new data'
-        // })
-    //  console.log('list',pock.$list())  
-    // return    
+        .$select(`pocket-1`)
+        // .$of(`::china`) 
+        // .$update({ data: { assets: 10.55 }})
+         .$compute(function(probe,id){        
+            this.data = 'new data'
+        })
+    console.log('list',pock.$list())  
+    return    
 
     function newEnclosure(cb) {
         const t = (new function () {
