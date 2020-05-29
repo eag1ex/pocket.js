@@ -1,6 +1,6 @@
 exports.PocketModule = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { objectSize, isFunction, log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
+    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     const PocketLibs = require('./Pocket.libs')()
     const newProbe = require('./Probe').Probe
@@ -40,6 +40,7 @@ exports.PocketModule = () => {
 
         /**
          * ### $payload
+         * - you can also use it on concurent payloads to existing `projectID`, once initial project is created overy other call will update each Probe{}.data/status, based on payloadData
          * @param {*} data `required`
          * @param {*} async `override current opts.sync for this payload`
          * @param {*} type optional, new/update, `update`: if we call on an existing project we can update `data/status properties` of all assigned tasks at once
@@ -56,6 +57,7 @@ exports.PocketModule = () => {
         $payload(data = {}, async, type = 'new') {
             this.d = null
             let isUpdated = null
+
             // validate payload format
             if (!isObject(data)) return false
 
@@ -77,10 +79,12 @@ exports.PocketModule = () => {
                 return false
             }
 
-            if (this.payloadData[data.id] && (!type || type==='new')) {
+            if (this.payloadData[data.id] && (!type || type === 'new')) {
                 if (this.debug) warn(`[$payload] this payload.id already exists`)
                 return false
             }
+
+            let initialProject = this.payloadData[data.id] === undefined // because there is no data set as of yet
 
             // NOTE validate our pocket values before generating each `new Probe()`
             for (let val of data['tasks'].values()) {
@@ -94,14 +98,12 @@ exports.PocketModule = () => {
                     continue
                 }
 
-                if (type === 'update' && this.payloadData[data.id]) {
-                    // NOTE after update, payloadData will differ from new Probe{} data
-                    this.$compute(function () {
-                        if (val['data']) this.data = val['data']
-                        if (val['status']) this.status = val['status']
-                        isUpdated = true
-                    }, data.id)
+                if (type === 'update' && !initialProject) {
+                    if (val['data']) this.$update({ data: val['data'] }, false, `::${val['task']}`)
+                    if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
+                    if (this.$status(`::${val['task']}`)) isUpdated = true
 
+                    // NOTE after update, payloadData will differ from new Probe{} data
                     // NOTE do not update `payloadData` it is redundant if we donot need it for anything, only update Probes{}
                     /// this.payloadData[data.id]['value']
                     // an existing project do not everride
@@ -121,7 +123,7 @@ exports.PocketModule = () => {
             }
 
             // only when updating existance of Probe{}
-            if (type === 'update' && this.payloadData[data.id]) return isUpdated
+            if (type === 'update' && this.payloadData[data.id] && !initialProject) return isUpdated
 
             if (this.payloadData[data.id]) {
                 this.lastProjectID(data.id)
@@ -225,52 +227,6 @@ exports.PocketModule = () => {
         }
 
         /**
-         * ### $list
-         * - list active Probes{} by project id, should return all assigned probe/tasks regardless of status
-         * - returns array[] of active Probe{}/tasks or []
-         * @param {*} projectID optional/sensitive, selects new point of reference.
-         * @param {*} cb((probe, probeID)=>) optional, when set will loop thru each Probe{} in callback
-         * @param {*} type optional, set to `list`, will return latest Probes, that includes if initiated cb and made a few changes
-         */
-        $list(projectID = '', cb = null, type = 'self') {
-            projectID = this.lastProjectID(projectID)
-            if (!this.payloadData[projectID]) return []
-            const list = () => {
-                return Object.entries(this.pocket).reduce((n, [key, val], inx) => {
-                    if (val.id.includes(projectID)) n.push(val)
-                    return n
-                }, [])
-            }
-            if (isFunction(cb)) {
-                Object.entries(this.pocket).forEach(([id, probe]) => cb.call(probe, probe, id))
-                if (type === 'self' || !type) return this
-                if (type === 'list') return list()
-            } else {
-                return list()
-            }
-        }
-
-        /**
-         * ### $compute
-         * - iterate thru each Probe{}/ instance in a callback, and make changes to it
-         * @param {*} cb((probe, probeID)=>this/self.data) required
-         * @param {*} projectID optional/sensitive, selects new point of reference.
-         */
-        $compute(cb, projectID = '') {
-            projectID = this.lastProjectID(projectID)
-            if (!isFunction(cb)) {
-                if (this.debug) warn(`[$compute] cb must be a function`)
-                return this
-            }
-            if (!this.payloadData[projectID]) {
-                if (this.debug) warn(`[$compute] no project found fo your/last id projectID:${projectID}`)
-                return this
-            }
-            Object.entries(this.pocket).forEach(([id, probe]) => cb.call(probe, probe, id))
-            return this
-        }
-
-        /**
          * ### $activeTasks
          * - list any active tasks for assigned Probes
          * @param {*} payloadID optional, when set will only filter thru given job id (NOT Probe{} ID!)
@@ -290,7 +246,6 @@ exports.PocketModule = () => {
             }, [])
             return returnAs(tasks)
         }
-
 
         $ready(payloadID = '') {
             this.d = null
@@ -343,16 +298,16 @@ exports.PocketModule = () => {
             for (let inx = 0; inx < dataFrom.length; inx++) {
                 if ((dataFrom[inx] || {})['data'] === undefined) continue
                 const [key, value] = Object.entries(dataFrom[inx]['data'])[0]
-                if ((key !== 'id' && key !== 'task') && this.pocket[id][key] !== undefined) {
+                if (this.pocket[id][key] !== undefined) {
                     if (key === 'data') {
                         if (mergeData === true) this.pocket[id][key] = Object.assign({}, this.pocket[id][key], value)
                         else this.pocket[id][key] = value
-                    } else this.pocket[id][key] = value
+                    } if (key === 'status') this.pocket[id][key] = value
 
                     updated = true
                     continue
                 } else {
-                    if (this.debug) warn(`[$update] not a valid propName: ${key}`)
+                    if (this.debug) warn(`[$update] not a valid prop/value: { ${key}:${this.pocket[id][key]} }`)
                 }
             }
             // when setting new data, using `$set()` we should clear any cached Probes and realated data
@@ -516,7 +471,7 @@ exports.PocketModule = () => {
             // these  two are together
             if (this._projectSetDispatcher[id] !== undefined) delete this._projectSetDispatcher[id]
             if (this._projectSetAsync[id]) delete this._projectSetAsync[id]
-
+            if (this._lastFilterList[id]) delete this._lastFilterList[id]
             // empty self
             this.clearStoreTransfers(id)
         }
@@ -556,6 +511,7 @@ exports.PocketModule = () => {
           * ### $ready
           * - resolves currently active `$payload(...)`
           * - `after completion of Pocket, instance data for all Probes is deleted`
+          * - can be called even before project was declared thanks to callback dispather `$projectSetAsync()`
           * @param {*} payloadID ,required
           */
         $ready(payloadID) {
@@ -565,11 +521,15 @@ exports.PocketModule = () => {
                 return this
             }
 
-            const p = super.$ready(payloadID).then(z => {
-                this.deletePocketSet(payloadID)
-                return z
-            }, err => Promise.reject(err))
-
+            // we wrap it if on ready project so it allows declaring `${$ready()}` even before $project was created, cool ha!
+            const p = this.$projectSetAsync(payloadID).then(({ projectID }) => {
+                return super.$ready(projectID).then(z => {
+                    this.deletePocketSet(projectID)
+                    return z
+                }, err => Promise.reject(err))
+            }, err => {
+                return Promise.reject(err)
+            })
             return returnAs(p)
         }
     }

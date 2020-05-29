@@ -28,6 +28,7 @@ module.exports = () => {
             this._transferCached = [ /** {timestamp,fromProbeID,data} */]
             this._projectSetDispatcher = {/** id:dispatcher */ }
             this._projectSetAsync = {/** id:SQ */ } // collect all $projectSetAsync promisses
+            this._lastFilterList = {/** id:[probes] */ }
         }
 
         /**
@@ -44,6 +45,14 @@ module.exports = () => {
             if (this._projectSetDispatcher[projectID]) return this._projectSetDispatcher[projectID]
             if (!this._projectSetDispatcher[projectID]) this._projectSetDispatcher[projectID] = require('../libs/dispatcher')(projectID)
             return this._projectSetDispatcher[projectID]
+        }
+
+        /**
+         * @param {*} projectID
+         * @returns array [Probe{},...] of selected project
+         */
+        projectProbeList(projectID) {
+            return Object.entries(this.pocket).filter(([id, probe]) => id.indexOf(projectID) === 0).map(([id, probe]) => probe)
         }
 
         /**
@@ -262,8 +271,6 @@ module.exports = () => {
             }
             return true
         }
-
-
 
         /**
          * ### probeProps

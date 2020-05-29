@@ -5,7 +5,7 @@
  * - allow selecttion to refference by, example:  `taskName`, `::taskName` and `${projectID}::taskName`, thanks to `selectByTask()` method
  */
 module.exports = (PocketModule) => {
-    const { copy, warn, isArray, onerror, objectSize, isString, uniq } = require('./utils')
+    const { copy, warn, isArray, onerror, objectSize, isString, uniq, isFunction } = require('./utils')
     return class PocketSelectors extends PocketModule {
         constructor(opts, debug) {
             super(opts, debug)
@@ -74,6 +74,95 @@ module.exports = (PocketModule) => {
             projectID = !isString(projectID) ? '' : projectID
             this.lastProjectID(projectID) // also updates last selector reference
             return this
+        }
+
+        /**
+         * ### $filter
+         * - filter works together with `$compute` or standalone when specified `.d` to return filtered `list`
+         * @param {*} cb 
+         * @param {*} projectID 
+         */
+        $filter(cb, projectID) {
+            projectID = this.lastProjectID(projectID) // also updates last selector reference
+
+            const returnAs = (val) => {
+                this.d = val
+                return this
+            }
+
+            if (!isFunction(cb)) return returnAs([])
+
+            if (!this.payloadData[projectID]) {
+                if (this.debug) warn(`[$filter] no projectID found`)
+                return returnAs(null)
+            }
+            this._lastFilterList[projectID] = []
+            this.projectProbeList(projectID).forEach((probe, inx) => {
+                const matchFound = cb.call(probe, probe)
+                if (matchFound !== undefined && (matchFound === true || matchFound === 1)) {
+                    this._lastFilterList[projectID].push(probe)
+                }
+            })
+            return returnAs(this._lastFilterList[projectID])
+        }
+
+        /**
+         * ### $compute
+         * - iterate thru each Probe{}/ instance in a callback, and make changes to it
+         * @param {*} cb((probe, probeID)=>this/self.data) required
+         * @param {*} projectID optional/sensitive, selects new point of reference.
+         */
+        $compute(cb, projectID = '') {
+            projectID = this.lastProjectID(projectID)
+            const returnAs = (val) => {
+                // delete last filtered list after it was consumed
+                if (val) delete this._lastFilterList[projectID]
+                this.d = val
+                return this
+            }
+
+            if (!isFunction(cb)) {
+                if (this.debug) warn(`[$compute] cb must be a function`)
+                return returnAs(null)
+            }
+
+            if (!this.payloadData[projectID]) {
+                if (this.debug) warn(`[$compute] no project found fo your/last id projectID:${projectID}`)
+                return returnAs(null)
+            }
+            if ((this._lastFilterList[projectID] || []).length) {
+                this._lastFilterList[projectID].forEach(probe => cb.call(probe, probe))
+                return returnAs(this._lastFilterList[projectID])
+            } else {
+                this.projectProbeList(projectID).forEach(probe => cb.call(probe, probe))
+                return returnAs(this.projectProbeList(projectID))
+            }
+        }
+
+        /**
+         * ### $list
+         * - list active Probes{} by project id, should return all assigned probe/tasks regardless of status
+         * - returns array[] of active Probe{}/tasks or []
+         * @param {*} projectID optional/sensitive, selects new point of reference.
+         * @param {*} cb((probe, probeID)=>) optional, when set will loop thru each Probe{} in callback
+         * @param {*} type optional, set to `list`, will return latest Probes, that includes if initiated cb and made a few changes
+         */
+        $list(projectID = '', cb = null, type = 'self') {
+            projectID = this.lastProjectID(projectID)
+            if (!this.payloadData[projectID]) return []
+            const list = () => {
+                return Object.entries(this.pocket).reduce((n, [key, val], inx) => {
+                    if (val.id.includes(projectID)) n.push(val)
+                    return n
+                }, [])
+            }
+            if (isFunction(cb)) {
+                this.projectProbeList(projectID).forEach(probe => cb.call(probe, probe))
+                if (type === 'self' || !type) return this
+                if (type === 'list') return list()
+            } else {
+                return list()
+            }
         }
 
         /**
@@ -230,10 +319,10 @@ module.exports = (PocketModule) => {
         }
 
         /**
-       * ### $task
-       * - returns Object copy of `Probe['task']` 
-       * @param {*} probeID optional/sensitive, select new point of reference
-       */
+         * ### $task
+         * - returns Object copy of `Probe['task']` 
+         * @param {*} probeID optional/sensitive, select new point of reference
+         */
         $task(probeID) {
             // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)

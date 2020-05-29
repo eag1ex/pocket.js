@@ -25,14 +25,14 @@ const data = {
             task: 'srilanka', data: { 'budget': 1.4, type: 'billions', project:'naval port' },
             compaign: 'Belt_and_Road_Initiative'
         },
-        {
-            task: 'kenya', data: { 'budget': 3.2, type: 'billions', project:'railway' },
-            compaign: 'Belt_and_Road_Initiative'
-        },
-        {
-            task: 'laos', data: { 'budget': 5.95, type: 'billions', project:'railway' },
-            compaign: 'Belt_and_Road_Initiative'
-        }
+        // {
+        //     task: 'kenya', data: { 'budget': 3.2, type: 'billions', project:'railway' },
+        //     compaign: 'Belt_and_Road_Initiative'
+        // },
+        // {
+        //     task: 'laos', data: { 'budget': 5.95, type: 'billions', project:'railway' },
+        //     compaign: 'Belt_and_Road_Initiative'
+        // }
     ]
 }
 
@@ -42,7 +42,60 @@ const data = {
 
 
 
-if (pock.$project(data)) {
+
+// pock.$ready(`pocket-1`).d.then(z=>{
+//       console.log('pocket-1 ready',z)
+// })
+
+// pock.$projectSetAsync(`pocket-1`).then(z=>{
+//     console.log(`projectSetAsync ready`,z)
+// })
+
+
+if (pock.$project(data,false,'update').d) {
+
+    const data = {
+        // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
+        id: 'pocket-1', // Belt and Road Initiative
+        tasks: [
+
+            {
+                task: 'china', 
+                data:{value:1, message:'some data'},
+                status:'complete',
+                compaign: 'Belt_and_Road_Initiative',
+            },
+            {
+                status:'complete',
+                task: 'srilanka', data: { 'budget': 1.4, type: 'billions', project:'naval port' },
+                compaign: 'Belt_and_Road_Initiative'
+            },
+        ]
+    }
+
+   pock.$project(data,false,'update')
+    // console.log('hello')
+    // setTimeout(()=>{
+    //   pock.$project(data,false,'update')
+    //   .$filter(function(){
+    //     if(this.task==='laos') return true
+    // }).$project(data,false,'update').$compute(function(){
+    //    console.log(this.id)
+    //  //  this.data='empty'
+    // }).$update({data:'empty again',status:'complete'},false, `::laos`)
+    // console.log(pock.$list())
+
+
+    //  },2000)
+
+//   const list =  pock.$filter(function(){
+//     if(this.task) return true
+//    },'pocket-1').$compute(function(){
+//     //console.log('each',this)
+//     this.data='hello consume data'
+//    }).d
+//     console.log(list)
+    return
     pock
         .$select(`pocket-1`)
         // .$of(`::china`) 

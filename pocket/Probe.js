@@ -81,6 +81,7 @@ exports.Probe = () => {
         }
 
         set compaign(v) {
+            if (v === undefined) return
             if (this._compaign) {
                 if (this.debug) warn(`cannot update already set compaign ${this._compaign}`)
                 return
@@ -95,6 +96,7 @@ exports.Probe = () => {
         }
 
         set task(v) {
+            if (v === undefined) return
             if (this._task) {
                 if (this.debug) warn(`cannot update already set task`)
                 return
@@ -119,6 +121,7 @@ exports.Probe = () => {
         }
 
         set data(v) {
+            if (v === undefined) return
             /**
             * cannot be updated uppon status is send || complete
             */
@@ -132,6 +135,10 @@ exports.Probe = () => {
             this._dataIndex++
             if (this.status === 'open' && this._data !== null && this._dataIndex > 1) this.status = 'updated'
             this._data = v
+        }
+
+        get data() {
+            return this._data
         }
 
         /**
@@ -152,10 +159,6 @@ exports.Probe = () => {
             if (isObject(data) && merge) this.data = Object.assign({}, this.data, data)
             else if (data !== undefined) this.data = data
             return this
-        }
-
-        get data() {
-            return this._data
         }
 
         /**
