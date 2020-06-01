@@ -27,6 +27,15 @@ module.exports = (PocketModule) => {
             return super.$get(lastProbeID, self)
         }
 
+        /**
+         * - return array of Probes matched by ref
+         * @param {*} probeRef, required
+         * @returns [Probe{},...] array
+         */
+        $getByRef(probeRef = '') {
+            return Object.assign(this.pocket).filter(([id, probe], inx) => probe.ref === probeRef)
+        }
+
         // extending original `$set`
         $set(dataFrom, probeID) {
             // allow use of short ref names example: `::cocalola`
@@ -271,7 +280,7 @@ module.exports = (PocketModule) => {
          * will return all available matched within our `_$cached_data[probeID]`. Multiples of `dataProp{}/([])/(',')` will return an object, if only one specified, only value will be retured
          * @param {*} probeID 
          */
-        $cached(dataProp = {}/** ='' */, probeID = '') {
+        $cached(dataProp = {}, probeID = '') {
             probeID = this.selectByTask(probeID, true)
             if (!this.pocket[probeID]) return undefined
             const hasValue = this._$cached_data[probeID] !== undefined && this._$cached_data[probeID] !== null

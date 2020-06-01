@@ -22,6 +22,7 @@ exports.Probe = () => {
             if (isNumber(opts.id) || opts.id) opts.id = opts.id.toString()
             if (!opts.task || !isString(opts.task)) throw ('task as string is required')
             this._id = null
+            this._ref = null
             this._task = null
             this._status = null
             this._data = null
@@ -35,6 +36,7 @@ exports.Probe = () => {
             this.status = 'open'
 
             // assign initial data if differs from default
+            if (opts.ref !== this._ref) this.ref = opts.ref
             if (opts.data !== this._data) this.data = opts.data
             if (opts.compaign) this.compaign = opts.compaign
         }
@@ -74,6 +76,24 @@ exports.Probe = () => {
 
         get id() {
             return this._id
+        }
+
+        get ref() {
+            return this._ref
+        }
+
+        /**
+         * - acceps string, can only be set when status isnt complete
+         * - can be used to find your Pocket by particular `ref`
+         */
+        set ref(v) {
+            if (!v) return
+            if (!isString(v)) {
+                warn(`[ref] must be a string`)
+                return
+            }
+            if (this.status === 'complete' || this._compaign.status === 'send') return
+            this._ref = v
         }
 
         get compaign() {
@@ -304,7 +324,7 @@ exports.Probe = () => {
         }
 
         all() {
-            return { compaign: this.compaign, data: this.data, id: this.id, task: this.task, status: this.status }
+            return { ref: this.ref, compaign: this.compaign, data: this.data, id: this.id, task: this.task, status: this.status }
         }
 
         /**

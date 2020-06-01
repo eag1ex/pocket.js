@@ -42,7 +42,7 @@
 - `Pocket > Probe`: Main/parent module managing each new payload and `Probe` until resolved, give tools access to user.
 
 #### What is a Probe
--  `Probe < Pocket`: Child module doesnt know about Pocket, status/state managed so when `complete`, Pocket intercepts it, and waits until all tasks `complete`. Can be used independantly if needed.
+- `Probe < Pocket`: Child module doesnt know about Pocket, status/state managed so when `complete`, Pocket intercepts it, and waits until all tasks `complete`. Can be used independantly if needed.
 
 
 #### Test / Mocha and coverage
@@ -95,6 +95,28 @@ Working examples can be found at `'./samples/**`
 
 - *Final note: All user/interaction methods are prefixed with '$'*
 - *Note: Most user $methods require `...).d` for access to values, to allows chaining*
+
+
+#### PocketModule selectors:
+- `Probe{} selectors list:`
+- **$projectSet(projectID)**: tells if project already created
+- **$of(probeID = ''):self**: selects pointer to Probe{} 
+- **$probeStatusAsync(probeID).d:Promise**: resolves promise when status changes
+- **$project(data)/$payload(data,async, type = 'new')**: alias of $payload
+- **getByRef(probeRef):[Array]**: returns an array of probes that match the Probe.ref
+- **$probe(probeID):Probe{}**: returns Probe{} by id
+- **$select(projectID):self**: sets pointer to the project
+- **$filter(cb, projectID):self**: filters probes that match condition true, in a callbacl
+- **$compute(cb, projectID = ''):self**: loops thru each probe (if previously filtered/or all) that can be munipulated
+- **$list(projectID = '', cb = null, type = 'self'):Array[]**:
+- **$transfer(fromProbeID = ''):self**:
+- **$to(toProbeID = '', pointToThisProbe = true, maxDelay = 100):self**:
+- **$data(dataProp:{}||[] , probeID = '', self = false)**:
+- **$cached(dataProp = {}, probeID = ''):{}**:
+- **$compaign(probeID):string**:
+- **$status(probeID):String**:
+- **$task(probeID):string**:
+- **$all(probeID):probeGetters**:
 
 #### Code/extentions
 for comments/and linting use: 
