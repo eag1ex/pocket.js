@@ -516,6 +516,12 @@ exports.PocketModule = () => {
           */
         $ready(payloadID) {
 
+            // in case it was called the second time, when already resolved!
+            if (this[`_$ready_resolved`]) {
+                return Promise.reject(`$ready already resolved`)
+            }
+
+            this[`_$ready_resolved`] = false
             const returnAs = (val) => {
                 this.d = val
                 return this
@@ -525,6 +531,7 @@ exports.PocketModule = () => {
             const p = this.$projectSetAsync(payloadID).then(({ projectID }) => {
                 return super.$ready(projectID).then(z => {
                     this.deletePocketSet(projectID)
+                    this[`_$ready_resolved`] = true
                     return z
                 }, err => Promise.reject(err))
             }, err => {

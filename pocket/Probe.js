@@ -295,6 +295,14 @@ exports.Probe = () => {
             return this.setStatusAsync.promise()
         }
 
+        /**
+         * - alias of `getStatusAsync`
+         * @readonly
+         */
+        get statusAsync(){
+            return this.getStatusAsync
+        }
+
         all() {
             return { compaign: this.compaign, data: this.data, id: this.id, task: this.task, status: this.status }
         }
