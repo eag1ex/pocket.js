@@ -6,7 +6,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
     entry: {
-        pocket: Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js')
+        pocket: process.env.NODE_ENV === 'none' ? Path.resolve(__dirname, '../Pocket/versions/Pocket.nodejs.js') : Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js')
     // executes es6+ app:
     // app: ['@babel/polyfill',Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js')]
     },

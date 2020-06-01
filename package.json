@@ -8,6 +8,7 @@
     "mocha": "mocha ./test/tests.js --colors --delay",
     "lint": "./node_modules/.bin/eslint  --ext .js pocket libs",
     "lint:fix": "./node_modules/.bin/eslint --fix --ext .js pocket libs",
+    "commonjs": "cross-env NODE_ENV=none ./node_modules/.bin/webpack --config webpack/webpack.config.commonjs.js --display-error-details --colors --progress",
     "dev": "cross-env NODE_ENV=development ./node_modules/.bin/webpack --config webpack/webpack.config.dev.js --display-error-details --colors --progress",
     "prod": "cross-env NODE_ENV=production ./node_modules/.bin/webpack --config webpack/webpack.config.prod.js --display-error-details --colors --progress ",
     "test": "nyc --reporter=html --port=2222 --reporter=text mocha ./test/tests.js --colors --delay"
@@ -20,7 +21,6 @@
     "bash-color": "0.0.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-transform-runtime": "^7.9.6",
@@ -30,6 +30,7 @@
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "chai": "^4.2.0",
