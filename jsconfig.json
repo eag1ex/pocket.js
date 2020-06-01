@@ -2,8 +2,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "moduleResolution": "node",
-    "module": "es2015",
-    "target": "es5",
+    "module": "commonJS",
+    "target": "es6",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
