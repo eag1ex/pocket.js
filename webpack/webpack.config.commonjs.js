@@ -52,13 +52,13 @@ module.exports = merge(common, {
                 test: /\.(js)$/,
                 include: Path.resolve(__dirname, '../Pocket/Pocket.module.js'),
                 loader: 'babel-loader',
-                options: {
-                    "plugins": [
-                        "@babel/plugin-syntax-dynamic-import",
-                        "@babel/plugin-proposal-class-properties",
-                        "babel-plugin-transform-es2015-modules-commonjs"
-                    ]
-                }
+                // options: {
+                //     "plugins": [
+                //         "@babel/plugin-syntax-dynamic-import",
+                //         "@babel/plugin-proposal-class-properties",
+                //         "babel-plugin-transform-es2015-modules-commonjs"
+                //     ]
+                // }
             }
         ]
     }

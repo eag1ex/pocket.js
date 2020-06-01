@@ -14,6 +14,7 @@ const Pocket = require('../build/js/pocket_commonjs').PocketModule()
 const DEBUG = true
 
 const pock = new Pocket({ async: false, dispatcher: true }, DEBUG)
+
 const data = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
     id: 'pocket-1', // Belt and Road Initiative

@@ -25,7 +25,7 @@ module.exports = {
         filename: 'js/[name].js',
         // NOTE only use if not setting window.xxx globals for `browser` versions
         // library: 'Pocket', 
-        libraryTarget: process.env.NODE_ENV === 'none' ? 'commonjs' : 'window'
+        libraryTarget: process.env.NODE_ENV === 'none' ? 'commonjs-module' : 'window'
     },
 
     plugins: [
