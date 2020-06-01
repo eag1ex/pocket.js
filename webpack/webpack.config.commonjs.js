@@ -18,7 +18,7 @@ module.exports = merge(common, {
         // namedModules: true,
         removeEmptyChunks: false,
         mergeDuplicateChunks: false,
-        // minimize: true,
+        minimize: true,
         minimizer: [
             (compiler) => {
                 new TerserPlugin({
@@ -29,7 +29,7 @@ module.exports = merge(common, {
                         ecma: 7,
                         output: { 
                             beautify: false,
-                            comments: 'some'
+                            comments: 'all'
                         },
                         mangle: true,
                         parallel: 3

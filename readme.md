@@ -114,6 +114,7 @@ Working examples can be found at `'./samples/**`
 - **$data(dataProp:{}||[] , probeID = '', self = false)**:
 - **$cached(dataProp = {}, probeID = ''):{}**:
 - **$compaign(probeID):string**:
+- **$ref(probeID)**: 
 - **$status(probeID):String**:
 - **$task(probeID):string**:
 - **$all(probeID):probeGetters**:

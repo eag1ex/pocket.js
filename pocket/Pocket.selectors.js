@@ -316,6 +316,18 @@ module.exports = (PocketModule) => {
         }
 
         /**
+         * ### $ref
+         * - returns Probe{}.ref
+         * @param {*} probeID optional/sensitive, select new point of reference
+         */
+        $ref(probeID) {
+            // allow use of short ref names example: `::cocalola`
+            probeID = this.selectByTask(probeID, true)
+            if (!this.pocket[probeID]) return null
+            return copy(this.pocket[probeID]['ref'])
+        }
+
+        /**
         * ### $status
         * - returns Object copy of `Probe['status']` 
         * @param {*} probeID optional/sensitive, select new point of reference

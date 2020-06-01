@@ -302,8 +302,7 @@ exports.PocketModule = () => {
                     if (key === 'data') {
                         if (mergeData === true) this.pocket[id][key] = Object.assign({}, this.pocket[id][key], value)
                         else this.pocket[id][key] = value
-                    } if (key === 'status') this.pocket[id][key] = value
-
+                    } if (key === 'status' || key === 'ref') this.pocket[id][key] = value
                     updated = true
                     continue
                 } else {
