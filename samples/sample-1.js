@@ -1,14 +1,16 @@
 `use strict`
 
 process.on('uncaughtException', function (err) {
-    console.log('sample-1.js uncaughtException/error',err);
+    console.log('sample-1.js uncaughtException/error', err)
 })
 
 /**
  * Example, exchange of data regarding `china => covid19 => world`
  */
 const { log, warn } = require('../index').utils
-const Pocket = require('../index').Pocket
+const Pocket = require('../build/js/pocket').PocketModule()
+
+// const Pocket = require('../index').Pocket
 const DEBUG = true
 
 const pock = new Pocket({ async: false, dispatcher: true }, DEBUG)
@@ -18,13 +20,15 @@ const data = {
     tasks: [
 
         {
-            task: 'china', data: { 'assets': 10, type: 'billions', info:'benefactor' },
+            task: 'china',
+            data: { 'assets': 10, type: 'billions', info: 'benefactor' },
             compaign: 'Belt_and_Road_Initiative'
         },
         {
-            task: 'srilanka', data: { 'budget': 1.4, type: 'billions', project:'naval port' },
+            task: 'srilanka',
+            data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
             compaign: 'Belt_and_Road_Initiative'
-        },
+        }
         // {
         //     task: 'kenya', data: { 'budget': 3.2, type: 'billions', project:'railway' },
         //     compaign: 'Belt_and_Road_Initiative'
@@ -40,9 +44,6 @@ const data = {
 //     log(`projectSetAsync is now set :)`,z)
 // ])
 
-
-
-
 // pock.$ready(`pocket-1`).d.then(z=>{
 //       console.log('pocket-1 ready',z)
 // })
@@ -51,8 +52,7 @@ const data = {
 //     console.log(`projectSetAsync ready`,z)
 // })
 
-
-if (pock.$project(data,false,'update').d) {
+if (pock.$project(data, false, 'update').d) {
 
     const data = {
         // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
@@ -61,19 +61,20 @@ if (pock.$project(data,false,'update').d) {
 
             {
                 task: 'china', 
-                data:{value:1, message:'some data'},
-                status:'complete',
-                compaign: 'Belt_and_Road_Initiative',
-            },
-            {
-                status:'complete',
-                task: 'srilanka', data: { 'budget': 1.4, type: 'billions', project:'naval port' },
+                data: { value: 1, message: 'some data' },
+                status: 'complete',
                 compaign: 'Belt_and_Road_Initiative'
             },
+            {
+                status: 'complete',
+                task: 'srilanka',
+                data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
+                compaign: 'Belt_and_Road_Initiative'
+            }
         ]
     }
 
-   pock.$project(data,false,'update')
+    pock.$project(data, false, 'update')
     // console.log('hello')
     // setTimeout(()=>{
     //   pock.$project(data,false,'update')
@@ -85,32 +86,31 @@ if (pock.$project(data,false,'update').d) {
     // }).$update({data:'empty again',status:'complete'},false, `::laos`)
     // console.log(pock.$list())
 
-
     //  },2000)
 
-//   const list =  pock.$filter(function(){
-//     if(this.task) return true
-//    },'pocket-1').$compute(function(){
-//     //console.log('each',this)
-//     this.data='hello consume data'
-//    }).d
-//     console.log(list)
-    return
+    //   const list =  pock.$filter(function(){
+    //     if(this.task) return true
+    //    },'pocket-1').$compute(function(){
+    //     //console.log('each',this)
+    //     this.data='hello consume data'
+    //    }).d
+    //     console.log(list)
+    
     pock
         .$select(`pocket-1`)
         // .$of(`::china`) 
         // .$update({ data: { assets: 10.55 }})
-         .$compute(function(probe,id){        
+        .$compute(function(probe, id) {        
             this.data = 'new data'
         })
-    console.log('list',pock.$list())  
-    //return    
+    console.log('list', pock.$list())  
+    return    
 
     function newEnclosure(cb) {
         const t = (new function () {
             this.project = null
             this.order = {
-                cost: 0, // updated dynamicly
+                cost: 0 // updated dynamicly
             }
             this.purchase = cb
         }())
@@ -143,34 +143,31 @@ if (pock.$project(data,false,'update').d) {
             log(`navalPort/Probe update`, data, status, id, compaign, task)
         })
         
-        // NOTE individual Probe{} status, same as `pock.pocket['b-r-i::srilanka'].getStatusAsync.then`
-        pock.$probeStatusAsync(`::srilanka`).d.then(status=>{
-            log(`srilanka/ status: ${status}`)
-        })
+    // NOTE individual Probe{} status, same as `pock.pocket['b-r-i::srilanka'].getStatusAsync.then`
+    pock.$probeStatusAsync(`::srilanka`).d.then(status => {
+        log(`srilanka/ status: ${status}`)
+    })
 
-        facilitate(({kenya})=>{
-           kenya.update({fees:this.fees, project:'railway not complete'},true)
-           .status = 'complete'
-           return kenya
-        }).update({kenya:pock.$probe(`::kenya`)})
-          .getStatusAsync.then(status=>{
-              log(`kenya/railway Probe{} status: ${status}`)
-          })      
+    facilitate(({ kenya }) => {
+        kenya.update({ fees: this.fees, project: 'railway not complete' }, true)
+            .status = 'complete'
+        return kenya
+    }).update({ kenya: pock.$probe(`::kenya`) })
+        .getStatusAsync.then(status => {
+            log(`kenya/railway Probe{} status: ${status}`)
+        })      
 
-
-
-         // setTimeout(()=>{
+    // setTimeout(()=>{
       
-         // },1000)
+    // },1000)
   
-        // pock.$select(`b-r-i`).$ready().d.then(z=>{
+    // pock.$select(`b-r-i`).$ready().d.then(z=>{
 
-        // })
+    // })
 
-
-       // console.log('srilanka',pock.$get(`::srilanka`))     
-            //.$update({status:'complete'}) 
-        // log(`::china/task`,pock.$of(`::china`).$cached())
+    // console.log('srilanka',pock.$get(`::srilanka`))     
+    // .$update({status:'complete'}) 
+    // log(`::china/task`,pock.$of(`::china`).$cached())
     
     //       //  .$update({ data: { assets: 0 } }, true)
     //      //   .$update({status:'complete'})
@@ -183,8 +180,6 @@ if (pock.$project(data,false,'update').d) {
     //                 .$update({status:'complete'})
     //     },90)
 
-
-
     // pock.$probeStatusAsync(`${data.id}::china`).d.then(z=>{
     //     log('china/getStatusAsync',z)
     // })
@@ -192,20 +187,14 @@ if (pock.$project(data,false,'update').d) {
     // pock.$ready(data.id).d.then(z => {
     //    log('Pocket ready', z)
     // })
-
     
-    //log(`world`, pock.$get(`${data.id}::world`).d)
-    //log(`worldProbe`, worldProbe.d['data'])
-    //log(`chinaProbe`, chinaProbe.d)
+    // log(`world`, pock.$get(`${data.id}::world`).d)
+    // log(`worldProbe`, worldProbe.d['data'])
+    // log(`chinaProbe`, chinaProbe.d)
 }
 
-    // setTimeout(() => {
-    //     pk.$update('abc123::grab', { status: 'complete' })
-    // }, 300)
+// setTimeout(() => {
+//     pk.$update('abc123::grab', { status: 'complete' })
+// }, 300)
 
-
-    //console.log('pc activeTasks', pk.$activeTasks())
-
-
-
-
+// console.log('pc activeTasks', pk.$activeTasks())

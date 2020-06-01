@@ -26,10 +26,10 @@ module.exports = merge(common, {
                         compress: {
                             passes: 2
                         },
-                        // ecma: 6,
+                        ecma: 7,
                         output: { 
                             beautify: false,
-                            comments: 'small'
+                            comments: 'some'
                         },
                         mangle: true,
                         parallel: 3
@@ -43,18 +43,22 @@ module.exports = merge(common, {
         rules: [
             {
                 test: /\.(js)$/,
-                include: Path.resolve(__dirname, '../Pocket/versions/Pocket.nodejs.js'),
+                include: Path.resolve(__dirname, '../Pocket/Pocket.module.js'),
                 enforce: 'pre',
-                loader: 'eslint-loader',
-                options: {
-                    presets: [ 'transform-es2015-modules-commonjs'],
-                    plugins: []
-                }
+                loader: 'eslint-loader'
+             
             }, 
             {
                 test: /\.(js)$/,
-                include: Path.resolve(__dirname, '../Pocket/versions/Pocket.nodejs.js'),
-                loader: 'babel-loader'
+                include: Path.resolve(__dirname, '../Pocket/Pocket.module.js'),
+                loader: 'babel-loader',
+                options: {
+                    "plugins": [
+                        "@babel/plugin-syntax-dynamic-import",
+                        "@babel/plugin-proposal-class-properties",
+                        "babel-plugin-transform-es2015-modules-commonjs"
+                    ]
+                }
             }
         ]
     }

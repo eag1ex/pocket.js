@@ -4,18 +4,28 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 // const Webpack = require('webpack')
 // how to assing globals for window: `https://stackoverflow.com/questions/37656592/define-global-variable-with-webpack`
 
-module.exports = {
-    entry: {
-        pocket: process.env.NODE_ENV === 'none' ? Path.resolve(__dirname, '../Pocket/versions/Pocket.nodejs.js') : Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js')
+const entry = () => {
+    if (process.env.NODE_ENV === 'none') {
+        return {
+            'pocket_commonjs': Path.resolve(__dirname, '../Pocket/Pocket.module.js')
+        }
+    } else {
+        return {
+            'pocket': Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js')
+        }
+    }
     // executes es6+ app:
     // app: ['@babel/polyfill',Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js')]
-    },
+}
+
+module.exports = {
+    entry: entry(),
     output: {
         path: Path.join(__dirname, '../build'),
-        filename: 'js/[name].js'
-    // NOTE only use if not setting window.xxx globals for `browser` versions
-    // library: 'Pocket', 
-    // libraryTarget: 'window'
+        filename: 'js/[name].js',
+        // NOTE only use if not setting window.xxx globals for `browser` versions
+        // library: 'Pocket', 
+        libraryTarget: process.env.NODE_ENV === 'none' ? 'commonjs' : 'window'
     },
 
     plugins: [
