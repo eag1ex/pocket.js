@@ -2,6 +2,18 @@
     "jslint.enable": false,
     "standard.enable":true,
     "eslint.nodePath":"./node_modules/eslint",
+    "node-module-intellisense.scanBuiltinModules": true,
+    "node-module-intellisense.scanDevDependencies": true,
+    "node-module-intellisense.scanFileModules": true,
+    "node-module-intellisense.fileModuleExtensions": [
+        ".js",
+        ".jsx",
+        ".ts",
+        ".d.ts",
+        ".tsx",
+        ".vue",
+        ".json"
+      ],
     "eslint.enable": true,
     "eslint.autoFixOnSave":true,
     "javascript.validate.enable":true,
