@@ -299,7 +299,7 @@ exports.Probe = () => {
          * - alias of `getStatusAsync`
          * @readonly
          */
-        get statusAsync(){
+        get statusAsync() {
             return this.getStatusAsync
         }
 
