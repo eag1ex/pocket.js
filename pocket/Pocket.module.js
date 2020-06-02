@@ -459,6 +459,7 @@ exports.PocketModule = () => {
          * - delete completed `pocketSet`
          */
         deletePocketSet(id) {
+            if(!id) return 
             if (Object.values(this.pocket).length) {
                 for (let poc of Object.values(this.pocket)) {
                     if (this._$cached_data[poc.id]) delete this._$cached_data[poc.id]
@@ -480,6 +481,18 @@ exports.PocketModule = () => {
     class PocketModuleExt extends PocketModule {
         constructor(opts, debug) {
             super(opts, debug)
+        }
+
+        /**
+         * ### $removeProject
+         * - removes all Probes and references relating to `projectID`
+         * @param {*} projectID 
+         */
+        $removeProject(projectID) {
+            projectID = !isString(projectID) ? '' : projectID
+            projectID = this.lastProjectID(projectID) // also updates last selector reference
+            this.deletePocketSet(projectID)
+            return this  
         }
 
         $payload(data, async, type) {

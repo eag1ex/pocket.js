@@ -99,6 +99,7 @@ Working examples can be found at `'./samples/**`
 
 #### PocketModule selectors:
 - `Probe{} selectors list:`
+- **$removeProject(projectID)**: removes the project in case not alredy removed
 - **$projectSet(projectID)**: tells if project already created
 - **$of(probeID = ''):self**: selects pointer to Probe{} 
 - **$probeStatusAsync(probeID).d:Promise**: resolves promise when status changes
