@@ -281,6 +281,9 @@ exports.PocketModule = function () {
               if (val['status']) _this2.$update({
                 status: val['status']
               }, false, "::".concat(val['task']));
+              if (val['ref']) _this2.$update({
+                ref: val['ref']
+              }, false, "::".concat(val['task']));
               if (_this2.$status("::".concat(val['task']))) isUpdated = true; // NOTE after update, payloadData will differ from new Probe{} data
               // NOTE do not update `payloadData` it is redundant if we donot need it for anything, only update Probes{}
               /// this.payloadData[data.id]['value']

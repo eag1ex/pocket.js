@@ -101,6 +101,7 @@ exports.PocketModule = () => {
                 if (type === 'update' && !initialProject) {
                     if (val['data']) this.$update({ data: val['data'] }, false, `::${val['task']}`)
                     if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
+                    if (val['ref']) this.$update({ ref: val['ref'] }, false, `::${val['task']}`)
                     if (this.$status(`::${val['task']}`)) isUpdated = true
 
                     // NOTE after update, payloadData will differ from new Probe{} data
