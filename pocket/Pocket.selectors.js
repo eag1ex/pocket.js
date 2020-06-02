@@ -118,6 +118,7 @@ module.exports = (PocketModule) => {
         /**
          * ### $compute
          * - iterate thru each Probe{}/ instance in a callback, and make changes to it
+         * - note: you can only compute thru items that are not `complete`
          * @param {*} cb((probe, probeID)=>this/self.data) required
          * @param {*} projectID optional/sensitive, selects new point of reference.
          */
@@ -140,10 +141,16 @@ module.exports = (PocketModule) => {
                 return returnAs(null)
             }
             if ((this._lastFilterList[projectID] || []).length) {
-                this._lastFilterList[projectID].forEach(probe => cb.call(probe, probe))
+                this._lastFilterList[projectID].forEach(probe => {
+                    // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete           
+                    if (probe.status !== 'complete' || probe.status !== 'send') cb.call(probe, probe)
+                })
                 return returnAs(this._lastFilterList[projectID])
             } else {
-                this.projectProbeList(projectID).forEach(probe => cb.call(probe, probe))
+                this.projectProbeList(projectID).forEach(probe => {
+                    // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete           
+                    if (probe.status !== 'complete' || probe.status !== 'send') cb.call(probe, probe)
+                })
                 return returnAs(this.projectProbeList(projectID))
             }
         }
@@ -166,7 +173,9 @@ module.exports = (PocketModule) => {
                 }, [])
             }
             if (isFunction(cb)) {
-                this.projectProbeList(projectID).forEach(probe => cb.call(probe, probe))
+                this.projectProbeList(projectID).forEach(probe => {
+                    cb(probe.all()) // no access to Probe/instance only copy
+                })
                 if (type === 'self' || !type) return this
                 if (type === 'list') return list()
             } else {
@@ -199,6 +208,7 @@ module.exports = (PocketModule) => {
          * - works together with `$transfer`, will transfer `data` from one Probe{} to another
          * if `_transferCache` is set, the cache is cleared.
          * @param {*} toProbeID optional/sensitive, points to Probe{} `data` will be packed, it is not previous reference pointer, but the next.
+         * - will only work if `toProbeID` is not yet complete
          * @param {*} pointToThisProbe to stay on the current pointer reference
          * @param {*} maxDelay, keep at minimum! Time between transaction can take place, relates to `fromAverageTimeHasPast` found in `accessLastValidTransfer()`
          */
@@ -223,6 +233,11 @@ module.exports = (PocketModule) => {
                 if (objectSize(lastValidTransfer)) {
                     const { fromProbeID, data } = lastValidTransfer
                     if (this.$transfer_lastID === fromProbeID) {
+                        if (this.pocket[toProbeID].status === 'complete' || this.pocket[toProbeID].status === 'send') {
+                            if (this.debug) warn(`[$to] cannot transfer since toProbeID: ${toProbeID} is already complete`)
+                            this.$transfer_lastID = ''
+                            return this
+                        }
                         this.pocket[fromProbeID]['data'] = null // from $transfer 
                         this.pocket[toProbeID]['data'] = data // $to 
                     }
