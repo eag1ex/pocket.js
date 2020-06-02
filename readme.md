@@ -118,6 +118,7 @@ Working examples can be found at `'./samples/**`
 - **$ref(probeID)**: 
 - **$status(probeID):String**:
 - **$task(probeID):string**:
+- **$error(probeID):[]**:
 - **$all(probeID):probeGetters**:
 
 #### Code/extentions

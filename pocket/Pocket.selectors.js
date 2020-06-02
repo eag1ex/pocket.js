@@ -367,6 +367,18 @@ module.exports = (PocketModule) => {
         }
 
         /**
+         * ### $task
+         * - returns Object copy of `Probe['task']` 
+         * @param {*} probeID optional/sensitive, select new point of reference
+         */
+        $error(probeID) {
+            // allow use of short ref names example: `::cocalola`
+            probeID = this.selectByTask(probeID, true)
+            if (!this.pocket[probeID]) return null
+            return copy(this.pocket[probeID]['error'])
+        }
+
+        /**
          * ### $all
          * - return Object copy of all setters: `{id,status,compaign,task,data}` 
          * @param {*} probeID optional/sensitive, select new point of reference

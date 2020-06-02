@@ -8,7 +8,7 @@ process.on('uncaughtException', function (err) {
  * Example, exchange of data regarding `china => covid19 => world`
  */
 const { log, warn } = require('../index').utils
-const Pocket = require('../build/js/pocket_commonjs').PocketModule()
+const Pocket = require('../index').Pocket
 
 // const Pocket = require('../index').Pocket
 const DEBUG = true
@@ -76,32 +76,13 @@ if (pock.$project(data, false, 'update').d) {
     }
 
     pock.$project(data, false, 'update')
-    // console.log('hello')
-    // setTimeout(()=>{
-    //   pock.$project(data,false,'update')
-    //   .$filter(function(){
-    //     if(this.task==='laos') return true
-    // }).$project(data,false,'update').$compute(function(){
-    //    console.log(this.id)
-    //  //  this.data='empty'
-    // }).$update({data:'empty again',status:'complete'},false, `::laos`)
-    // console.log(pock.$list())
 
-    //  },2000)
-
-    //   const list =  pock.$filter(function(){
-    //     if(this.task) return true
-    //    },'pocket-1').$compute(function(){
-    //     //console.log('each',this)
-    //     this.data='hello consume data'
-    //    }).d
-    //     console.log(list)
     const l = pock.$compute(function(probe, id) {
-        if(this.task ==='srilanka') this.ref = '#special'        
+     // this.error = 'error!'        
     }).$filter(function(){
-        return this.ref==='#special'
+        return true
     }).d
-    console.log(l)
+    console.log(pock.$error(`::china`))
     return
     pock
         .$select(`pocket-1`)

@@ -102,6 +102,7 @@ exports.PocketModule = () => {
                     if (val['data']) this.$update({ data: val['data'] }, false, `::${val['task']}`)
                     if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
                     if (val['ref']) this.$update({ ref: val['ref'] }, false, `::${val['task']}`)
+                    if (val['error']) this.$update({ error: val['error'] }, false, `::${val['task']}`)
                     if (this.$status(`::${val['task']}`)) isUpdated = true
 
                     // NOTE after update, payloadData will differ from new Probe{} data
@@ -303,7 +304,7 @@ exports.PocketModule = () => {
                     if (key === 'data') {
                         if (mergeData === true) this.pocket[id][key] = Object.assign({}, this.pocket[id][key], value)
                         else this.pocket[id][key] = value
-                    } if (key === 'status' || key === 'ref') this.pocket[id][key] = value
+                    } if (key === 'status' || key === 'ref' || key === 'error') this.pocket[id][key] = value
                     updated = true
                     continue
                 } else {

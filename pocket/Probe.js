@@ -345,7 +345,7 @@ exports.Probe = () => {
         }
 
         all() {
-            return { ref: this.ref, compaign: this.compaign, data: this.data, id: this.id, task: this.task, status: this.status }
+            return { error:this.error, ref: this.ref, compaign: this.compaign, data: this.data, id: this.id, task: this.task, status: this.status }
         }
 
         /**

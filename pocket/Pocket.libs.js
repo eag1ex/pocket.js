@@ -279,7 +279,7 @@ module.exports = () => {
          * - only updatable props are: `'compaign', 'data', 'status'(limited)`
          */
         get probeProps() {
-            return ['compaign', 'data', 'task', 'ref', 'id', 'status']
+            return ['compaign', 'data', 'task', 'ref', 'error','id', 'status']
         }
     }
 }
