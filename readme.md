@@ -120,6 +120,9 @@ Working examples can be found at `'./samples/**`
 - **$task(probeID):string**:
 - **$error(probeID):[]**:
 - **$all(probeID):probeGetters**:
+- **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. This is an imported class, activated when `opt.architect=true` 
+- **$asset(assetName, projectID)**: can access the asset declared in `$architect`, activated when `opt.architect=true` 
+
 
 #### Code/extentions
 for comments/and linting use: 

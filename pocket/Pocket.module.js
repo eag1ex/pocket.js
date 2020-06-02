@@ -474,6 +474,14 @@ exports.PocketModule = () => {
             if (this._projectSetDispatcher[id] !== undefined) delete this._projectSetDispatcher[id]
             if (this._projectSetAsync[id]) delete this._projectSetAsync[id]
             if (this._lastFilterList[id]) delete this._lastFilterList[id]
+
+            // from PocketArchitect dynamicly assigned
+            try {
+                if (this.architectConfig[id]) delete this.architectConfig[id]
+            } catch (err) {
+                // blah
+            }
+
             // empty self
             this.clearStoreTransfers(id)
         }
@@ -504,7 +512,7 @@ exports.PocketModule = () => {
             }
             const asAsync = async !== undefined ? async : this.async // override if set
             if (asAsync && isPromise(data)) return returnAs(data.then(z => super.$payload(z, false, type), err => err))
-            if (!this.async && !isPromise(data)) return returnAs(super.$payload(data, false, type))
+            if (!asAsync && !isPromise(data)) return returnAs(super.$payload(data, false, type))
             else {
                 if (this.debug) onerror(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
                 if (asAsync) return returnAs(Promise.reject())

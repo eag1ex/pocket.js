@@ -13,6 +13,7 @@ module.exports = () => {
         constructor(opts = {}, debug) {
             this.debug = debug || false
             this.async = (opts || {}).async || null
+            this.architect = (opts || {}).architect || null // load Architect class
             // when set enables dispatcher to communicate directly with `probe.js`
             this.dispatcher = (opts || {}).dispatcher ? require('../libs/dispatcher')() : null
             this.pocket = {} // example this.pocket[`abc::taskName`] returns Probe{} Instance
@@ -276,10 +277,10 @@ module.exports = () => {
          * ### probeProps
          * - `each probe props that can be available and send on ready`
          * - `order is important, keep 'status' last`
-         * - only updatable props are: `'compaign', 'data', 'status'(limited)`
+         * - only updatable props are: `'compaign', 'data', 'error', 'ref', 'status'(limited)`
          */
         get probeProps() {
-            return ['compaign', 'data', 'task', 'ref', 'error','id', 'status']
+            return ['compaign', 'data', 'task', 'ref', 'error', 'id', 'status']
         }
     }
 }

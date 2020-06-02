@@ -79,23 +79,22 @@ exports.Probe = () => {
             return this._id
         }
 
-
         /**
          * - collect all errors in to an array
          * - no empty error values will be set
          */
-        set error(v){
-            if(!v) return
-            if(!(v||[]).length && isArray(v)) return
+        set error(v) {
+            if (!v) return
+            if (!(v || []).length && isArray(v)) return
             this._error.push(v)
-            this._error = this._error.filter(z=>!!z)
+            this._error = this._error.filter(z => !!z)
         }
 
         /**
          * @returns an arrays of errors or null
          */
-        get error(){
-            if(!this._error.length) return null
+        get error() {
+            if (!this._error.length) return null
             return this._error
         }
 
@@ -345,7 +344,7 @@ exports.Probe = () => {
         }
 
         all() {
-            return { error:this.error, ref: this.ref, compaign: this.compaign, data: this.data, id: this.id, task: this.task, status: this.status }
+            return { error: this.error, ref: this.ref, compaign: this.compaign, data: this.data, id: this.id, task: this.task, status: this.status }
         }
 
         /**

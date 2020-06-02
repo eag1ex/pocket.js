@@ -6,9 +6,55 @@
  */
 module.exports = (PocketModule) => {
     const { copy, warn, isArray, onerror, objectSize, isString, uniq, isFunction } = require('./utils')
+  
     return class PocketSelectors extends PocketModule {
+
         constructor(opts, debug) {
             super(opts, debug)
+            this.createArchitect() // only when pocketInstance is set
+        }
+
+        createArchitect() {
+            if (this.architect && !this["architect_set"]) {
+                try {
+                    const PocketArchitect = require('./Pocket.architect')()
+                    PocketArchitect.prototype = Object.create(this)
+                    PocketArchitect.prototype.constructor = PocketArchitect
+                    Object.assign(this, new PocketArchitect())
+                } catch (err) {
+                    console.log(`[createArchitect] error`, err)
+                }
+
+                this["architect_set"] = true
+            }
+        }
+
+        /** 
+         * - can be used as a project setter same as `$payload` or `$project`, but with additional configuration
+         * 
+         * @param cb required, must return project settings: `{project:{payloadData}, asset:{value, name}}
+         * @param projectID optional
+         * @returns self
+        */
+        $architect(...args) {
+            if (!this.architect) {
+                if (this.debug) warn(`[$architect] "opts.architect" must be set to use this option`)
+                return this
+            }
+            return this.__architect(...args)
+        }
+
+        /** 
+         * @param assetName string, specify the name you chose in your `$architect(...)` declaration
+         * @param projectID optional, update selector and return desired asset
+         * @returns asset by name or null
+        */
+        $asset(...args) {
+            if (!this.architect) {
+                if (this.debug) warn(`[$asset] "opts.architect" must be set to use this option`)
+                return null
+            }
+            return this.__asset(...args)
         }
 
         // extending original `$probeStatusAsync`
@@ -389,5 +435,6 @@ module.exports = (PocketModule) => {
             if (!this.pocket[probeID]) return null
             return copy(this.pocket[probeID].all())
         }
+        
     }
 }

@@ -28,10 +28,9 @@ module.exports = function (uid, debug = null) {
         }
 
         /**
-     * @Dispatch
-     * master listener, sends all event callbacks to `batchReady`
-     * @param {*} cb
-     */
+         * @Dispatch
+         * master listener, sends all event callbacks to `batchReady`
+         */
         this.Dispatch = () => {
             if (this.dispatchInstance[this.uid]) return this
             const self = this
