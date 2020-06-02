@@ -1,6 +1,6 @@
 exports.PocketModule = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID } = require('./utils')
+    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID, isString } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     const PocketLibs = require('./Pocket.libs')()
     const newProbe = require('./Probe').Probe
@@ -459,7 +459,7 @@ exports.PocketModule = () => {
          * - delete completed `pocketSet`
          */
         deletePocketSet(id) {
-            if(!id) return 
+            if (!id) return 
             if (Object.values(this.pocket).length) {
                 for (let poc of Object.values(this.pocket)) {
                     if (this._$cached_data[poc.id]) delete this._$cached_data[poc.id]

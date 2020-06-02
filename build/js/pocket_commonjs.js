@@ -145,7 +145,8 @@ exports.PocketModule = function () {
       isArray = _require.isArray,
       isObject = _require.isObject,
       isPromise = _require.isPromise,
-      validID = _require.validID;
+      validID = _require.validID,
+      isString = _require.isString;
 
   var sq = __webpack_require__(7); // nice and simple promise/defer by `eaglex.net`
 
@@ -767,6 +768,8 @@ exports.PocketModule = function () {
     }, {
       key: "deletePocketSet",
       value: function deletePocketSet(id) {
+        if (!id) return;
+
         if (Object.values(this.pocket).length) {
           for (var _i3 = 0, _Object$values = Object.values(this.pocket); _i3 < _Object$values.length; _i3++) {
             var poc = _Object$values[_i3];
@@ -804,8 +807,23 @@ exports.PocketModule = function () {
 
       return _super2.call(this, opts, debug);
     }
+    /**
+     * ### $removeProject
+     * - removes all Probes and references relating to `projectID`
+     * @param {*} projectID 
+     */
+
 
     _createClass(PocketModuleExt, [{
+      key: "$removeProject",
+      value: function $removeProject(projectID) {
+        projectID = !isString(projectID) ? '' : projectID;
+        projectID = this.lastProjectID(projectID); // also updates last selector reference
+
+        this.deletePocketSet(projectID);
+        return this;
+      }
+    }, {
       key: "$payload",
       value: function $payload(data, async, type) {
         var _this8 = this;
