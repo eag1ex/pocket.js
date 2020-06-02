@@ -5,7 +5,7 @@
  */
 exports.Probe = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { isString, warn, log, isNumber, onerror, last, copy, isObject } = require('./utils')
+    const { isString, isArray, warn, log, isNumber, onerror, last, copy, isObject } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     return class Probe {
         /**
@@ -22,6 +22,7 @@ exports.Probe = () => {
             if (isNumber(opts.id) || opts.id) opts.id = opts.id.toString()
             if (!opts.task || !isString(opts.task)) throw ('task as string is required')
             this._id = null
+            this._error = []
             this._ref = null
             this._task = null
             this._status = null
@@ -76,6 +77,26 @@ exports.Probe = () => {
 
         get id() {
             return this._id
+        }
+
+
+        /**
+         * - collect all errors in to an array
+         * - no empty error values will be set
+         */
+        set error(v){
+            if(!v) return
+            if(!(v||[]).length && isArray(v)) return
+            this._error.push(v)
+            this._error = this._error.filter(z=>!!z)
+        }
+
+        /**
+         * @returns an arrays of errors or null
+         */
+        get error(){
+            if(!this._error.length) return null
+            return this._error
         }
 
         get ref() {

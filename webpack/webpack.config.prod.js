@@ -26,6 +26,7 @@ module.exports = merge(common, {
                             passes: 2
                         },
                         output: {
+                           // comments: 'all',
                             beautify: false
                         },
                         mangle: true,
