@@ -56,6 +56,7 @@ Working examples can be found at `'./samples/**`
 
 #### PocketModule config/opts and status logic:
 - `PocketModule.opts{}`: available options on constructor to be set with instance creation.
+    - `opts.architect:Boolean`: when set loads additional Architect class with available methods
     - `opts.async:Boolean`: when set will handle `await payload(asyncData)` as Promise. 
     - `opts.dispatcher:Boolean`: when set will load `Dispatcher module`, in to Pocket instance, and allow additional live on-change logging and direct communication with each Probe, currently this feature is limited to only logging, must set `debug:true` to see it in action. `[dispatcher]...`.
     - `debug:Boolean`: will log additional messages on what is happening, good for debuging :)!

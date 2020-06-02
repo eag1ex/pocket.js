@@ -1,6 +1,6 @@
 
 /** 
-    * ### PocketArchitect
+    * ### Architect
     * a more in depth project architecture setup, allowing more robust configuration, munipulation and data flows
 */
 module.exports = () => {
@@ -10,7 +10,7 @@ module.exports = () => {
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
 
-    return function PocketArchitect() {
+    return function Architect() {
         this.architectConfig = {/** id:data */ }
 
         /** 
@@ -48,18 +48,22 @@ module.exports = () => {
                 return this
             }
 
+            const config = cb.call(this/** ,?? */)
+            
+            if (!objectSize(config)) {
+                if (this.debug) onerror(`[architect] must return a valid object settings {project, asset}, at least 1 is required`)
+                return this
+            }
+
+            const configProjectID = (config['project'] ||{}).id
             const lastProject = this.lastProjectID(projectID) // in case we are calling `$architect` on existing project
-            projectID = this.validProjectID(lastProject || projectID)
+            projectID = this.validProjectID(lastProject || projectID || configProjectID)
 
             if (!projectID) {
                 if (this.debug) onerror(`[$architect] if this is a new project, you must specify projectID`)
                 return this
             }
-            const config = cb.call(this/** ,?? */)
-            if (!objectSize(config)) {
-                if (this.debug) onerror(`[architect] must return a valid object settings {project, asset}, at least 1 is required`)
-                return this
-            }
+
             const validConfig = Object.entries(config).reduce((n, [k, value]) => {
                 if (['project', 'asset'].indexOf(k) !== -1) n[k] = value
                 return n

@@ -31,19 +31,19 @@ const data = {
     ]
 }
 
-pocket.$architect(function () {
+const ok = pocket.$architect(()=>{
     // when assigning project `data` must also specify if `async` and `type`
     data.async = false
     data.type = 'new'
     return {
-       // project: data,
+       project: data,
        asset: { name: 'dispatch', value: { data: true } } // must provide both
     }
-}, 'pocket-1')
+})
 
 
 
-console.log(pocket.$asset('dispatch','pocket-1'))
+console.log(pocket.$asset('dispatch'))
 // dispatcher.initListener().subscribe(function(d,id){
 //     // add architect
 //     // this.next()

@@ -11,23 +11,10 @@ module.exports = (PocketModule) => {
 
         constructor(opts, debug) {
             super(opts, debug)
-            this.createArchitect() // only when pocketInstance is set
+            
         }
 
-        createArchitect() {
-            if (this.architect && !this["architect_set"]) {
-                try {
-                    const PocketArchitect = require('./Pocket.architect')()
-                    PocketArchitect.prototype = Object.create(this)
-                    PocketArchitect.prototype.constructor = PocketArchitect
-                    Object.assign(this, new PocketArchitect())
-                } catch (err) {
-                    console.log(`[createArchitect] error`, err)
-                }
-
-                this["architect_set"] = true
-            }
-        }
+  
 
         /** 
          * - can be used as a project setter same as `$payload` or `$project`, but with additional configuration

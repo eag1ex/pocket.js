@@ -30,6 +30,23 @@ module.exports = () => {
             this._projectSetDispatcher = {/** id:dispatcher */ }
             this._projectSetAsync = {/** id:SQ */ } // collect all $projectSetAsync promisses
             this._lastFilterList = {/** id:[probes] */ }
+            
+            this.createArchitect() // only when pocketInstance is set
+        }
+
+        createArchitect() {
+            if (this.architect && !this["architect_set"]) {
+                try {
+                    const Architect = require('./Architect')()
+                    Architect.prototype = Object.create(this)
+                    Architect.prototype.constructor = Architect
+                    Object.assign(this, new Architect())
+                } catch (err) {
+                    console.log(`[createArchitect] error`, err)
+                }
+
+                this["architect_set"] = true
+            }
         }
 
         /**
