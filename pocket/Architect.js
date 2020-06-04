@@ -4,14 +4,47 @@
     * a more in depth project architecture setup, allowing more robust configuration, munipulation and data flows
 */
 module.exports = () => {
-    const { objectSize, isFunction, onerror, warn } = require('./utils')
+    const { objectSize, isFunction, onerror, warn, log } = require('./utils')
 
     // work with 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+    
+    /**
+     * protected prototype exluded from `Architect`
+     */
+    function ArchitectModel() {
+        this._architectVal = null
+        this.architect = Object.create(ArchitectModel.prototype, {
+            value: {
+                enumerable: true,
+                configurable: true,
+                get: () => {
+                    return this._architectVal
+                },
+                set: (v) => {
+                    if (!objectSize(v)) return
+                    this._architectVal = v
+                    log(`[architect] updated`)
+                }
+            }
+        })
+    }
 
     return function Architect() {
-        this.architectConfig = {/** id:data */ }
+        this.architectConfig = {}
+        const archModel = new ArchitectModel()
+        this.architect = archModel.architect
+
+        this.setArchitect = (projectID, val) => {
+            if (!this.architectConfig[projectID]) this.architectConfig[projectID] = this.architect
+            this.architectConfig[projectID]['value'] = val
+            return this
+        }
+
+        this.getArchitect = (projectID) => {
+            return this.architectConfig[projectID]['value']
+        }
 
         /** 
          * @param assetName string, specify the name you chose in your `$architect(...)` declaration
@@ -22,8 +55,8 @@ module.exports = () => {
             const lastProject = this.lastProjectID(projectID) // in case we are calling `$architect` on existing project
             projectID = this.validProjectID(lastProject || projectID)
 
-            if (this.architectConfig[projectID]) {
-                if (this.architectConfig[projectID][assetName]) return this.architectConfig[projectID][assetName]
+            if (this.getArchitect(projectID)) {
+                if (this.getArchitect(projectID)[assetName]) return this.getArchitect(projectID)[assetName]
                 else {
                     if (this.debug) warn(`[$asset] assetName for architect doesnt exist`)
                     return null
@@ -55,7 +88,7 @@ module.exports = () => {
                 return this
             }
 
-            const configProjectID = (config['project'] ||{}).id
+            const configProjectID = (config['project'] || {}).id
             const lastProject = this.lastProjectID(projectID) // in case we are calling `$architect` on existing project
             projectID = this.validProjectID(lastProject || projectID || configProjectID)
 
@@ -73,9 +106,10 @@ module.exports = () => {
                 const item = validConfig[k]
 
                 if (k === 'project') {
-                    if (!this.architectConfig[projectID]) this.architectConfig[projectID] = {}
-                    // item['async'] item['type'] .. can include `async` and `type`          
-                    this.architectConfig[projectID]['project'] = this.$payload(item, item['async'], item['type']).d
+                    // item['async'] item['type'] .. can include `async` and `type`  
+                    this.setArchitect(projectID,
+                        { project: this.$payload(item, item['async'], item['type']).d }
+                    )
                 }
 
                 if (k === 'asset') {
@@ -84,8 +118,11 @@ module.exports = () => {
                         return this
                     }
                     // if already exists, same assets will be overriten and new will be created
-                    if (!this.architectConfig[projectID]) this.architectConfig[projectID] = {}
-                    this.architectConfig[projectID][item['name']] = item['value']
+                    this.setArchitect(projectID, {
+                        [item['name']]: item['value']
+                    })
+                    // if (!this.architectConfig[projectID]) this.architectConfig[projectID] = {}
+                    // this.architectConfig[projectID][item['name']] = item['value']
                 }
             }
 

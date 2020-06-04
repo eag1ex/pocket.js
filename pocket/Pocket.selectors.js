@@ -14,8 +14,6 @@ module.exports = (PocketModule) => {
             
         }
 
-  
-
         /** 
          * - can be used as a project setter same as `$payload` or `$project`, but with additional configuration
          * 
