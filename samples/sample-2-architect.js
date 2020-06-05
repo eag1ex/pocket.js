@@ -8,6 +8,7 @@ process.on('uncaughtException', function (err) {
     console.log('sample-1.js uncaughtException/error', err)
 })
 
+
 const dispatcher = require('../libs/dispatcher')()
 const { log, warn } = require('../index').utils
 const Pocket = require('../index').Pocket
@@ -15,7 +16,7 @@ const Pocket = require('../index').Pocket
 
 const DEBUG = true
 const pocket = new Pocket({ architect:true, async: true, dispatcher: true }, DEBUG)
-pocket.
+
 const data = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
     id: 'pocket-1', // Belt and Road Initiative
