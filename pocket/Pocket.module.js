@@ -80,8 +80,8 @@ exports.PocketModule = () => {
             }
 
             if (this.payloadData[data.id] && (!type || type === 'new')) {
-                if (this.debug) warn(`[$payload] this payload.id already exists`)
-                return false
+                // if (this.debug) warn(`[$payload] this payload.id already exists`)
+                return true
             }
 
             let initialProject = this.payloadData[data.id] === undefined // because there is no data set as of yet
