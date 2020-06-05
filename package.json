@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "data pocket redistribution",
   "main": "index.js",
-  "scripts": {
+  "types": "./types/index.d.ts",
+  "scripts": { 
     "example": "node ./examples.js",
     "mocha": "mocha ./test/tests.js --colors --delay",
     "lint": "./node_modules/.bin/eslint  --ext .js pocket libs",

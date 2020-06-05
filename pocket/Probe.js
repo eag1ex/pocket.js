@@ -40,6 +40,8 @@ exports.Probe = () => {
             if (opts.ref !== this._ref) this.ref = opts.ref
             if (opts.data !== this._data) this.data = opts.data
             if (opts.compaign) this.compaign = opts.compaign
+
+            this._completeAsync = sq()
         }
 
         /**
@@ -290,6 +292,7 @@ exports.Probe = () => {
                         this._status = stat
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
+                        this._completeAsync.resolve({ status: this._status, id: this.id })
                         break
 
                     case 'error':
@@ -333,6 +336,14 @@ exports.Probe = () => {
          */
         get getStatusAsync() {
             return this.setStatusAsync.promise()
+        }
+
+        /**
+         * - when status is set to complete or send, the promise will then be resolved
+         * @returns {status, id}
+         */
+        get completeAsync() {
+            return this._completeAsync.promise()
         }
 
         /**

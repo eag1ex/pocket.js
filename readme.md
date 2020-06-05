@@ -105,7 +105,7 @@ Working examples can be found at `'./samples/**`
 - **$of(probeID = ''):self**: selects pointer to Probe{} 
 - **$probeStatusAsync(probeID).d:Promise**: resolves promise when status changes
 - **$project(data)/$payload(data,async, type = 'new')**: alias of $payload
-- **getByRef(probeRef):[Array]**: returns an array of probes that match the Probe.ref
+- **$getByRef(probeRef):[Array]**: returns an array of probes that match the Probe.ref
 - **$probe(probeID):Probe{}**: returns Probe{} by id
 - **$select(projectID):self**: sets pointer to the project
 - **$filter(cb, projectID):self**: filters probes that match condition true, in a callbacl
