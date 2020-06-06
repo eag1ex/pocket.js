@@ -45,10 +45,9 @@ const ok = pocket.$architect(() => {
         // tell architect we want to keep persistant values
         // if `project:true/or asset:true` we want to persist previous value, do not overide
         // defaults to `false` for both
-        cache: { project: false, asset: false }
+        cache: { project: false, asset: true }
     }
-})
-.$architect(() => {
+}).$architect(() => {
     // when assigning project `data` must also specify if `async` and `type`
     data.async = false
     data.type = 'new'
@@ -59,15 +58,13 @@ const ok = pocket.$architect(() => {
         // tell architect we want to keep persistant values
         // if `project:true/or asset:true` we want to persist previous value, do not overide
         // defaults to `false` for both
-        cache: { project: false, asset: false }
+        //cache: { project: false, asset: false }
     }
 })
 
-
-console.log(pocket.$asset('dispatch',(dispatch)=>{
-       // console.log('project',dispatch) 
+pocket.$asset('dispatch',(dispatch)=>{
         return dispatch
-}))
+})
 // dispatcher.initListener().subscribe(function(d,id){
 //     // add architect
 //     // this.next()

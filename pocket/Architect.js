@@ -48,8 +48,9 @@ module.exports = () => {
 
         /** 
          * @param assetName string, specify the name you chose in your `$architect(...)` declaration,
-         * @param asCallback return asset as in callback if it exists
+         * @param asCallback when exists, return asset as callback
          * @param projectID optional, update selector and return desired asset
+         * @returns if callback is returned the same value is returned
         */
         this.__asset = (assetName, asCallback, projectID) => {
             if (!isFunction(asCallback)) {
@@ -66,11 +67,6 @@ module.exports = () => {
 
             if (this.getArchitect(projectID)) {
                 if (this.getArchitect(projectID)[assetName] !== undefined) {
-                    // NOTE when asking for `projectID=project` resolution, we need to specify `.d`
-                    /* example $asset(.., (project=>{
-                        // if we return the project in callback, we can accces `.d` resolution
-                    }).d)
-                    */
                     return asCallback.call(this, this.getArchitect(projectID)[assetName])
                 } else {
                     if (this.debug) warn(`[$asset] assetName for architect doesnt exist`)
@@ -117,11 +113,15 @@ module.exports = () => {
                 return n
             }, {})
 
-            // default setting for `architect.cache` if getArchitect not stored any values
+            // default setting for `architect.cache` if getArchitect not stored
             if (!(this.getArchitect(projectID) || {})['cache']) {
+                const defaults = { project: false, asset: false }
+                if(!validConfig['cache']) validConfig['cache'] = defaults
+              
                 this.setArchitect(projectID, {
-                    'cache': { project: false, asset: false }
+                    'cache': validConfig['cache']
                 })
+               
             } else validConfig['cache'] = this.getArchitect(projectID)['cache']
 
             for (let k in validConfig) {
@@ -138,8 +138,7 @@ module.exports = () => {
                     }
 
                     this.setArchitect(projectID,
-                        // NOTE to access resolution of `$payload(..)` we need to ask for `.d`
-                        { project: this.$payload(item, item['async'], item['type']) }
+                        { project: this.$payload(item, item['async'], item['type']).d }
                     )
                 }
 
