@@ -124,7 +124,7 @@ Working examples can be found at `'./samples/**`
 - **$all(probeID):probeGetters**:
 - **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. This is an imported class, activated when `opt.architect=true` 
 - **$asset(assetName, projectID)**: can access the asset declared in `$architect`, activated when `opt.architect=true` 
-- **$condition(cb,projectID)**: declare conditional arguments within callback without exiting Pocket block
+- **$condition(cb,id)**: declare arguments within callback without exiting Pocket block chain. The `id` you pass:  probe `::id` or `projectID`, will expose access to self of either Probe or Pocket instance. The return of callback is sensitive, if no value is passed the Pocket/self is returned. For example if accessing Probe then probe id can be returned but the chaining will refer to its instance, you may want to return pocket self instead.
 
 
 #### Code/extentions
