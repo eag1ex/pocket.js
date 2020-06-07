@@ -6,12 +6,12 @@
  */
 module.exports = (PocketModule) => {
     const { copy, warn, isArray, onerror, objectSize, isString, uniq, isFunction } = require('./utils')
-  
+
     return class PocketSelectors extends PocketModule {
 
         constructor(opts, debug) {
             super(opts, debug)
-            
+
         }
 
         /** 
@@ -36,7 +36,10 @@ module.exports = (PocketModule) => {
          * @returns by default eturns Pocket/self, or any true value passed inside callback
          */
         $condition(cb, id) {
-            if (!isFunction(cb)) return this
+            if (!isFunction(cb)) {
+                if (this.debug) warn(`[$condition] must provide callback`)
+                return this
+            }
             id = !isString(id) ? '' : id
 
             let selfType = 'PocketSelf'// `ProbeSelf`
@@ -45,16 +48,25 @@ module.exports = (PocketModule) => {
                 id = this.selectByTask(id, true)
                 id = this.lastProbeID(id)
                 selfType = `ProbeSelf`
-                if (!id) return this
+                if (!id) {
+                    if (this.debug) warn(`[$condition] probeID not found`)
+                    return this
+                }
                 // also updates last selector reference
             } else if (this.lastProjectID(id)) {
                 selfType = 'PocketSelf'
-            } else return this // if specified id is `projectID`
+            } else {
+                if (this.debug) warn(`[$condition] projectID not found`)
+                return this // if specified id is `projectID`
+            }
 
             if (selfType === 'PocketSelf') self = this
             if (selfType === 'ProbeSelf') self = this.$get(id)
 
-            if (!self) return this
+            if (!self) {
+                if (this.debug) warn(`[$condition] no valid self value`)
+                return this
+            }
             const cbDATA = cb.call(self)
             if (cbDATA) return cbDATA // if callback has any true data return it, 
             else return this // else return self
@@ -174,12 +186,31 @@ module.exports = (PocketModule) => {
                 if (this.debug) warn(`[$filter] no projectID found`)
                 return returnAs(null)
             }
-            this._lastFilterList[projectID] = []
-            this.projectProbeList(projectID).forEach((probe, inx) => {
-                const matchFound = cb.call(probe, probe)
-                if (matchFound !== undefined && (matchFound === true || matchFound === 1)) {
-                    this._lastFilterList[projectID].push(probe)
+            // when narrowing down $filter.$filter process, lets remember last action
+            let probeList = []
+            if ((this._lastFilterList[projectID] || []).length) probeList = this._lastFilterList[projectID]
+            else {
+                this._lastFilterList[projectID] = []
+                probeList = this.projectProbeList(projectID)
+            }
+            probeList.forEach((probe, inx) => {
+                if (probe.isNONE) {
+                    return
                 }
+                const matchFound = cb.call(probe, probe)
+                if (!matchFound) {
+                    this._lastFilterList[projectID] = this._lastFilterList[projectID].filter(z => z.id !== probe.id)
+                    this._lastFilterList[projectID].push({ id: probe.id, isNONE: true })
+                    return
+                }
+
+                if (matchFound !== undefined && (matchFound === true || matchFound === 1)) {
+                    // dont re-add same probe
+                    const isNew = this._lastFilterList[projectID].filter((z, i) => (z || {}).id === probe.id).length
+
+                    if (!isNew) this._lastFilterList[projectID].push(probe)
+                    
+                } else this._lastFilterList[projectID].push({ id: probe.id, isNONE: true })
             })
             return returnAs(this._lastFilterList[projectID])
         }
@@ -209,11 +240,15 @@ module.exports = (PocketModule) => {
                 if (this.debug) warn(`[$compute] no project found fo your/last id projectID:${projectID}`)
                 return returnAs(null)
             }
-            if ((this._lastFilterList[projectID] || []).length) {
-                this._lastFilterList[projectID].forEach(probe => {
+
+            let lastFilter = (this._lastFilterList[projectID] || [])
+            if (lastFilter.length) {
+                this._lastFilterList[projectID] = lastFilter = lastFilter.filter(z => z.isNONE === undefined)
+                lastFilter.forEach(probe => {
                     // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete           
                     if (probe.status !== 'complete' || probe.status !== 'send') cb.call(probe, probe)
                 })
+                // finally only return not none list on probes, then clear _lastFilterList
                 return returnAs(this._lastFilterList[projectID])
             } else {
                 this.projectProbeList(projectID).forEach(probe => {
@@ -458,6 +493,6 @@ module.exports = (PocketModule) => {
             if (!this.pocket[probeID]) return null
             return copy(this.pocket[probeID].all())
         }
-        
+
     }
 }

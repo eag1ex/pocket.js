@@ -34,7 +34,7 @@ const data = {
     ]
 }
 
-const ok = pocket.$architect(() => {
+ pocket.$architect(() => {
     // when assigning project `data` must also specify if `async` and `type`
     data.async = false
     data.type = 'old'
@@ -64,10 +64,25 @@ const ok = pocket.$architect(() => {
     //if(this.$projectID ==='pocket-1'){
         console.log('yey got projectID',this.$projectID)
    // }
-}).$asset('dispatch',(dispatch)=>{
-    console.log('dispatch',dispatch)
-        return dispatch
+}).$filter(function () {
+    return this.task === 'srilanka'
+}).$filter(function () {
+    return this.compaign === 'Belt_and_Road_Initiative'
+}).$filter(function () {
+    return this.task === 'srilanka'
 })
+.$filter(function () {
+    return this.compaign === 'Belt_and_Road_Initiative1'
+})
+const list = pocket.$select('pocket-1').$compute(function(){
+    console.log('each compute', this.task)
+}).d
+
+console.log('list', list)
+// .$asset('dispatch',(dispatch)=>{
+//     console.log('dispatch',dispatch)
+//         return dispatch
+// })
 // dispatcher.initListener().subscribe(function(d,id){
 //     // add architect
 //     // this.next()
