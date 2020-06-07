@@ -33,7 +33,7 @@ module.exports = (PocketModule) => {
          * - run conditional statement within callback, so we can keep chaining in the same block
          * @param cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
          * @param `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`
-         * @returns returns self, or any `true` value that was passed inside callback
+         * @returns by default eturns Pocket/self, or any true value passed inside callback
          */
         $condition(cb, id) {
             if (!isFunction(cb)) return this
