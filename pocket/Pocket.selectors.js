@@ -41,7 +41,6 @@ module.exports = (PocketModule) => {
                 return this
             }
             id = !isString(id) ? '' : id
-
             let selfType = 'PocketSelf'// `ProbeSelf`
             let self = null
             if (id.indexOf(`::`) === 0) { // if specified id is `probeID`
@@ -53,11 +52,10 @@ module.exports = (PocketModule) => {
                     return this
                 }
                 // also updates last selector reference
-            } else if (this.lastProjectID(id)) {
-                selfType = 'PocketSelf'
-            } else {
+            } else if (this.lastProjectID(id)) selfType = 'PocketSelf' // if specified id is `projectID`
+            else {
                 if (this.debug) warn(`[$condition] projectID not found`)
-                return this // if specified id is `projectID`
+                return this 
             }
 
             if (selfType === 'PocketSelf') self = this
@@ -67,6 +65,7 @@ module.exports = (PocketModule) => {
                 if (this.debug) warn(`[$condition] no valid self value`)
                 return this
             }
+            
             const cbDATA = cb.call(self)
             if (cbDATA) return cbDATA // if callback has any true data return it, 
             else return this // else return self
