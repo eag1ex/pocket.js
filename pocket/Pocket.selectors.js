@@ -29,6 +29,34 @@ module.exports = (PocketModule) => {
             return this.__architect(...args)
         }
 
+        /**
+         * - run conditional statement within callback, so we can keep chaining in the same block
+         * @param cb required callback
+         * @param `projectID/probeID` optional, specify either `projectID` or `probeID`
+         * @returns returns self or any `true` data that was passed inside callback
+         */
+        $if(cb, id) {
+            if (!isFunction(cb)) return this
+            id = !isString(id) ? '' : id
+
+            if (id.indexOf(`::`) === 0) { // if specified id is `probeID`
+                id = this.selectByTask(id, true)
+                if (!this.lastProbeID(id)) return this
+                // also updates last selector reference
+            } else if (!this.lastProjectID(id)) return this // if specified id is `projectID`
+
+            const cbDATA = cb.call(this)
+            if (cbDATA) return cbDATA // if callback has any true data return it, 
+            else return this // else return self
+        }
+
+        /**
+         * @returns last selected projectID
+         */
+        get $projectID() {
+            return this._lastProjectID
+        }
+
         /** 
          * @param assetName string, specify the name you chose in your `$architect(...)` declaration
          * @param projectID optional, update selector and return desired asset

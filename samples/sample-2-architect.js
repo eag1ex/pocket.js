@@ -53,16 +53,19 @@ const ok = pocket.$architect(() => {
     data.type = 'new'
     return {
         project: data,
-        asset: { name: 'dispatch', value: { data: 'hello' } }, // must provide both
+        asset: { name: 'dispatch', value: null }, // must provide both
 
         // tell architect we want to keep persistant values
         // if `project:true/or asset:true` we want to persist previous value, do not overide
         // defaults to `false` for both
         //cache: { project: false, asset: false }
     }
-})
-
-pocket.$asset('dispatch',(dispatch)=>{
+}).$if(function(){
+    if(this.$projectID ==='pocket-1'){
+        console.log('yey got china')
+    }
+},`::china`).$asset('dispatch',(dispatch)=>{
+    console.log('dispatch',dispatch)
         return dispatch
 })
 // dispatcher.initListener().subscribe(function(d,id){

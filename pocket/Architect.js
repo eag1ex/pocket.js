@@ -4,7 +4,7 @@
     * a more in depth project architecture setup, allowing more robust configuration, munipulation and data flows
 */
 module.exports = () => {
-    const { objectSize, isFunction, onerror, warn, log } = require('./utils')
+    const { objectSize, isFunction, onerror, warn, log, isString } = require('./utils')
 
     // work with 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
@@ -116,7 +116,7 @@ module.exports = () => {
             // default setting for `architect.cache` if getArchitect not stored
             if (!(this.getArchitect(projectID) || {})['cache']) {
                 const defaults = { project: false, asset: false }
-                if(!validConfig['cache']) validConfig['cache'] = defaults
+                if (!validConfig['cache']) validConfig['cache'] = defaults
               
                 this.setArchitect(projectID, {
                     'cache': validConfig['cache']
@@ -143,7 +143,7 @@ module.exports = () => {
                 }
 
                 if (k === 'asset') {
-                    if (!item['name'] || !item['value']) {
+                    if (!isString(item['name']) || item['value'] === undefined) {
                         if (this.debug) warn(`[$architect] asset must include {value, name}`)
                         return this
                     }

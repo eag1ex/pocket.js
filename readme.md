@@ -110,6 +110,7 @@ Working examples can be found at `'./samples/**`
 - **$select(projectID):self**: sets pointer to the project
 - **$filter(cb, projectID):self**: filters probes that match condition true, in a callbacl
 - **$compute(cb, projectID = ''):self**: loops thru each probe (if previously filtered/or all) that can be munipulated
+- **$projectID**: getter/ return last projectID
 - **$list(projectID = '', cb = null, type = 'self'):Array[]**:
 - **$transfer(fromProbeID = ''):self**:
 - **$to(toProbeID = '', pointToThisProbe = true, maxDelay = 100):self**:
@@ -123,6 +124,7 @@ Working examples can be found at `'./samples/**`
 - **$all(probeID):probeGetters**:
 - **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. This is an imported class, activated when `opt.architect=true` 
 - **$asset(assetName, projectID)**: can access the asset declared in `$architect`, activated when `opt.architect=true` 
+- **$if(cb,projectID)**: declare conditional arguments within callback without exiting Pocket block
 
 
 #### Code/extentions

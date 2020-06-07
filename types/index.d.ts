@@ -60,6 +60,7 @@ declare module Pocket {
     export function $all(probeID: string): Object
     export function $architect(cb: Function, projectID: string): boolean | globalThis;
     export function $asset(assetName: string, projectID: string): any
+    export function $if(cb:Function, id:string): globalThis
 }
 
 
