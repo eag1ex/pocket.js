@@ -31,21 +31,31 @@ module.exports = (PocketModule) => {
 
         /**
          * - run conditional statement within callback, so we can keep chaining in the same block
-         * @param cb required callback
-         * @param `projectID/probeID` optional, specify either `projectID` or `probeID`
-         * @returns returns self or any `true` data that was passed inside callback
+         * @param cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
+         * @param `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`
+         * @returns returns self, or any `true` value that was passed inside callback
          */
-        $if(cb, id) {
+        $condition(cb, id) {
             if (!isFunction(cb)) return this
             id = !isString(id) ? '' : id
 
+            let selfType = 'PocketSelf'// `ProbeSelf`
+            let self = null
             if (id.indexOf(`::`) === 0) { // if specified id is `probeID`
                 id = this.selectByTask(id, true)
-                if (!this.lastProbeID(id)) return this
+                id = this.lastProbeID(id)
+                selfType = `ProbeSelf`
+                if (!id) return this
                 // also updates last selector reference
-            } else if (!this.lastProjectID(id)) return this // if specified id is `projectID`
+            } else if (this.lastProjectID(id)) {
+                selfType = 'PocketSelf'
+            } else return this // if specified id is `projectID`
 
-            const cbDATA = cb.call(this)
+            if (selfType === 'PocketSelf') self = this
+            if (selfType === 'ProbeSelf') self = this.$get(id)
+
+            if (!self) return this
+            const cbDATA = cb.call(self)
             if (cbDATA) return cbDATA // if callback has any true data return it, 
             else return this // else return self
         }

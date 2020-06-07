@@ -60,11 +60,11 @@ const ok = pocket.$architect(() => {
         // defaults to `false` for both
         //cache: { project: false, asset: false }
     }
-}).$if(function(){
-    if(this.$projectID ==='pocket-1'){
-        console.log('yey got china')
-    }
-},`::china`).$asset('dispatch',(dispatch)=>{
+}).$condition(function(){
+    //if(this.$projectID ==='pocket-1'){
+        console.log('yey got projectID',this.$projectID)
+   // }
+}).$asset('dispatch',(dispatch)=>{
     console.log('dispatch',dispatch)
         return dispatch
 })
