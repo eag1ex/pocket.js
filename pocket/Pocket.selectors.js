@@ -75,7 +75,7 @@ module.exports = (PocketModule) => {
                 return this
             }
             
-            const cbDATA = cb.call(self)
+            const cbDATA = cb.call(self, self) // when using arrow function pass `(self)=>` in callback as well
             if (cbDATA) return cbDATA // if callback has any true data return it, 
             else return this // else return self
         }
