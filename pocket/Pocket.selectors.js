@@ -259,14 +259,14 @@ module.exports = (PocketModule) => {
                     })
                 lastFilter.forEach(probe => {
                     // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete           
-                    if (probe.status !== 'complete' || probe.status !== 'send') cb.call(probe, probe)
+                    if (probe.status !== 'complete' && probe.status !== 'send') cb.call(probe, probe)
                 })
                 // finally only return not none list on probes, then clear _lastFilterList
                 return returnAs(this._lastFilterList[projectID])
             } else {
                 this.projectProbeList(projectID).forEach(probe => {
                     // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete           
-                    if (probe.status !== 'complete' || probe.status !== 'send') cb.call(probe, probe)
+                    if (probe.status !== 'complete' && probe.status !== 'send') cb.call(probe, probe)
                 })
                 return returnAs(this.projectProbeList(projectID))
             }

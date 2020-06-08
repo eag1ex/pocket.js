@@ -49,20 +49,21 @@ const data = {
     }
 }).$architect(() => {
     // when assigning project `data` must also specify if `async` and `type`
-    data.async = false
-    data.id = 'pocket-2'
-    //data.type = 'new'
+   // data.async = false
+    //data.id = 'pocket-2'
+    data.type = 'update'
     data.tasks = [
         {
-            task: 'srilanka',
-            data: { 'budget': 0, type: 'billions', project: 'naval port' },
+            task: 'china',
+           // data:'empty',
+           // status:'complete',
             compaign: 'Belt_and_Road_Initiative'
         },
         {
-            task: 'none',
-            data: 'no data',
+            task: 'srilanka',
+           // data: 'empty',
             compaign: 'Belt_and_Road_Initiative'
-        },
+        }
     ]
 
     return {
@@ -75,31 +76,36 @@ const data = {
         //cache: { project: false, asset: false }
     }
 })
-.$select(`pocket-2`)
+
 .$condition(function(){
     //if(this.$projectID ==='pocket-1'){
         console.log('yey got projectID',this.$projectID)
    // }
-}).$filter(function () {
-    return this.task === 'none'
 })
+// .$filter(function () {
+//     return this.task === 'none'
+// })
 // .$filter(function () {
 //     return this.task === 'srilanka'
 // })
 // .$filter(function () {
 //     return this.compaign === 'Belt_and_Road_Initiative'
 // })
-pocket.$select('pocket-2').$compute(function(){
-   // console.log('each compute', this.task)
-}).d
+pocket.$select('pocket-1').$compute(function(){
+    this.status = 'complete'
+    console.log('each compute/status', this.status)
+})
+.$ready().d.then(z=>{
+    console.log('all done',z)
+})
 
-const list = pocket.$select(`pocket-2`).$filter(function () {
-    return this.task === 'none'
-}).$compute(function(){
-    console.log('each compute', this.task)
-}).d
+// const list = pocket.$select(`pocket-2`).$filter(function () {
+//     return this.task === 'none'
+// }).$compute(function(){
+//     console.log('each compute', this.task)
+// }).d
 
-console.log('list2', list)
+// console.log('list2', list)
 // .$asset('dispatch',(dispatch)=>{
 //     console.log('dispatch',dispatch)
 //         return dispatch

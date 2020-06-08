@@ -144,6 +144,7 @@ exports.PocketModule = () => {
          */
         $projectSetAsync(projectID = '') {
             const self = this
+            projectID = this.lastProjectID(projectID)
             if (this._projectSetAsync[projectID]) {
                 return this._projectSetAsync[projectID].promise()
             }
@@ -250,9 +251,6 @@ exports.PocketModule = () => {
 
         $ready(payloadID = '') {
             this.d = null
-
-            payloadID = this.lastProjectID(payloadID)
-            if (!payloadID) throw (`payloadID must be set`)
 
             if (!this._ready[payloadID]) throw (`ready[payloadID] is not set, maybe you called it before $payload()`)
             return this._ready[payloadID].promise()
@@ -548,6 +546,8 @@ exports.PocketModule = () => {
                 return this
             }
 
+            payloadID = this.lastProjectID(payloadID)
+            if (!payloadID) throw (`payloadID must be set`)
             // we wrap it if on ready project so it allows declaring `${$ready()}` even before $project was created, cool ha!
             const p = this.$projectSetAsync(payloadID).then(({ projectID }) => {
                 return super.$ready(projectID).then(z => {
