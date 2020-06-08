@@ -37,7 +37,7 @@ const data = {
  pocket.$architect(() => {
     // when assigning project `data` must also specify if `async` and `type`
     data.async = false
-    data.type = 'old'
+    data.type = 'new'
     return {
         project: data,
         asset: { name: 'dispatch', value: { data: true } }, // must provide both
@@ -50,7 +50,21 @@ const data = {
 }).$architect(() => {
     // when assigning project `data` must also specify if `async` and `type`
     data.async = false
-    data.type = 'new'
+    data.id = 'pocket-2'
+    //data.type = 'new'
+    data.tasks = [
+        {
+            task: 'srilanka',
+            data: { 'budget': 0, type: 'billions', project: 'naval port' },
+            compaign: 'Belt_and_Road_Initiative'
+        },
+        {
+            task: 'none',
+            data: 'no data',
+            compaign: 'Belt_and_Road_Initiative'
+        },
+    ]
+
     return {
         project: data,
         asset: { name: 'dispatch', value: null }, // must provide both
@@ -60,25 +74,32 @@ const data = {
         // defaults to `false` for both
         //cache: { project: false, asset: false }
     }
-}).$condition(function(){
+})
+.$select(`pocket-2`)
+.$condition(function(){
     //if(this.$projectID ==='pocket-1'){
         console.log('yey got projectID',this.$projectID)
    // }
 }).$filter(function () {
-    return this.task === 'srilanka'
-}).$filter(function () {
-    return this.compaign === 'Belt_and_Road_Initiative'
-}).$filter(function () {
-    return this.task === 'srilanka'
+    return this.task === 'none'
 })
-.$filter(function () {
-    return this.compaign === 'Belt_and_Road_Initiative1'
-})
-const list = pocket.$select('pocket-1').$compute(function(){
+// .$filter(function () {
+//     return this.task === 'srilanka'
+// })
+// .$filter(function () {
+//     return this.compaign === 'Belt_and_Road_Initiative'
+// })
+pocket.$select('pocket-2').$compute(function(){
+   // console.log('each compute', this.task)
+}).d
+
+const list = pocket.$select(`pocket-2`).$filter(function () {
+    return this.task === 'none'
+}).$compute(function(){
     console.log('each compute', this.task)
 }).d
 
-console.log('list', list)
+console.log('list2', list)
 // .$asset('dispatch',(dispatch)=>{
 //     console.log('dispatch',dispatch)
 //         return dispatch

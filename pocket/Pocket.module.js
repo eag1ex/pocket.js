@@ -98,7 +98,7 @@ exports.PocketModule = () => {
                     continue
                 }
 
-                if (type === 'update' && !initialProject) {
+                if (type === 'update' && !initialProject && this.$exists(`::${val['task']}`)) {
                     if (val['data']) this.$update({ data: val['data'] }, false, `::${val['task']}`)
                     if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
                     if (val['ref']) this.$update({ ref: val['ref'] }, false, `::${val['task']}`)
@@ -120,7 +120,6 @@ exports.PocketModule = () => {
                 }
 
                 this.payloadData[data.id]['value'].push(val)
-
                 this.lastPocketTimestamp = this.payloadData[data.id]['timestamp']
             }
 

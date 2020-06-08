@@ -30,6 +30,15 @@ module.exports = (PocketModule) => {
         }
 
         /**
+         * - check is probe exists on PocketModule
+         * @param {*} probeID required, can specify `::taskName` or full id `{projectID}::{probeID}`
+         * @returns boolean
+         */
+        $exists(probeID) {
+            return !!this.selectByTask(probeID)
+        }
+
+        /**
          * - run conditional statement within callback, so we can keep chaining in the same block
          * @param cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
          * @param `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`
@@ -175,7 +184,7 @@ module.exports = (PocketModule) => {
             projectID = this.lastProjectID(projectID) // also updates last selector reference
 
             const returnAs = (val) => {
-                this.d = val
+                this.d = (val || []).filter(z => z.isNONE === undefined)
                 return this
             }
 
@@ -242,7 +251,12 @@ module.exports = (PocketModule) => {
 
             let lastFilter = (this._lastFilterList[projectID] || [])
             if (lastFilter.length) {
+
+                // uniq
                 this._lastFilterList[projectID] = lastFilter = lastFilter.filter(z => z.isNONE === undefined)
+                    .filter(({ id }, i, all) => {
+                        return all.filter(({ id2 }) => id === id2).length === 0
+                    })
                 lastFilter.forEach(probe => {
                     // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete           
                     if (probe.status !== 'complete' || probe.status !== 'send') cb.call(probe, probe)
