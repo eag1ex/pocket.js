@@ -51,7 +51,7 @@ module.exports = () => {
 
         /**
          * ### projectSetDispatcher
-         * - create new dispather to act as a callback for setting new projects in future
+         * - create new dispather to act as a callback for setting new projects in future. NOTE once project is created and using $architect /$project/$payload to update will not recreate `projectSetDispatcher`
          * - works with `$projectSetAsync`
          * @param {*} projectID 
          */

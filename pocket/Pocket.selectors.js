@@ -39,6 +39,17 @@ module.exports = (PocketModule) => {
         }
 
         /**
+         * ### $projectSet
+         * - use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
+         * @param {*} projectID required
+         */
+        $projectSet(projectID = '') {
+            projectID = this.validProjectID(projectID)
+            if (this.payloadData[projectID]) return true
+            return false
+        }
+
+        /**
          * - run conditional statement within callback, so we can keep chaining in the same block
          * @param cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
          * @param `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`

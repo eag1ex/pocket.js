@@ -86,6 +86,9 @@ exports.PocketModule = () => {
 
             let initialProject = this.payloadData[data.id] === undefined // because there is no data set as of yet
 
+            // NOTE on update/new of project we need to reset $filter values, in case 
+            if ((this._lastFilterList[data.id] || []).length) this._lastFilterList[data.id] = []
+
             // NOTE validate our pocket values before generating each `new Probe()`
             for (let val of data['tasks'].values()) {
                 if (!val['task']) {
@@ -99,6 +102,7 @@ exports.PocketModule = () => {
                 }
 
                 if (type === 'update' && !initialProject && this.$exists(`::${val['task']}`)) {
+                   
                     if (val['data']) this.$update({ data: val['data'] }, false, `::${val['task']}`)
                     if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
                     if (val['ref']) this.$update({ ref: val['ref'] }, false, `::${val['task']}`)
@@ -138,8 +142,8 @@ exports.PocketModule = () => {
 
         /**
          * ### $projectSetAsync
-         * - usage: to call before `$project()/$payload()` were even called
-         * - for example you have loaded same `Pocket` instance in another part of your code, now checking for it  in future before even created, this method can `await $projectSetAsync(projectID)` and continue with already set `$project(...).$get(..).$update(..)` etc
+         * - usage: to call before `$project()/$payload()/$architect` were called
+         * - for example you have loaded same `Pocket` instance in another part of your code, now checking for it  in future before $project created. This method can `await $projectSetAsync(projectID)` and continue with already set `$project(...).$get(..).$update(..)` etc
          * @param {*} projectID required, this is your `$project/$payload` id
          */
         $projectSetAsync(projectID = '') {
@@ -149,7 +153,7 @@ exports.PocketModule = () => {
                 return this._projectSetAsync[projectID].promise()
             }
             /**
-             * will subscribe when called the first time and set our simple promise then will resolve once the `$payload` is succesfull
+             * will subscribe when called the first time and set our simple promise then resolve once the `$payload` is succesfull
              */
             this._projectSetAsync[projectID] = sq()
             this.projectSetDispatcher(projectID).initListener().subscribe(function (z, id) {
@@ -159,16 +163,6 @@ exports.PocketModule = () => {
             return this._projectSetAsync[projectID].promise()
         }
 
-        /**
-         * ### $projectSet
-         * - use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
-         * @param {*} projectID required
-         */
-        $projectSet(projectID = '') {
-            projectID = this.validProjectID(projectID)
-            if (this.payloadData[projectID]) return true
-            return false
-        }
 
         /**
          * ### $probeStatusAsync
