@@ -23,12 +23,12 @@ const data = {
     tasks: [
         {
             task: 'china',
-            data: { 'assets': 10, type: 'billions', info: 'benefactor' },
+           // data: { 'assets': 10, type: 'billions', info: 'benefactor' },
             campaign: 'Belt_and_Road_Initiative'
         },
         {
             task: 'srilanka',
-            data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
+           // data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
             campaign: 'Belt_and_Road_Initiative'
         }
     ]
@@ -37,6 +37,7 @@ const data = {
 pocket.$ready(`pocket-1`).d.then(z=>{
     console.log('on ready',z)
 })
+
  pocket.$architect(() => {
     // when assigning project `data` must also specify if `async` and `type`
     data.async = false
@@ -50,45 +51,39 @@ pocket.$ready(`pocket-1`).d.then(z=>{
         // defaults to `false` for both
         cache: { project: false, asset: true }
     }
-}).$architect(() => {
-    // when assigning project `data` must also specify if `async` and `type`
-   // data.async = false
-    //data.id = 'pocket-2'
-    data.type = 'update'
+}).$condition(function(){
     data.tasks = [
         {
             task: 'china',
             data: { 'assets': 10, type: 'billions', info: 'benefactor' },
-            campaign: 'blah'
+           // campaign: 'Belt_and_Road_Initiative'
         },
         {
             task: 'srilanka',
-           data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
-          campaign: 'blah'
+            data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
+           // campaign: 'Belt_and_Road_Initiative'
         }
     ]
-    return {
-        project: data,
-        asset: { name: 'dispatch', value: null }, // must provide both
+    data.type = 'update'
+    this.$architect(()=>({project:data}))
+}).$filter(function () {
+    console.log(pocket.$projectID,'ha?')
+   return this.task === 'srilanka'
+ }).$compute(function(){
+     console.log(this.task, this.data)
+ })
 
-        // tell architect we want to keep persistant values
-        // if `project:true/or asset:true` we want to persist previous value, do not overide
-        // defaults to `false` for both
-        //cache: { project: false, asset: false }
-    }
-})
 
-.$condition(function(){
-    //if(this.$projectID ==='pocket-1'){
-        console.log('yey got projectID',this.$projectID)
-   // }
-})
+
+// .$condition(function(){
+//     //if(this.$projectID ==='pocket-1'){
+//         console.log('yey got projectID',this.$projectID)
+//    // }
+// })
 // .$filter(function () {
 //     return this.task === 'none'
 // })
-// .$filter(function () {
-//     return this.task === 'srilanka'
-// })
+
 // .$filter(function () {
 //     return this.compaign === 'Belt_and_Road_Initiative'
 // })

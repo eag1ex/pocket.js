@@ -107,7 +107,6 @@ module.exports = () => {
                 if (this.debug) onerror(`[$architect] if this is a new project, you must specify projectID`)
                 return this
             }
-
             const validConfig = Object.entries(config).reduce((n, [k, value]) => {
                 if (['project', 'asset', 'cache'].indexOf(k) !== -1) n[k] = value
                 return n

@@ -193,7 +193,6 @@ module.exports = (PocketModule) => {
          */
         $filter(cb, projectID) {
             projectID = this.lastProjectID(projectID) // also updates last selector reference
-
             const returnAs = (val) => {
                 this.d = (val || []).filter(z => z.isNONE === undefined)
                 return this
