@@ -295,10 +295,10 @@ module.exports = () => {
          * ### probeProps
          * - `each probe props that can be available and send on ready`
          * - `order is important, keep 'status' last`
-         * - only updatable props are: `'compaign', 'data', 'error', 'ref', 'status'(limited)`
+         * - only updatable props are: `'campaign', 'data', 'error', 'ref', 'status'(limited)`
          */
         get probeProps() {
-            return ['compaign', 'data', 'task', 'ref', 'error', 'id', 'status']
+            return ['campaign', 'data', 'task', 'ref', 'error', 'id', 'status']
         }
     }
 }

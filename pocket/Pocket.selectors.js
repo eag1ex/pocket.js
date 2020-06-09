@@ -447,15 +447,15 @@ module.exports = (PocketModule) => {
         }
 
         /**
-         * ### $compaign
-         * - returns Object copy of `Probe['compaign']` 
+         * ### $campaign
+         * - returns Object copy of `Probe['campaign']` 
          * @param {*} probeID optional/sensitive, select new point of reference
          */
-        $compaign(probeID) {
+        $campaign(probeID) {
             // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)
             if (!this.pocket[probeID]) return null
-            return copy(this.pocket[probeID]['compaign'])
+            return copy(this.pocket[probeID]['campaign'])
         }
 
         /**
@@ -508,7 +508,7 @@ module.exports = (PocketModule) => {
 
         /**
          * ### $all
-         * - return Object copy of all setters: `{id,status,compaign,task,data}` 
+         * - return Object copy of all setters: `{id,status,campaign,task,data}` 
          * @param {*} probeID optional/sensitive, select new point of reference
          */
         $all(probeID) {

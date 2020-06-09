@@ -52,7 +52,7 @@ declare module Pocket {
     export function $to(toProbeID: string, pointToThisProbe?: boolean, maxDelay?: number): globalThis
     export function $data(dataProp: Object | Array<string>, probeID: string, self: boolean): any
     export function $cached(dataProp: Object | Array<string>, probeID: string): any
-    export function $compaign(probeID: string): string
+    export function $campaign(probeID: string): string
     export function $ref(probeID: string): string
     export function $status(probeID: string): string
     export function $task(probeID: string): string

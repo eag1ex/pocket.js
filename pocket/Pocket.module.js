@@ -49,7 +49,7 @@ exports.PocketModule = () => {
          * - `sets a multi task with instructions:`
          * - `data = {
                 id: '', // 1 id for all tasks
-                tasks: [{ taskName: '', data: '', compaign: '' }]
+                tasks: [{ taskName: '', data: '', campaign: '' }]
             }`
 
          * - `call distributor and setDefer`
@@ -107,6 +107,7 @@ exports.PocketModule = () => {
                     if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
                     if (val['ref']) this.$update({ ref: val['ref'] }, false, `::${val['task']}`)
                     if (val['error']) this.$update({ error: val['error'] }, false, `::${val['task']}`)
+                    if (val['campaign']) this.$update({ campaign: val['campaign'] }, false, `::${val['task']}`)
                     if (this.$status(`::${val['task']}`)) isUpdated = true
 
                     // NOTE after update, payloadData will differ from new Probe{} data
@@ -202,7 +203,7 @@ exports.PocketModule = () => {
         /**
          * ### $update
          * - update Probe/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
-         * @param {*} dataFrom required, must specify what to update on Probe{}, example: `dataFrom:{data:'coke',status:'complete',compaign:'cocacola'}`
+         * @param {*} dataFrom required, must specify what to update on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
          * @prop {*} mergeData optional if `true` will merge: `Object.assing({},probe[id].data,mergeData['data'])`
          * @param {*} probeID required, example format: `${payload.id}::taskName`
          */
@@ -213,7 +214,7 @@ exports.PocketModule = () => {
         /**
          * ### $set
          * - as name suggest sets up new new data for Probe/task, it derives from `$update` 
-         * @param {*} dataFrom required, must specify what to set on Probe{}, example: `dataFrom:{data:'coke',status:'complete',compaign:'cocacola'}`
+         * @param {*} dataFrom required, must specify what to set on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
          * - we should only use `$set` for initialization, this action also calls `clearStoreTransfers`
          * @param {*} probeID required, example format: `${payload.id}::taskName`
          */
@@ -294,7 +295,7 @@ exports.PocketModule = () => {
                     if (key === 'data') {
                         if (mergeData === true) this.pocket[id][key] = Object.assign({}, this.pocket[id][key], value)
                         else this.pocket[id][key] = value
-                    } if (key === 'status' || key === 'ref' || key === 'error') this.pocket[id][key] = value
+                    } if (key === 'status' || key === 'ref' || key === 'error' || key === 'campaign') this.pocket[id][key] = value
                     updated = true
                     continue
                 } else {
@@ -391,7 +392,7 @@ exports.PocketModule = () => {
         /**
          * - every new probe `id` must be: format `id:::taskName`
          * required: `{id,task}`
-         * optional: `{compaign}`
+         * optional: `{campaign}`
          * @param {*} opts
          */
         setProbe(opts = {}) {
@@ -418,11 +419,11 @@ exports.PocketModule = () => {
         /**
          * set new probe model
          * - every new task has a set of requirements. Once status is `complete` and data available, probe sends a dispatch with probe information `(if opts.dispatcher===true)`.
-         * methods:`{get,all}` props: `{id,data,task,status,compaign}`
+         * methods:`{get,all}` props: `{id,data,task,status,campaign}`
          * 
          *  @param {*} opts.id required
          *  @param {*} opts.task required
-         *  @param {*} opts.compaign optional
+         *  @param {*} opts.campaign optional
          * 
          * - `Probe` is resolved once `sq.resolve()` is called, sq => `Simple Q` our plugin
          */

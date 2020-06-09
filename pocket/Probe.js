@@ -11,7 +11,7 @@ exports.Probe = () => {
         /**
          * @param {*} opts.id required, case sensitive, all will be toLowerCase() 
          * @param {*} opts.task once set cannot be changed
-         * @param {*} opts.compaign optional, once set cannot be changed
+         * @param {*} opts.campaign optional, once set cannot be changed
          * @param {*} opts.data optional any value except undefind, cannot be change once status set to `complete` or send
          * @param {*} opts.status required to control Probe actions
          * @param {*} emitter optional, dispatcher/emmiter available if not null
@@ -27,7 +27,7 @@ exports.Probe = () => {
             this._task = null
             this._status = null
             this._data = null
-            this._compaign = null
+            this._campaign = null
             this._dataIndex = 0
             this._statusIndex = 0
             this._statusAsync = [/** {timestamp:promise} */] // dynamic promise changer
@@ -39,7 +39,7 @@ exports.Probe = () => {
             // assign initial data if differs from default
             if (opts.ref !== this._ref) this.ref = opts.ref
             if (opts.data !== this._data) this.data = opts.data
-            if (opts.compaign) this.compaign = opts.compaign
+            if (opts.campaign) this.campaign = opts.campaign
 
             this._completeAsync = sq()
         }
@@ -114,27 +114,27 @@ exports.Probe = () => {
                 warn(`[ref] must be a string`)
                 return
             }
-            if (this.status === 'complete' || this._compaign.status === 'send') return
+            if (this.status === 'complete' || this._campaign.status === 'send') return
             this._ref = v
         }
 
-        get compaign() {
-            return this._compaign
+        get campaign() {
+            return this._campaign
         }
 
-        set compaign(v) {
+        set campaign(v) {
             if (v === undefined) return
-            if (this._compaign) {
-                if (this.debug) warn(`cannot update already set compaign ${this._compaign}`)
+            if (this._campaign) {
+                if (this.debug) warn(`cannot update already set campaign ${this._campaign}`)
                 return
             }
             if (!v) return
             if (!isString(v)) {
-                if (this.debug) warn(`compaign must be a string`, v)
+                if (this.debug) warn(`campaign must be a string`, v)
                 return
             }
 
-            this._compaign = v
+            this._campaign = v
         }
 
         set task(v) {
@@ -355,7 +355,7 @@ exports.Probe = () => {
         }
 
         all() {
-            return { error: this.error, ref: this.ref, compaign: this.compaign, data: this.data, id: this.id, task: this.task, status: this.status }
+            return { error: this.error, ref: this.ref, campaign: this.campaign, data: this.data, id: this.id, task: this.task, status: this.status }
         }
 
         /**

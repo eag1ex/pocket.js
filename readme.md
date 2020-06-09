@@ -85,7 +85,7 @@ Working examples can be found at `'./samples/**`
 
 - **$update( dataFrom, mergeData,probeID).d:Boolean** : will select currently available Probe/task by `id`, and update its data, only available fields found on Probe can be updated according to setter/getter requirements 
     - `probeID:String`: required probeID, each probe `probeID` makes up: `${payload.id}::${task}`, dynamicly created uppon `$payload(..)===true`
-    - `dataFrom:{}`: avaialble fields example: `dataFrom:{data:'some cola', compaign:'cocacola',status:'complete'}`, will perform an update on Probe[id][data],Probe[id][compaign], etc. Validation is sensitive.
+    - `dataFrom:{}`: avaialble fields example: `dataFrom:{data:'some cola', campaign:'cocacola',status:'complete'}`, will perform an update on Probe[id][data],Probe[id][campaign], etc. Validation is sensitive.
     - `mergeData`: when specified and `dataFrom.data` field is set,  will merge both
 
 
@@ -116,7 +116,7 @@ Working examples can be found at `'./samples/**`
 - **$to(toProbeID = '', pointToThisProbe = true, maxDelay = 100):self**:
 - **$data(dataProp:{}||[] , probeID = '', self = false)**:
 - **$cached(dataProp = {}, probeID = ''):{}**:
-- **$compaign(probeID):string**:
+- **$campaign(probeID):string**:
 - **$ref(probeID)**: 
 - **$status(probeID):String**:
 - **$task(probeID):string**:

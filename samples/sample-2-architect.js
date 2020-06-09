@@ -24,22 +24,23 @@ const data = {
         {
             task: 'china',
             data: { 'assets': 10, type: 'billions', info: 'benefactor' },
-            compaign: 'Belt_and_Road_Initiative'
+            campaign: 'Belt_and_Road_Initiative'
         },
         {
             task: 'srilanka',
             data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
-            compaign: 'Belt_and_Road_Initiative'
+            campaign: 'Belt_and_Road_Initiative'
         }
     ]
 }
 
- 
-
+pocket.$ready(`pocket-1`).d.then(z=>{
+    console.log('on ready',z)
+})
  pocket.$architect(() => {
     // when assigning project `data` must also specify if `async` and `type`
     data.async = false
-    data.type = 'new'
+    data.type = 'update'
     return {
         project: data,
         asset: { name: 'dispatch', value: { data: true } }, // must provide both
@@ -57,17 +58,15 @@ const data = {
     data.tasks = [
         {
             task: 'china',
-           // data:'empty',
-           // status:'complete',
-            compaign: 'Belt_and_Road_Initiative'
+            data: { 'assets': 10, type: 'billions', info: 'benefactor' },
+            campaign: 'blah'
         },
         {
             task: 'srilanka',
-           // data: 'empty',
-            compaign: 'Belt_and_Road_Initiative'
+           data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
+          campaign: 'blah'
         }
     ]
-
     return {
         project: data,
         asset: { name: 'dispatch', value: null }, // must provide both
@@ -95,7 +94,7 @@ const data = {
 // })
 pocket.$select('pocket-1').$compute(function(){
     this.status = 'complete'
-    console.log('each compute/status', this.status)
+    //console.log('each compute/status', this)
 })
 
 // const list = pocket.$select(`pocket-2`).$filter(function () {
