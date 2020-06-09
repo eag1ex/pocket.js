@@ -182,12 +182,13 @@ module.exports = () => {
         /**
          * ### lastProjectID
          * - every project is a job initiated by payload, so `payload.id === lastProjectID()`
+         * @param type strictly validate against scoped projecjID
          */
-        lastProjectID(projectID = '', debug = null) {
+        lastProjectID(projectID = '', debug = null, type = 'strict') {
             if (!projectID && this._lastProjectID) projectID = this._lastProjectID
             if (projectID) projectID = this.validProjectID(projectID, debug)
-            if (projectID && this.payloadData[projectID]) this._lastProjectID = projectID
-            if (!this.payloadData[projectID]) return null
+            if (projectID && this.payloadData[projectID] && type === 'strict') this._lastProjectID = projectID
+            if (!this.payloadData[projectID] && type === 'strict') return null
             if (!projectID) return null
             return projectID
         }

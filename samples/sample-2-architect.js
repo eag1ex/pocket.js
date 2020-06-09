@@ -34,6 +34,8 @@ const data = {
     ]
 }
 
+ 
+
  pocket.$architect(() => {
     // when assigning project `data` must also specify if `async` and `type`
     data.async = false
@@ -94,9 +96,6 @@ const data = {
 pocket.$select('pocket-1').$compute(function(){
     this.status = 'complete'
     console.log('each compute/status', this.status)
-})
-.$ready().d.then(z=>{
-    console.log('all done',z)
 })
 
 // const list = pocket.$select(`pocket-2`).$filter(function () {

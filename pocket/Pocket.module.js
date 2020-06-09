@@ -148,7 +148,7 @@ exports.PocketModule = () => {
          */
         $projectSetAsync(projectID = '') {
             const self = this
-            projectID = this.lastProjectID(projectID)
+            projectID = this.lastProjectID(projectID, false, null)
             if (this._projectSetAsync[projectID]) {
                 return this._projectSetAsync[projectID].promise()
             }
@@ -539,8 +539,8 @@ exports.PocketModule = () => {
                 this.d = val
                 return this
             }
-
-            payloadID = this.lastProjectID(payloadID)
+            // sofl validation for non existant `payloadID` if called before declaration of a project
+            payloadID = this.lastProjectID(payloadID, false, null)
             if (!payloadID) throw (`payloadID must be set`)
             // we wrap it if on ready project so it allows declaring `${$ready()}` even before $project was created, cool ha!
             const p = this.$projectSetAsync(payloadID).then(({ projectID }) => {
