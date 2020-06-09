@@ -80,7 +80,7 @@ exports.PocketModule = () => {
             }
 
             if (this.payloadData[data.id] && (!type || type === 'new')) {
-                this._lastProjectID  = data.id
+                this._lastProjectID = data.id
                 // if (this.debug) warn(`[$payload] this payload.id already exists`)
                 return true
             }
@@ -110,7 +110,7 @@ exports.PocketModule = () => {
                     if (val['error']) this.$update({ error: val['error'] }, false, `::${val['task']}`)
                     if (val['campaign']) this.$update({ campaign: val['campaign'] }, false, `::${val['task']}`)
                     if (this.$status(`::${val['task']}`)) isUpdated = true
-                    this._lastProjectID  = data.id
+                    this._lastProjectID = data.id
                     // NOTE after update, payloadData will differ from new Probe{} data
                     // NOTE do not update `payloadData` it is redundant if we donot need it for anything, only update Probes{}
                     /// this.payloadData[data.id]['value']
@@ -281,7 +281,7 @@ exports.PocketModule = () => {
             }
 
             let updated = false
-            this._lastProjectID  = id
+            this._lastProjectID = id
             // reorder dataFrom, make sure if `status` exists, it is shifted to last position, so the Probe{} doent change state before other values got chance to do so, nice!
 
             // we need to convert dataFrom{} to dataFrom[]>array to achieve this

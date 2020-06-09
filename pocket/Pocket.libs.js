@@ -190,7 +190,7 @@ module.exports = () => {
             if (projectID && this.payloadData[projectID]) this._lastProjectID = projectID
             if (!this.payloadData[projectID] && type === 'strict') return null
             if (!projectID) return null
-            if (projectID && !this._lastProjectID ) this._lastProjectID = projectID
+            if (projectID && !this._lastProjectID) this._lastProjectID = projectID
             return projectID
         }
 
