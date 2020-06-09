@@ -255,7 +255,9 @@ exports.PocketModule = function () {
         }
 
         var initialProject = this.payloadData[data.id] === undefined; // because there is no data set as of yet
-        // NOTE validate our pocket values before generating each `new Probe()`
+        // NOTE on update/new of project we need to reset $filter values, in case 
+
+        if ((this._lastFilterList[data.id] || []).length) this._lastFilterList[data.id] = []; // NOTE validate our pocket values before generating each `new Probe()`
 
         var _iterator = _createForOfIteratorHelper(data['tasks'].values()),
             _step;
@@ -342,8 +344,8 @@ exports.PocketModule = function () {
       }
       /**
        * ### $projectSetAsync
-       * - usage: to call before `$project()/$payload()` were even called
-       * - for example you have loaded same `Pocket` instance in another part of your code, now checking for it  in future before even created, this method can `await $projectSetAsync(projectID)` and continue with already set `$project(...).$get(..).$update(..)` etc
+       * - usage: to call before `$project()/$payload()/$architect` were called
+       * - for example you have loaded same `Pocket` instance in another part of your code, now checking for it  in future before $project created. This method can `await $projectSetAsync(projectID)` and continue with already set `$project(...).$get(..).$update(..)` etc
        * @param {*} projectID required, this is your `$project/$payload` id
        */
 
@@ -352,13 +354,13 @@ exports.PocketModule = function () {
       value: function $projectSetAsync() {
         var projectID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
         var self = this;
-        projectID = this.lastProjectID(projectID);
+        projectID = this.lastProjectID(projectID, false, null);
 
         if (this._projectSetAsync[projectID]) {
           return this._projectSetAsync[projectID].promise();
         }
         /**
-         * will subscribe when called the first time and set our simple promise then will resolve once the `$payload` is succesfull
+         * will subscribe when called the first time and set our simple promise then resolve once the `$payload` is succesfull
          */
 
 
@@ -369,20 +371,6 @@ exports.PocketModule = function () {
           this.del(); // deletes projectSetDispatcher of self 
         });
         return this._projectSetAsync[projectID].promise();
-      }
-      /**
-       * ### $projectSet
-       * - use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
-       * @param {*} projectID required
-       */
-
-    }, {
-      key: "$projectSet",
-      value: function $projectSet() {
-        var projectID = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-        projectID = this.validProjectID(projectID);
-        if (this.payloadData[projectID]) return true;
-        return false;
       }
       /**
        * ### $probeStatusAsync
@@ -887,9 +875,10 @@ exports.PocketModule = function () {
         var returnAs = function returnAs(val) {
           _this9.d = val;
           return _this9;
-        };
+        }; // sofl validation for non existant `payloadID` if called before declaration of a project
 
-        payloadID = this.lastProjectID(payloadID);
+
+        payloadID = this.lastProjectID(payloadID, false, null);
         if (!payloadID) throw "payloadID must be set"; // we wrap it if on ready project so it allows declaring `${$ready()}` even before $project was created, cool ha!
 
         var p = this.$projectSetAsync(payloadID).then(function (_ref6) {
@@ -2188,7 +2177,7 @@ module.exports = () => {
 
         /**
          * ### projectSetDispatcher
-         * - create new dispather to act as a callback for setting new projects in future
+         * - create new dispather to act as a callback for setting new projects in future. NOTE once project is created and using $architect /$project/$payload to update will not recreate `projectSetDispatcher`
          * - works with `$projectSetAsync`
          * @param {*} projectID 
          */
@@ -2319,12 +2308,13 @@ module.exports = () => {
         /**
          * ### lastProjectID
          * - every project is a job initiated by payload, so `payload.id === lastProjectID()`
+         * @param type strictly validate against scoped projecjID
          */
-        lastProjectID(projectID = '', debug = null) {
+        lastProjectID(projectID = '', debug = null, type = 'strict') {
             if (!projectID && this._lastProjectID) projectID = this._lastProjectID
             if (projectID) projectID = this.validProjectID(projectID, debug)
-            if (projectID && this.payloadData[projectID]) this._lastProjectID = projectID
-            if (!this.payloadData[projectID]) return null
+            if (projectID && this.payloadData[projectID] && type === 'strict') this._lastProjectID = projectID
+            if (!this.payloadData[projectID] && type === 'strict') return null
             if (!projectID) return null
             return projectID
         }
@@ -3169,6 +3159,17 @@ module.exports = (PocketModule) => {
         }
 
         /**
+         * ### $projectSet
+         * - use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
+         * @param {*} projectID required
+         */
+        $projectSet(projectID = '') {
+            projectID = this.validProjectID(projectID)
+            if (this.payloadData[projectID]) return true
+            return false
+        }
+
+        /**
          * - run conditional statement within callback, so we can keep chaining in the same block
          * @param cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
          * @param `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`
@@ -3205,7 +3206,7 @@ module.exports = (PocketModule) => {
                 return this
             }
             
-            const cbDATA = cb.call(self)
+            const cbDATA = cb.call(self, self) // when using arrow function pass `(self)=>` in callback as well
             if (cbDATA) return cbDATA // if callback has any true data return it, 
             else return this // else return self
         }

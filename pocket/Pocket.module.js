@@ -163,7 +163,6 @@ exports.PocketModule = () => {
             return this._projectSetAsync[projectID].promise()
         }
 
-
         /**
          * ### $probeStatusAsync
          * - return last probe status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
