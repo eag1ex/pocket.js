@@ -1,6 +1,6 @@
 exports.PocketModule = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID, isString, notify } = require('./utils')
+    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID, isString } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     const PocketLibs = require('./Pocket.libs')()
     const newProbe = require('./Probe').Probe

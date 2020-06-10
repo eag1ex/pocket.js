@@ -24,14 +24,14 @@ module.exports = () => {
             this._$cached_data = {/** id:{} */ }// stores last captured data when calling `$data(..)`
             this.$transfer_lastID = '' // set when we call `$transfer()` and reset after `$to()`
             this._ready = {} // collect all ready example: `{id:Promise}`
-            this._ready_method_set = {/**[id]:true */}// ignore subsequent calls to $ready method 
+            this._ready_method_set = {/** [id]:true */}// ignore subsequent calls to $ready method 
             this.d = undefined // NOTE user reference data, carefull when using selectors from previous target, always access last
             this._projectSet = {/** projectID:promise */ }
             this._transferCached = [ /** {timestamp,fromProbeID,data} */]
             this._projectSetDispatcher = {/** id:dispatcher */ }
             this._projectSetAsync = {/** id:SQ */ } // collect all $projectSetAsync promisses
             this._lastFilterList = {/** id:[probes] */ }
-            this.projectsCache = {/**[id]:'open/complete' */}// keep reference of completed projects, this variable is never purged
+            this.projectsCache = {/** [id]:'open/complete' */}// keep reference of completed projects, this variable is never purged
             this.createArchitect() // only when pocketInstance is set
         }
 

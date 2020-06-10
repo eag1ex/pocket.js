@@ -43,8 +43,8 @@ module.exports = (PocketModule) => {
          * @returns boolean `true/false/null`, determined by project completion
          */
         $projectComplete(projectID) {
-            if(!this.projectsCache[projectID]) return null
-            return this.projectsCache[projectID] === 'complete' ? true : false
+            if (!this.projectsCache[projectID]) return null
+            return this.projectsCache[projectID] === 'complete'
         }
 
         /**
