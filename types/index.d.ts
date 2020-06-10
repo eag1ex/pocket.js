@@ -36,7 +36,7 @@ declare module Pocket {
     export function $get(probeID: string, self: boolean): globalThis
     export function $update(dataFrom: IdataFrom, mergeData: boolean, probeID: string): globalThis
     export function $activeTasks(projectID: string): globalThis
-    export function $ready(projectID: string): globalThis
+    export function $ready(projectID: string, allowMultiple:boolean): globalThis
 
     // project and probe selectors
     export function $removeProject(projectID: string): globalThis
@@ -62,6 +62,7 @@ declare module Pocket {
     export function $asset(assetName: string, projectID: string): any
     export function $condition(cb:Function, id:string): globalThis
     export function $exists(probeID: string): boolean
+    export function $projectComplete(projectID:string):boolean
 }
 
 

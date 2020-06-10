@@ -92,7 +92,8 @@ Working examples can be found at `'./samples/**`
 - **$activeTasks( payloadID ).d:Array**: returns an `array['taskA','tastB']` from current job payload, will only be available before `$ready(..)` is resolved, and before PocketSet tasks are completed.
 
 
-- **$ready(payloadID).d:Promise**: last calling method, when your `Pocket` tasks are completed, example: `Probe[id][status]='complete'` only then, will it resolve(), otherwise pending Probe's will remain and `$ready()` will expire, this is the desired effect, most logical behaviour.
+- **$ready(payloadID, allowMultiple).d:Promise**: last calling method, when your `Pocket` tasks are completed, example: `Probe[id][status]='complete'` only then, will it resolve(), otherwise pending Probe's will remain and `$ready()` will expire, this is the desired effect, most logical behaviour.
+    - `allowMultiple:boolean = false`: if you want to allow calling same project $ready(..) multiple times then set `allowMultiple=true`, otherwise it will give you warning. By default is set to `false`.
 
 - *Final note: All user/interaction methods are prefixed with '$'*
 - *Note: Most user $methods require `...).d` for access to values, to allows chaining*

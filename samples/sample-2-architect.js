@@ -34,9 +34,16 @@ const data = {
     ]
 }
 
-pocket.$ready(`pocket-1`).d.then(z=>{
+pocket.$ready(`pocket-1`,true).d.then(z=>{
     console.log('on ready',z)
 })
+
+
+    pocket.$ready(`pocket-1`,true).d.then(z=>{
+        console.log('on ready',z)
+    })    
+
+
 
  pocket.$architect(() => {
     // when assigning project `data` must also specify if `async` and `type`
@@ -66,27 +73,8 @@ pocket.$ready(`pocket-1`).d.then(z=>{
     ]
     data.type = 'update'
     this.$architect(()=>({project:data}))
-}).$filter(function () {
-    console.log(pocket.$projectID,'ha?')
-   return this.task === 'srilanka'
- }).$compute(function(){
-     console.log(this.task, this.data)
- })
+})
 
-
-
-// .$condition(function(){
-//     //if(this.$projectID ==='pocket-1'){
-//         console.log('yey got projectID',this.$projectID)
-//    // }
-// })
-// .$filter(function () {
-//     return this.task === 'none'
-// })
-
-// .$filter(function () {
-//     return this.compaign === 'Belt_and_Road_Initiative'
-// })
 pocket.$select('pocket-1').$compute(function(){
     this.status = 'complete'
     //console.log('each compute/status', this)

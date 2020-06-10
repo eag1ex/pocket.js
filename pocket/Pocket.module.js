@@ -1,6 +1,6 @@
 exports.PocketModule = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID, isString } = require('./utils')
+    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID, isString, notify } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     const PocketLibs = require('./Pocket.libs')()
     const newProbe = require('./Probe').Probe
@@ -103,14 +103,14 @@ exports.PocketModule = () => {
                 }
 
                 if (type === 'update' && !initialProject && this.$exists(`::${val['task']}`)) {
-                   
+
                     if (val['data']) this.$update({ data: val['data'] }, false, `::${val['task']}`)
                     if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
-                    
+
                     // NOTE in case we update status in case it wasnt provided but new data was assigned
                     if (!val['status'] && val['data'] && this.$status(`::${val['task']}`) !== 'updated') {
                         this.$update({ status: 'updated' }, false, `::${val['task']}`)
-                    } 
+                    }
 
                     if (val['ref']) this.$update({ ref: val['ref'] }, false, `::${val['task']}`)
                     if (val['error']) this.$update({ error: val['error'] }, false, `::${val['task']}`)
@@ -121,7 +121,7 @@ exports.PocketModule = () => {
                     // NOTE do not update `payloadData` it is redundant if we donot need it for anything, only update Probes{}
                     /// this.payloadData[data.id]['value']
                     // an existing project do not everride
-                   
+
                     continue
                 }
 
@@ -141,6 +141,7 @@ exports.PocketModule = () => {
 
             if (this.payloadData[data.id]) {
                 this.lastProjectID(data.id)
+                if (!this.projectsCache[data.id]) this.projectsCache[data.id] = 'open' // means created project
                 this.distributor()
                     .setDefer(data.id)
                 // NOTE required in order for $projectSetAsync to retrun callback to resolve our promise
@@ -460,7 +461,7 @@ exports.PocketModule = () => {
          * - delete completed `pocketSet`
          */
         deletePocketSet(id) {
-            if (!id) return 
+            if (!id) return
             if (Object.values(this.pocket).length) {
                 for (let poc of Object.values(this.pocket)) {
                     if (this._$cached_data[poc.id]) delete this._$cached_data[poc.id]
@@ -501,7 +502,7 @@ exports.PocketModule = () => {
             projectID = !isString(projectID) ? '' : projectID
             projectID = this.lastProjectID(projectID) // also updates last selector reference
             this.deletePocketSet(projectID)
-            return this  
+            return this
         }
 
         $payload(data, async, type) {
@@ -535,34 +536,59 @@ exports.PocketModule = () => {
           * - `after completion of Pocket, instance data for all Probes is deleted`
           * - can be called even before project was declared thanks to callback dispather `$projectSetAsync()`
           * @param {*} payloadID ,required
+          * @param allowsMultiple optional, when set to true will allow multiple calls to resolved data
           */
-        $ready(payloadID) {
+        $ready(payloadID, allowsMultiple = false) {
 
-            // in case it was called the second time, when already resolved!
-            if (this[`_$ready_resolved`]) {
-                return Promise.reject(`$ready already resolved`)
-            }
+            try {
 
-            this[`_$ready_resolved`] = false
-            const returnAs = (val) => {
-                this.d = val
-                return this
+                const returnAs = (val) => {
+                    this.d = val
+                    if (this.d && !allowsMultiple) {
+                        this.d.catch(warn)
+                    }
+                    return this
+                }
+
+                // sofl validation for non existant `payloadID` if called before declaration of a project
+                let _payloadID = this.lastProjectID(payloadID, false, null)
+                if (!payloadID && _payloadID) payloadID = _payloadID // grab last assigned id incase provided none
+
+                // in case it was called the second time, when already resolved!
+                if (this.projectsCache[payloadID] === 'complete' && !allowsMultiple) {
+                    return returnAs(Promise.reject(`[$ready] project: ${payloadID} already complete`))
+                }
+
+                if (this._ready_method_set[payloadID] !== undefined && !allowsMultiple) {
+                    if (this._ready_method_set[payloadID] === true) {
+                        return returnAs(Promise.reject(`[$ready] project: ${payloadID} already complete, cannot recall same $ready`))
+                    }
+                    if (this._ready_method_set[payloadID] === false) {
+                        return returnAs(Promise.reject(`[$ready] project: ${payloadID} you already declared $ready somewhere else, this call is ignored`))
+                    }
+                }
+
+                if (!_payloadID) throw (`payloadID must be set`)
+
+                // we wrap it if on ready project so it allows declaring `${$ready()}` even before $project was created, cool ha!
+                const p = this.$projectSetAsync(_payloadID).then(({ projectID }) => {
+                    return super.$ready(projectID).then(z => {
+                        this.deletePocketSet(projectID)
+                        this.projectsCache[projectID] = 'complete'
+                        this._ready_method_set[_payloadID] = true
+                        return z
+                    }, err => Promise.reject(err))
+                }, err => {
+                    return Promise.reject(err)
+                })
+                this._ready_method_set[_payloadID] = false
+                return returnAs(p)
+
+            } catch (error) {
+                onerror(error)
             }
-            // sofl validation for non existant `payloadID` if called before declaration of a project
-            payloadID = this.lastProjectID(payloadID, false, null)
-            if (!payloadID) throw (`payloadID must be set`)
-            // we wrap it if on ready project so it allows declaring `${$ready()}` even before $project was created, cool ha!
-            const p = this.$projectSetAsync(payloadID).then(({ projectID }) => {
-                return super.$ready(projectID).then(z => {
-                    this.deletePocketSet(projectID)
-                    this[`_$ready_resolved`] = true
-                    return z
-                }, err => Promise.reject(err))
-            }, err => {
-                return Promise.reject(err)
-            })
-            return returnAs(p)
         }
+
     }
 
     const PocketSelectors = require('./Pocket.selectors')(PocketModuleExt)

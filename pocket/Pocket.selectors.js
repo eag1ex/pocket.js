@@ -39,6 +39,15 @@ module.exports = (PocketModule) => {
         }
 
         /**
+         * @param projectID required
+         * @returns boolean `true/false/null`, determined by project completion
+         */
+        $projectComplete(projectID) {
+            if(!this.projectsCache[projectID]) return null
+            return this.projectsCache[projectID] === 'complete' ? true : false
+        }
+
+        /**
          * ### $projectSet
          * - use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
          * @param {*} projectID required
