@@ -106,6 +106,12 @@ exports.PocketModule = () => {
                    
                     if (val['data']) this.$update({ data: val['data'] }, false, `::${val['task']}`)
                     if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
+                    
+                    // NOTE in case we update status in case it wasnt provided but new data was assigned
+                    if (!val['status'] && val['data'] && this.$status(`::${val['task']}`) !== 'updated') {
+                        this.$update({ status: 'updated' }, false, `::${val['task']}`)
+                    } 
+
                     if (val['ref']) this.$update({ ref: val['ref'] }, false, `::${val['task']}`)
                     if (val['error']) this.$update({ error: val['error'] }, false, `::${val['task']}`)
                     if (val['campaign']) this.$update({ campaign: val['campaign'] }, false, `::${val['task']}`)
