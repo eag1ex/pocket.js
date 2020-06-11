@@ -108,7 +108,8 @@ exports.PocketModule = () => {
                     if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
 
                     // NOTE in case we update status in case it wasnt provided but new data was assigned
-                    if (!val['status'] && val['data'] && this.$status(`::${val['task']}`) !== 'updated') {
+                    // status should only be changed after data is set
+                    if (!val['status'] && val['data'] && this.$status(`::${val['task']}`) === 'open') {
                         this.$update({ status: 'updated' }, false, `::${val['task']}`)
                     }
 
@@ -137,11 +138,14 @@ exports.PocketModule = () => {
             }
 
             // only when updating existance of Probe{}
-            if (type === 'update' && this.payloadData[data.id] && !initialProject) return isUpdated
+            if (type === 'update' && this.payloadData[data.id] && !initialProject) {
+                this.projectsCache[data.id] = 'open'
+                return isUpdated
+            }
 
             if (this.payloadData[data.id]) {
                 this.lastProjectID(data.id)
-                if (!this.projectsCache[data.id]) this.projectsCache[data.id] = 'open' // means created project
+                this.projectsCache[data.id] = 'open' // means created project
                 this.distributor()
                     .setDefer(data.id)
                 // NOTE required in order for $projectSetAsync to retrun callback to resolve our promise

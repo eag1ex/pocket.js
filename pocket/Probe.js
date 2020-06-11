@@ -88,6 +88,9 @@ exports.Probe = () => {
         set error(v) {
             if (!v) return
             if (!(v || []).length && isArray(v)) return
+
+            // in case data is in its initial status state = 'open' we need to update it to change `_dataIndex`
+            if (!this.data && this.data !== false) this.data = false
             this._error.push(v)
             this._error = this._error.filter(z => !!z)
         }
