@@ -23,7 +23,7 @@ const data1 = {
     tasks: [
         {
             task: 'china',
-           // data: 'a',
+            //data: 'a',
             campaign: 'Belt_and_Road_Initiative',
           //  status:'updated'
             //error:'first err'
@@ -36,7 +36,7 @@ const data2 = {
     tasks: [
         {
             task: 'china',
-           // data: 'a',
+          //  data: 'a',
             campaign: 'Belt_and_Road_Initiative',
             //error:'first err'
         }
@@ -75,7 +75,7 @@ let loop = (inx) => {
               // cache: { project: false, asset: true }
             }
         })
-        .$select(d.id)
+        // .$select(d.id)
         // .$architect(() => {
         //         d.async = false
         //         d.type = 'update'
@@ -97,21 +97,23 @@ let loop = (inx) => {
                     {
                         task: 'china',
                         data: 'abc',
-                        status:'complete'
+                        //status:'complete'
                         //campaign: 'Belt_and_Road_Initiative',
                         //error:'first err'
                     }
                 ]
-               
+                console.log('data/tasks', d.tasks)
                
                 //console.log('what _lastProbeID', this)
                this.$architect(() => ({ project: d }))
+               console.log('$architect is?', this.d)
                console.log('what projectID', this.$projectID, d.id)
-               console.log('data??',this.$data(null,`china`))
+              
+              // console.log('probe??',this.$get(`::china`))
             } 
         },d.id)
-       // setTimeout(()=>{          
             .$compute(function(){
+                console.log('what is this', this.data)
                 // FIXME issue found, we are not getting the latest data
                 // works > pocket.$data(null, `::china`)
                 // not work > this.data
@@ -120,15 +122,13 @@ let loop = (inx) => {
                 //this.status = 'complete'
                 //console.log('each compute/status', this)
             })
-       // },100)
-
     }
 
-    setTimeout(() => {
+    //setTimeout(() => {
         console.log('next loop')
         inx = inx +1
         loop(inx)     
-    }, 500)
+   // }, 500)
    
 }
 loop(0)

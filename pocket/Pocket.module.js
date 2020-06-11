@@ -90,6 +90,8 @@ exports.PocketModule = () => {
             // NOTE on update/new of project we need to reset $filter values, in case 
             if ((this._lastFilterList[data.id] || []).length) this._lastFilterList[data.id] = []
 
+
+
             // NOTE validate our pocket values before generating each `new Probe()`
             for (let val of data['tasks'].values()) {
                 if (!val['task']) {
@@ -103,7 +105,11 @@ exports.PocketModule = () => {
                 }
 
                 if (type === 'update' && !initialProject && this.$exists(`::${val['task']}`)) {
-                    if (val['data']) this.$update({ data: val['data'] }, false, `::${val['task']}`)
+                    if (val['data']) {
+                       
+                     this.$update({ data: val['data'] }, false, `::${val['task']}`)
+                   
+                    }
                     if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
 
                     // NOTE in case we update status in case it wasnt provided but new data was assigned

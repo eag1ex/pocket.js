@@ -30,7 +30,7 @@ module.exports = () => {
             this._transferCached = [ /** {timestamp,fromProbeID,data} */]
             this._projectSetDispatcher = {/** id:dispatcher */ }
             this._projectSetAsync = {/** id:SQ */ } // collect all $projectSetAsync promisses
-            this._lastFilterList = {/** id:[probes] */ }
+            this._lastFilterList = {/** id:[probe references only] */ }
             this.projectsCache = {/** [id]:'open/complete' */}// keep reference of completed projects, this variable is never purged
             this.deleteWithDelay = (opts || {}).deleteWithDelay || 1000// after project is completed and $ready(..) is resolved set delay to when it should be deleted
             // this.createArchitect() // only when pocketInstance is set
@@ -50,6 +50,20 @@ module.exports = () => {
 
         //         this["architect_set"] = true
         //     }
+        // }
+
+        /**
+         * - return latest Probe by reference from `this._lastFilterList[projectID]`
+         * @param {*} projectID 
+         */
+        // getProbesByFilterRef(projectID) {
+        //     if (!projectID) return []
+        //     if (!this._lastFilterList[projectID]) return []
+        //     return this._lastFilterList[projectID].reduce((n, ref, inx) => {
+        //         if (ref.id && ref.isNONE === undefined && this.pocket[ref.id]) n.push(this.pocket[ref.id])
+        //         else if (this.pocket[ref.id]) n.push({ id: ref.id, isNONE: true })
+        //         return n
+        //     }, []).filter(z => !!z)
         // }
 
         /**
@@ -73,7 +87,8 @@ module.exports = () => {
          * @returns array [Probe{},...] of selected project
          */
         projectProbeList(projectID) {
-            return Object.entries(this.pocket).filter(([id, probe]) => id.indexOf(projectID) === 0).map(([id, probe]) => probe)
+            if(!projectID) return []
+            return  Object.entries(this.pocket).filter(([id]) => id.indexOf(projectID) === 0).map(([id, probe]) => probe)
         }
 
         /**

@@ -266,7 +266,7 @@ module.exports = (PocketModule) => {
                 // uniq
                 this._lastFilterList[projectID] = lastFilter = lastFilter.filter(z => z.isNONE === undefined)
                     .filter(({ id }, i, all) => {
-                        return all.filter(({ id2 }) => id === id2).length === 0
+                        return all.filter(_probe => id === _probe.id).length === 0
                     })
                 lastFilter.forEach(probe => {
                     // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete           
@@ -275,8 +275,10 @@ module.exports = (PocketModule) => {
                 // finally only return not none list on probes, then clear _lastFilterList
                 return returnAs(this._lastFilterList[projectID])
             } else {
+              
                 this.projectProbeList(projectID).forEach(probe => {
                     // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete           
+                    
                     if (probe.status !== 'complete' && probe.status !== 'send') cb.call(probe, probe)
                 })
                 return returnAs(this.projectProbeList(projectID))
