@@ -41,7 +41,7 @@ module.exports = () => {
                 try {
                     const Architect = require('./Architect')()
                     Architect.prototype = Object.create(this)
-                    Architect.prototype.constructor = Architect
+                    Architect.prototype.constructor = Architect             
                     Object.assign(this, new Architect())
                 } catch (err) {
                     console.log(`[createArchitect] error`, err)

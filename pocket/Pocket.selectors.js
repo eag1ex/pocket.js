@@ -11,12 +11,11 @@ module.exports = (PocketModule) => {
 
         constructor(opts, debug) {
             super(opts, debug)
-
         }
 
         /** 
          * - can be used as a project setter same as `$payload` or `$project`, but with additional configuration
-         * 
+         * @extends Architect
          * @param cb required, must return project settings: `{project:{payloadData}, asset:{value, name}}
          * @param projectID optional
          * @returns self
@@ -25,8 +24,24 @@ module.exports = (PocketModule) => {
             if (!this.architect) {
                 if (this.debug) warn(`[$architect] "opts.architect" must be set to use this option`)
                 return this
+            } 
+            // because we are using Architect Functional class as Object.create(...) that extends to es6 PocketModule class
+            // it is not continuasly updated, we are also borrowing assets to Architect, and so we have to always return latest values and reassing Architect latest values back to PocketModule        
+            return Object.assign(this, this.__architect.bind(this)(...args))
+        }
+
+        /** 
+         * @extends Architect
+         * @param assetName string, specify the name you chose in your `$architect(...)` declaration
+         * @param projectID optional, update selector and return desired asset
+         * @returns asset by name or null
+        */
+        $asset(...args) {
+            if (!this.architect) {
+                if (this.debug) warn(`[$asset] "opts.architect" must be set to use this option`)
+                return null
             }
-            return this.__architect(...args)
+            return this.__asset.bind(this)(...args)
         }
 
         /**
@@ -105,19 +120,6 @@ module.exports = (PocketModule) => {
          */
         get $projectID() {
             return this._lastProjectID
-        }
-
-        /** 
-         * @param assetName string, specify the name you chose in your `$architect(...)` declaration
-         * @param projectID optional, update selector and return desired asset
-         * @returns asset by name or null
-        */
-        $asset(...args) {
-            if (!this.architect) {
-                if (this.debug) warn(`[$asset] "opts.architect" must be set to use this option`)
-                return null
-            }
-            return this.__asset(...args)
         }
 
         // extending original `$probeStatusAsync`
