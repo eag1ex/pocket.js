@@ -15,7 +15,7 @@ const Pocket = require('../index').Pocket
 
 
 const DEBUG = true
-const pocket = new Pocket({ async: false, dispatcher: true, completeOnNull:false,deleteWithDelay:1000 }, DEBUG)
+const pocket = new Pocket({ async: false, dispatcher: true, completeOnNull:true,deleteWithDelay:2000 }, DEBUG)
 
 const data1 = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
@@ -25,7 +25,7 @@ const data1 = {
             task: 'china',
            // data: 'a',
             campaign: 'Belt_and_Road_Initiative',
-            status:'updated'
+          //  status:'updated'
             //error:'first err'
         }
     ]
@@ -50,48 +50,88 @@ pocket.$ready(`pocket-2`, true).d.then(z => {
     console.log('pocket-2 ready', z)
 })
 
+
+/**
+ * the problem exists when we call multi declaration and data is no updated within the second $architect
+ */
 const datas = [data1, data2]
 
 let loop = (inx) => {
+    if (!datas[inx]) return
+
     if (datas[inx]) {
         const d = datas[inx]
+        console.log('calling id', d.id)
         pocket.$architect(() => {
             // when assigning project `data` must also specify if `async` and `type`
             d.async = false
             d.type = 'update'
             return {
-                project: data1,
+                project: d,
                 asset: { name: 'dispatch', value: { data: true } }, // must provide both
                 // tell architect we want to keep persistant values
                 // if `project:true/or asset:true` we want to persist previous value, do not overide
                 // defaults to `false` for both
-               // cache: { project: false, asset: true }
+              // cache: { project: false, asset: true }
             }
-        }, d.id).$condition(function () {
+        })
+        .$select(d.id)
+        // .$architect(() => {
+        //         d.async = false
+        //         d.type = 'update'
+        //         d.tasks = [
+        //             {
+        //                 task: 'china',
+        //                 data: 'abc',
+        //                // status:'complete'
+        //                 //campaign: 'Belt_and_Road_Initiative',
+        //                 //error:'first err'
+        //             }
+        //         ]
+        //     return { project: d }
+        // })
+        .$condition(function () {
             if (d) {
                 d.type = 'update'
-                this.$architect(() => ({ project: d }))
-                console.log('what _lastProbeID', this.d)
+                d.tasks = [
+                    {
+                        task: 'china',
+                        data: 'abc',
+                        status:'complete'
+                        //campaign: 'Belt_and_Road_Initiative',
+                        //error:'first err'
+                    }
+                ]
+               
+               
                 //console.log('what _lastProbeID', this)
-                // return => defaults to Pocket/self
-            }
-        }).$compute(function(){
-            this.data ='hello'
-            this.status = 'complete'
-            //console.log('each compute/status', this)
-        })
-
-        setTimeout(() => {
-            inx = inx - 1
-            loop(inx)
-        }, 500)
+               this.$architect(() => ({ project: d }))
+               console.log('what projectID', this.$projectID, d.id)
+               console.log('data??',this.$data(null,`china`))
+            } 
+        },d.id)
+       // setTimeout(()=>{          
+            .$compute(function(){
+                // FIXME issue found, we are not getting the latest data
+                // works > pocket.$data(null, `::china`)
+                // not work > this.data
+                // console.log('what is this.data',this.data, pocket.$data(null, `::china`), this.id, d.id)
+                //this.data ='hello'
+                //this.status = 'complete'
+                //console.log('each compute/status', this)
+            })
+       // },100)
 
     }
-    else {
-        console.log('loop/done')
-    }
+
+    setTimeout(() => {
+        console.log('next loop')
+        inx = inx +1
+        loop(inx)     
+    }, 500)
+   
 }
-loop(1)
+loop(0)
 
 // .$compute(function(){
   
