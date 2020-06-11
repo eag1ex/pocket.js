@@ -50,7 +50,7 @@ module.exports = (Pocket) => {
             return (this.architectConfig[projectID] || {})['value']
         }
 
-    /** 
+        /** 
        * @param assetName string, specify the name you chose in your `$architect(...)` declaration,
        * @param asCallback when exists, return asset as callback
        * @param projectID optional, update selector and return desired asset
