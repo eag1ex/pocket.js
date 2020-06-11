@@ -3,7 +3,7 @@
     * ### Architect
     * a more in depth project architecture setup, allowing more robust configuration, munipulation and data flows
 */
-module.exports = () => {
+module.exports = (Pocket) => {
     const { objectSize, isFunction, onerror, warn, log, isString } = require('./utils')
 
     // work with 
@@ -31,28 +31,32 @@ module.exports = () => {
         })
     }
 
-    return function Architect() {
-        this.architectConfig = {}
-        const archModel = new ArchitectModel()
-        this.architect = archModel.architect
+    return class Architect extends Pocket {
+        constructor(opts, debug) {
+            super(opts, debug)
 
-        this.setArchitect = (projectID, val) => {
-            if (this.architectConfig[projectID] === undefined) this.architectConfig[projectID] = this.architect
+            this.architectConfig = {}
+            const archModel = new ArchitectModel()
+            this.architectMod = archModel.architect
+        }
+
+        setArchitect(projectID, val) {
+            if (this.architectConfig[projectID] === undefined) this.architectConfig[projectID] = this.architectMod
             this.architectConfig[projectID]['value'] = Object.assign({}, this.architectConfig[projectID]['value'], val)
             return this
         }
 
-        this.getArchitect = (projectID) => {
+        getArchitect(projectID) {
             return (this.architectConfig[projectID] || {})['value']
         }
 
-        /** 
-         * @param assetName string, specify the name you chose in your `$architect(...)` declaration,
-         * @param asCallback when exists, return asset as callback
-         * @param projectID optional, update selector and return desired asset
-         * @returns if callback is returned the same value is returned
-        */
-        this.__asset = (assetName, asCallback, projectID) => {
+    /** 
+       * @param assetName string, specify the name you chose in your `$architect(...)` declaration,
+       * @param asCallback when exists, return asset as callback
+       * @param projectID optional, update selector and return desired asset
+       * @returns if callback is returned the same value is returned
+      */
+        asset(assetName, asCallback, projectID) {
             if (!isFunction(asCallback)) {
                 if (this.debug) warn(`[$asset] asCallback must be a function`)
                 return null
@@ -79,13 +83,13 @@ module.exports = () => {
         }
 
         /** 
-         * - can be used as a project setter same as `$payload` or `$project`, but with additional configuration
-         * 
-         * @param cb required, must return project settings: `{project:{payloadData}, asset:{value, name}, cache:{project, asset}}
-         * @param projectID optional
-         * @returns self
-        */
-        this.__architect = (cb, projectID) => {
+          * - can be used as a project setter same as `$payload` or `$project`, but with additional configuration
+          * 
+          * @param cb required, must return project settings: `{project:{payloadData}, asset:{value, name}, cache:{project, asset}}
+          * @param projectID optional
+          * @returns self
+         */
+        architect(cb, projectID) {
 
             if (!isFunction(cb)) {
                 if (this.debug) onerror(`[$architect] callback must be set`)
@@ -116,11 +120,11 @@ module.exports = () => {
             if (!(this.getArchitect(projectID) || {})['cache']) {
                 const defaults = { project: false, asset: false }
                 if (!validConfig['cache']) validConfig['cache'] = defaults
-              
+
                 this.setArchitect(projectID, {
                     'cache': validConfig['cache']
                 })
-               
+
             } else validConfig['cache'] = this.getArchitect(projectID)['cache']
 
             for (let k in validConfig) {
@@ -164,5 +168,6 @@ module.exports = () => {
             }
             return this
         }
+
     }
 }

@@ -20,14 +20,8 @@ module.exports = (PocketModule) => {
          * @param projectID optional
          * @returns self
         */
-        $architect(...args) {
-            if (!this.architect) {
-                if (this.debug) warn(`[$architect] "opts.architect" must be set to use this option`)
-                return this
-            } 
-            // because we are using Architect Functional class as Object.create(...) that extends to es6 PocketModule class
-            // it is not continuasly updated, we are also borrowing assets to Architect, and so we have to always return latest values and reassing Architect latest values back to PocketModule        
-            return Object.assign(this, this.__architect.bind(this)(...args))
+        $architect(...args) {     
+            return this.architect(...args)
         }
 
         /** 
@@ -37,11 +31,7 @@ module.exports = (PocketModule) => {
          * @returns asset by name or null
         */
         $asset(...args) {
-            if (!this.architect) {
-                if (this.debug) warn(`[$asset] "opts.architect" must be set to use this option`)
-                return null
-            }
-            return this.__asset.bind(this)(...args)
+            return this.asset(...args)
         }
 
         /**

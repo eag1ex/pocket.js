@@ -103,7 +103,6 @@ exports.PocketModule = () => {
                 }
 
                 if (type === 'update' && !initialProject && this.$exists(`::${val['task']}`)) {
-
                     if (val['data']) this.$update({ data: val['data'] }, false, `::${val['task']}`)
                     if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
 
@@ -576,9 +575,19 @@ exports.PocketModule = () => {
                 // we wrap it if on ready project so it allows declaring `${$ready()}` even before $project was created, cool ha!
                 const p = this.$projectSetAsync(_payloadID).then(({ projectID }) => {
                     return super.$ready(projectID).then(z => {
-                        this.deletePocketSet(projectID)
+
+                        // NOTE to help problems with loops and using chaining with last selector
+                        // will gradualy delete project with specified timeout
+                        if (!this.deleteWithDelay) this.deletePocketSet(projectID)
+                        else {
+                            setTimeout(() => {
+                                this.deletePocketSet(projectID)
+                            }, this.deleteWithDelay)
+                        }
+
                         this.projectsCache[projectID] = 'complete'
                         this._ready_method_set[_payloadID] = true
+
                         return z
                     }, err => Promise.reject(err))
                 }, err => {
@@ -591,9 +600,8 @@ exports.PocketModule = () => {
                 onerror(error)
             }
         }
-
     }
-
-    const PocketSelectors = require('./Pocket.selectors')(PocketModuleExt)
+    const PocketArchitect = require('./Pocket.architect')(PocketModuleExt)
+    const PocketSelectors = require('./Pocket.selectors')(PocketArchitect)
     return PocketSelectors
 }

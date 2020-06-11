@@ -15,7 +15,7 @@ const Pocket = require('../index').Pocket
 
 
 const DEBUG = true
-const pocket = new Pocket({ architect:true, async: true, dispatcher: true, completeOnNull:false }, DEBUG)
+const pocket = new Pocket({ async: false, dispatcher: true, completeOnNull:false,deleteWithDelay:1000 }, DEBUG)
 
 const data1 = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
@@ -23,7 +23,7 @@ const data1 = {
     tasks: [
         {
             task: 'china',
-            data: 'a',
+           // data: 'a',
             campaign: 'Belt_and_Road_Initiative',
             status:'updated'
             //error:'first err'
@@ -36,7 +36,7 @@ const data2 = {
     tasks: [
         {
             task: 'china',
-            data: 'a',
+           // data: 'a',
             campaign: 'Belt_and_Road_Initiative',
             //error:'first err'
         }
@@ -50,62 +50,48 @@ pocket.$ready(`pocket-2`, true).d.then(z => {
     console.log('pocket-2 ready', z)
 })
 
+const datas = [data1, data2]
 
- pocket.$architect(() => {
-    // when assigning project `data` must also specify if `async` and `type`
-    data1.async = false
-    data1.type = 'update'
-    return {
-        project: data1,
-        asset: { name: 'dispatch', value: { data: true } }, // must provide both
+let loop = (inx) => {
+    if (datas[inx]) {
+        const d = datas[inx]
+        pocket.$architect(() => {
+            // when assigning project `data` must also specify if `async` and `type`
+            d.async = false
+            d.type = 'update'
+            return {
+                project: data1,
+                asset: { name: 'dispatch', value: { data: true } }, // must provide both
+                // tell architect we want to keep persistant values
+                // if `project:true/or asset:true` we want to persist previous value, do not overide
+                // defaults to `false` for both
+               // cache: { project: false, asset: true }
+            }
+        }, d.id).$condition(function () {
+            if (d) {
+                d.type = 'update'
+                this.$architect(() => ({ project: d }))
+                console.log('what _lastProbeID', this.d)
+                //console.log('what _lastProbeID', this)
+                // return => defaults to Pocket/self
+            }
+        }).$compute(function(){
+            this.data ='hello'
+            this.status = 'complete'
+            //console.log('each compute/status', this)
+        })
 
-        // tell architect we want to keep persistant values
-        // if `project:true/or asset:true` we want to persist previous value, do not overide
-        // defaults to `false` for both
-       // cache: { project: false, asset: true }
+        setTimeout(() => {
+            inx = inx - 1
+            loop(inx)
+        }, 500)
+
     }
-}).$condition(function () {
-    if (data1) {
-        data1.type = 'update'
-        this.$architect(() => ({ project: data1 }))
-        console.log('what _lastProbeID', this.d)
-        //console.log('what _lastProbeID', this)
-        // return => defaults to Pocket/self
+    else {
+        console.log('loop/done')
     }
-})
-
-pocket.$architect(() => {
-    // when assigning project `data` must also specify if `async` and `type`
-    data2.async = false
-    data2.type = 'update'
-    return {
-        project: data2,
-        asset: { name: 'dispatch', value: { data: true } }, // must provide both
-
-        // tell architect we want to keep persistant values
-        // if `project:true/or asset:true` we want to persist previous value, do not overide
-        // defaults to `false` for both
-       // cache: { project: false, asset: true }
-    }
-}).$condition(function () {
-    if (data2) {
-        data1.type = 'update'
-        this.$architect(() => ({ project: data2 }))
-        // return => defaults to Pocket/self
-        console.log('what _lastProbeID', this.d)
-    }
-})
-
-
-pocket.$select('pocket-1').$compute(function(){
-    this.status = 'complete'
-    //console.log('each compute/status', this)
-})
-
-pocket.$select('pocket-2').$compute(function(){
-    this.status = 'complete'
-    //console.log('each compute/status', this)
-})
+}
+loop(1)
 
 // .$compute(function(){
   

@@ -13,7 +13,6 @@ module.exports = () => {
         constructor(opts = {}, debug) {
             this.debug = debug || false
             this.async = (opts || {}).async || null
-            this.architect = (opts || {}).architect || null // load Architect class
             this.completeOnNull = (opts || {}).completeOnNull || null // Allow Probe to complete even if data is null
             // when set enables dispatcher to communicate directly with `probe.js`
             this.dispatcher = (opts || {}).dispatcher ? require('../libs/dispatcher')() : null
@@ -33,23 +32,25 @@ module.exports = () => {
             this._projectSetAsync = {/** id:SQ */ } // collect all $projectSetAsync promisses
             this._lastFilterList = {/** id:[probes] */ }
             this.projectsCache = {/** [id]:'open/complete' */}// keep reference of completed projects, this variable is never purged
-            this.createArchitect() // only when pocketInstance is set
+            this.deleteWithDelay =  (opts || {}).deleteWithDelay || 1000// after project is completed and $ready(..) is resolved set delay to when it should be deleted
+            // this.createArchitect() // only when pocketInstance is set
         }
 
-        createArchitect() {
-            if (this.architect && !this["architect_set"]) {
-                try {
-                    const Architect = require('./Architect')()
-                    Architect.prototype = Object.create(this)
-                    Architect.prototype.constructor = Architect             
-                    Object.assign(this, new Architect())
-                } catch (err) {
-                    console.log(`[createArchitect] error`, err)
-                }
+        // NOTE abolished functional class, doesnt work well with es6 class
+        // createArchitect() {
+        //     if (this.architect && !this["architect_set"]) {
+        //         try {
+        //             const Architect = require('./Pocket.architect')()
+        //             Architect.prototype = Object.create(this)
+        //             Architect.prototype.constructor = Architect             
+        //             Object.assign(this, new Architect())
+        //         } catch (err) {
+        //             console.log(`[createArchitect] error`, err)
+        //         }
 
-                this["architect_set"] = true
-            }
-        }
+        //         this["architect_set"] = true
+        //     }
+        // }
 
         /**
          * ### projectSetDispatcher
@@ -235,10 +236,10 @@ module.exports = () => {
             if (!probeID) return null
             if (!this.idRegexValid(probeID)) return
             if (probeID.indexOf(`::`) === -1) return null
-            if (!this.pocket[probeID]) {
-                if (this.debug && debug === null) warn(`[get] did not find probe with probeID ${probeID}`)
-                return null
-            }
+            // if (!this.pocket[probeID]) {
+            //     if (this.debug && debug === null) warn(`[validProbe] did not find probe with probeID ${probeID}`)
+            //     return null
+            // }
             return probeID
         }
 

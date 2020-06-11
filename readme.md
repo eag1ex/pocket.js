@@ -56,8 +56,8 @@ Working examples can be found at `'./samples/**`
 
 #### PocketModule config/opts and status logic:
 - `PocketModule.opts{}`: available options on constructor to be set with instance creation.
-    - `opts.architect:Boolean`: when set loads additional Architect class with available methods
     - `opts.completeOnNull:boolean`: when set will allow completion of any probe even it data is still in initial null phase
+    - `opts.deleteWithDelay:number`: remove all project data with given dataly after $ready has been resolved, defaults to `1000` ms
     - `opts.async:Boolean`: when set will handle `await payload(asyncData)` as Promise. 
     - `opts.dispatcher:Boolean`: when set will load `Dispatcher module`, in to Pocket instance, and allow additional live on-change logging and direct communication with each Probe, currently this feature is limited to only logging, must set `debug:true` to see it in action. `[dispatcher]...`.
     - `debug:Boolean`: will log additional messages on what is happening, good for debuging :)!
@@ -124,7 +124,7 @@ Working examples can be found at `'./samples/**`
 - **$task(probeID):string**:
 - **$error(probeID):[]**:
 - **$all(probeID):probeGetters**:
-- **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. This is an imported class, activated when `opt.architect=true` 
+- **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. 
 - **$asset(assetName, projectID)**: can access the asset declared in `$architect`, activated when `opt.architect=true` 
 - **$condition(cb,id)**: declare arguments within callback without exiting Pocket block chain. The `id` you pass:  probe `::id` or `projectID`, will expose access to self of either Probe or Pocket instance. The return of callback is sensitive, if no value is passed the Pocket/self is returned. For example if accessing Probe then probe id can be returned but the chaining will refer to its instance, you may want to return pocket self instead.
 - **$exists(probeID):boolean**: check if probe exists, specify `probeID`, returns boolean.
