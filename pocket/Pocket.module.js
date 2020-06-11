@@ -324,7 +324,6 @@ exports.PocketModule = () => {
             }
 
             // if(updated && type==='update') { }
-
             return returnAs(updated)
         }
 
@@ -359,7 +358,7 @@ exports.PocketModule = () => {
                     if (!isObject(pock)) return null
                     for (let i = 0; i < this.probeProps.length; i++) {
                         const prop = this.probeProps[i]
-                        if (pock[prop]) output[prop] = pock[prop]
+                        if (pock[prop] !== undefined && pock[prop] !== null) output[prop] = pock[prop]
                     }
                     return output
                 }
@@ -421,7 +420,7 @@ exports.PocketModule = () => {
             try {
                 opts.id = uid
                 const emitter = this.dispatcher !== null ? this._emit.bind(this) : null
-                const p = new this.Probe(opts, emitter, this.debug)
+                const p = new this.Probe(opts, { emitter, completeOnNull: this.completeOnNull }, this.debug)
                 this.pocket[uid] = p
             } catch (err) {
                 onerror(err)

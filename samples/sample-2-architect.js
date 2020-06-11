@@ -15,7 +15,7 @@ const Pocket = require('../index').Pocket
 
 
 const DEBUG = true
-const pocket = new Pocket({ architect:true, async: true, dispatcher: true }, DEBUG)
+const pocket = new Pocket({ architect:true, async: true, dispatcher: true, completeOnNull:false }, DEBUG)
 
 const data = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
@@ -23,12 +23,13 @@ const data = {
     tasks: [
         {
             task: 'china',
-           // data: { 'assets': 10, type: 'billions', info: 'benefactor' },
-            campaign: 'Belt_and_Road_Initiative'
+            data: false,
+            campaign: 'Belt_and_Road_Initiative',
+            error:'first err'
         },
         {
             task: 'srilanka',
-           // data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
+           data: false,
             campaign: 'Belt_and_Road_Initiative'
         }
     ]
@@ -37,11 +38,6 @@ const data = {
 pocket.$ready(`pocket-1`,true).d.then(z=>{
     console.log('on ready',z)
 })
-
-
-    pocket.$ready(`pocket-1`,true).d.then(z=>{
-        console.log('on ready',z)
-    })    
 
 
 
@@ -62,12 +58,14 @@ pocket.$ready(`pocket-1`,true).d.then(z=>{
     data.tasks = [
         {
             task: 'china',
-            data: { 'assets': 10, type: 'billions', info: 'benefactor' },
+            error:'error here'
+            // data: { 'assets': 10, type: 'billions', info: 'benefactor' },
            // campaign: 'Belt_and_Road_Initiative'
         },
         {
             task: 'srilanka',
-            data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
+            error:'error there'
+           // data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
            // campaign: 'Belt_and_Road_Initiative'
         }
     ]
@@ -76,9 +74,12 @@ pocket.$ready(`pocket-1`,true).d.then(z=>{
 })
 
 pocket.$select('pocket-1').$compute(function(){
-    this.status = 'complete'
+    this.status = 'updated'
     //console.log('each compute/status', this)
+}).$compute(function(){
+    console.log('this.err', this.error)
 })
+
 
 // const list = pocket.$select(`pocket-2`).$filter(function () {
 //     return this.task === 'none'

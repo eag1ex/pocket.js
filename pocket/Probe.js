@@ -9,18 +9,19 @@ exports.Probe = () => {
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     return class Probe {
         /**
-         * @param {*} opts.id required, case sensitive, all will be toLowerCase() 
-         * @param {*} opts.task once set cannot be changed
-         * @param {*} opts.campaign optional, once set cannot be changed
-         * @param {*} opts.data optional any value except undefind, cannot be change once status set to `complete` or send
-         * @param {*} opts.status required to control Probe actions
-         * @param {*} emitter optional, dispatcher/emmiter available if not null
+         * @param {*} props.id required, case sensitive, all will be toLowerCase() 
+         * @param {*} props.task once set cannot be changed
+         * @param {*} props.campaign optional, once set cannot be changed
+         * @param {*} props.data optional any value except undefind, cannot be change once status set to `complete` or send
+         * @param {*} props.status required to control Probe actions
+         * @param {*} opts.emitter optional, dispatcher/emmiter available if not null
+         * @param {*} opts.completeOnNull override complete setting even if data was never set
          * @param {*} debug 
          */
-        constructor(opts = {}, emitter, debug) {
+        constructor(props = {}, opts = {}, debug) {
             this.debug = debug || false
-            if (isNumber(opts.id) || opts.id) opts.id = opts.id.toString()
-            if (!opts.task || !isString(opts.task)) throw ('task as string is required')
+            if (isNumber(props.id) || props.id) props.id = props.id.toString()
+            if (!props.task || !isString(props.task)) throw ('task as string is required')
             this._id = null
             this._error = []
             this._ref = null
@@ -31,15 +32,17 @@ exports.Probe = () => {
             this._dataIndex = 0
             this._statusIndex = 0
             this._statusAsync = [/** {timestamp:promise} */] // dynamic promise changer
-            this.emitter = emitter || null
-            this.task = opts.task
-            this.id = opts.id
+            this.task = props.task
+            this.id = props.id
             this.status = 'open'
 
+            this.emitter = opts.emitter || null
+            this.completeOnNull = opts.completeOnNull || null // when true allows completion on data still at initial null state
+
             // assign initial data if differs from default
-            if (opts.ref !== this._ref) this.ref = opts.ref
-            if (opts.data !== this._data) this.data = opts.data
-            if (opts.campaign) this.campaign = opts.campaign
+            if (props.ref !== this._ref) this.ref = props.ref
+            if (props.data !== this._data) this.data = props.data
+            if (props.campaign) this.campaign = props.campaign
 
             this._completeAsync = sq()
         }
@@ -90,7 +93,8 @@ exports.Probe = () => {
             if (!(v || []).length && isArray(v)) return
 
             // in case data is in its initial status state = 'open' we need to update it to change `_dataIndex`
-            if (!this.data && this.data !== false) this.data = false
+            //  if (this.data === null) this.data = false
+            // NOTE  we now use `this.completeOnNull` so can ignore above logic
             this._error.push(v)
             this._error = this._error.filter(z => !!z)
         }
@@ -244,10 +248,10 @@ exports.Probe = () => {
                     onerror('statusStackOrder invalid status')
                 }
 
-                if (this._status === 'complete' || this._status === 'send') {
-                    if (this.debug) warn(`cannot update status if already complete, id:${this.id}`)
-                    return false
-                }
+                // if (this._status === 'send' && (stat === 'complete' || stat ==='send')) {
+                //     if (this.debug) warn(`cannot update status if already complete, id:${this.id}`)
+                //     return false
+                // }
 
                 switch (stat) {
                     case 'open':
@@ -277,14 +281,17 @@ exports.Probe = () => {
                         break
 
                     case 'complete':
-
+                        if (this.data === null && this.completeOnNull !== true) {
+                            if (this.debug) warn(`[status] cannot complete status because data is null, to complete you set data prop to false`)
+                            break
+                        }
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
                         // setTimeout(()=>{
                         this._status = stat
                         this.onComplete(v) // resolve probe when status complete
                         //  })
-
+                       
                         break
 
                     case 'send':
@@ -366,16 +373,16 @@ exports.Probe = () => {
          * @param {*} status
          */
         onComplete(status) {
-            if ((status === 'complete' || status === 'error') && this._status !== 'send' && this._dataIndex > 0) {
+            if ((status === 'complete' || status === 'error') && this._status !== 'send' && (this._dataIndex > 0 || this.completeOnNull === true)) {
 
                 if (this.emitter) {
                     setTimeout(() => {
                         this.emitter({ probe: this, status })
                     })
                 }
-
-                this.sq.resolve({ probe: this.all() })
                 this._status = 'send'
+                this.sq.resolve({ probe: this.all() })       
+                
             }
         }
 

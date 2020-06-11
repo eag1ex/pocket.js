@@ -14,6 +14,7 @@ module.exports = () => {
             this.debug = debug || false
             this.async = (opts || {}).async || null
             this.architect = (opts || {}).architect || null // load Architect class
+            this.completeOnNull = (opts || {}).completeOnNull || null // Allow Probe to complete even if data is null
             // when set enables dispatcher to communicate directly with `probe.js`
             this.dispatcher = (opts || {}).dispatcher ? require('../libs/dispatcher')() : null
             this.pocket = {} // example this.pocket[`abc::taskName`] returns Probe{} Instance
