@@ -25,10 +25,10 @@ module.exports = (PocketModule) => {
         }
 
         /** 
-         * @extends Architect
          * @param assetName string, specify the name you chose in your `$architect(...)` declaration
          * @param projectID optional, update selector and return desired asset
          * @returns asset by name or null
+         * @extends Architect
         */
         $asset(...args) {
             return this.asset(...args)
@@ -112,20 +112,32 @@ module.exports = (PocketModule) => {
             return this._lastProjectID
         }
 
-        // extending original `$probeStatusAsync`
+        /**
+         * - return last probe status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
+         * @param {*} probeID 
+         * @extends probeStatusAsync
+         */
         $probeStatusAsync(probeID = '') {
             // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)
             let lastProbeID = this.lastProbeID(probeID)
-            return super.$probeStatusAsync(lastProbeID)
+            return this.probeStatusAsync(lastProbeID)
         }
-
-        // extending original `$get`
+        
+        /**
+         * ### $get
+          * - `get probe by 'id::taskName'`
+          * - `returns instance`
+          *  methods:`{get,all}` props: `{id,data,tasks,status}`
+          * @param {*} probeID required, example format: `${payload.id}::taskName`
+          * @param {*} self = false optional, in case you want to chain, and access `Probe{}` through `...).d`
+          * @extends _get
+         */
         $get(probeID, self) {
             // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)
             let lastProbeID = this.lastProbeID(probeID)
-            return super.$get(lastProbeID, self)
+            return this._get(lastProbeID, self)
         }
 
         /**
@@ -136,13 +148,19 @@ module.exports = (PocketModule) => {
         $getByRef(probeRef = '') {
             return Object.assign(this.pocket).filter(([id, probe], inx) => probe.ref === probeRef)
         }
-
-        // extending original `$set`
+       
+        /**
+         * - as name suggest sets up new new data for Probe/task, it derives from `$update` 
+         * @param {*} dataFrom required, must specify what to set on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
+         * - we should only use `$set` for initialization, this action also calls `clearStoreTransfers`
+         * @param {*} probeID required, example format: `${payload.id}::taskName`
+         * @extends _set
+         */
         $set(dataFrom, probeID) {
             // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)
             let lastProbeID = this.lastProbeID(probeID)
-            return super.$set(dataFrom, lastProbeID)
+            return this._set(dataFrom, lastProbeID)
         }
 
         /**
@@ -165,14 +183,20 @@ module.exports = (PocketModule) => {
             }
 
             return this.pocket[lastProbeID]
-        }
-
-        // extending original `$update`
+        } 
+        
+        /**
+         * update Probe/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
+         * @param {*} dataFrom required, must specify what to update on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
+         * @param {*} mergeData optional if `true` will merge: `Object.assing({},probe[id].data,mergeData['data'])`
+         * @param {*} probeID required, example format: `${payload.id}::taskName`
+         * @extends update
+         */
         $update(dataFrom, mergeData, probeID) {
             // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)
             let lastProbeID = this.lastProbeID(probeID)
-            return super.$update(dataFrom, mergeData, lastProbeID)
+            return this.update(dataFrom, mergeData, lastProbeID)
         }
 
         /**

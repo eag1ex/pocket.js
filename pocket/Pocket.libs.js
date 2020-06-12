@@ -87,8 +87,8 @@ module.exports = () => {
          * @returns array [Probe{},...] of selected project
          */
         projectProbeList(projectID) {
-            if(!projectID) return []
-            return  Object.entries(this.pocket).filter(([id]) => id.indexOf(projectID) === 0).map(([id, probe]) => probe)
+            if (!projectID) return []
+            return Object.entries(this.pocket).filter(([id]) => id.indexOf(projectID) === 0).map(([id, probe]) => probe)
         }
 
         /**

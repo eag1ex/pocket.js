@@ -39,22 +39,9 @@ exports.PocketModule = () => {
         //
 
         /**
-         * ### $payload
-         * - you can also use it on concurent payloads to existing `projectID`, once initial project is created overy other call will update each Probe{}.data/status, based on payloadData
-         * @param {*} data `required`
-         * @param {*} async `override current opts.sync for this payload`
-         * @param {*} type optional, new/update, `update`: if we call on an existing project we can update `data/status properties` of all assigned tasks at once
-         * 
-         * - `initialize new payload, for as many tasks`
-         * - `sets a multi task with instructions:`
-         * - `data = {
-                id: '', // 1 id for all tasks
-                tasks: [{ taskName: '', data: '', campaign: '' }]
-            }`
-
-         * - `call distributor and setDefer`
+         * @memberof $payload
          */
-        $payload(data = {}, async, type = 'new') {
+        payload(data = {}, async, type = 'new') {
             this.d = null
             let isUpdated = null
 
@@ -90,8 +77,6 @@ exports.PocketModule = () => {
             // NOTE on update/new of project we need to reset $filter values, in case 
             if ((this._lastFilterList[data.id] || []).length) this._lastFilterList[data.id] = []
 
-
-
             // NOTE validate our pocket values before generating each `new Probe()`
             for (let val of data['tasks'].values()) {
                 if (!val['task']) {
@@ -103,25 +88,22 @@ exports.PocketModule = () => {
                     if (this.debug) warn('[$payload] invalid taskName, failed idRegexValid validation')
                     continue
                 }
-
-                if (type === 'update' && !initialProject && this.$exists(`::${val['task']}`)) {
-                    if (val['data']) {
-                       
-                     this.$update({ data: val['data'] }, false, `::${val['task']}`)
-                   
-                    }
-                    if (val['status']) this.$update({ status: val['status'] }, false, `::${val['task']}`)
+                
+                const probeID = `${data.id}::${val['task']}`
+                if (type === 'update' && !initialProject && this.pocket[probeID]) {
+                    if (val['data']) this.pocket[probeID]['data'] = val['data']    
+                    if (val['status']) this.pocket[probeID]['status'] = val['status']    
 
                     // NOTE in case we update status in case it wasnt provided but new data was assigned
                     // status should only be changed after data is set
-                    if (!val['status'] && val['data'] && this.$status(`::${val['task']}`) === 'open') {
-                        this.$update({ status: 'updated' }, false, `::${val['task']}`)
+                    if (!val['status'] && val['data'] && this.pocket[probeID]['status'] === 'open') {
+                        this.pocket[probeID]['status'] = 'updated'
                     }
-
-                    if (val['ref']) this.$update({ ref: val['ref'] }, false, `::${val['task']}`)
-                    if (val['error']) this.$update({ error: val['error'] }, false, `::${val['task']}`)
-                    if (val['campaign']) this.$update({ campaign: val['campaign'] }, false, `::${val['task']}`)
-                    if (this.$status(`::${val['task']}`)) isUpdated = true
+                    if (val['ref']) this.pocket[probeID]['ref'] = val['ref']
+                    if (val['error']) this.pocket[probeID]['error'] = val['error']
+                    if (val['campaign']) this.pocket[probeID]['campaign'] = val['campaign']
+                    
+                    isUpdated = true
                     this._lastProjectID = data.id
                     // NOTE after update, payloadData will differ from new Probe{} data
                     // NOTE do not update `payloadData` it is redundant if we donot need it for anything, only update Probes{}
@@ -183,11 +165,9 @@ exports.PocketModule = () => {
         }
 
         /**
-         * ### $probeStatusAsync
-         * - return last probe status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
-         * @param {*} probeID 
+         * @memberof probeStatusAsync
          */
-        $probeStatusAsync(probeID = '') {
+        probeStatusAsync(probeID = '') {
             const returnAs = (val) => {
                 this.d = val
                 return this
@@ -199,14 +179,24 @@ exports.PocketModule = () => {
         }
 
         /**
-         * ### $get
-          * - `get probe by 'id::taskName'`
-          * - `returns instance`
-          *  methods:`{get,all}` props: `{id,data,tasks,status}`
-          * @param {*} probeID required, example format: `${payload.id}::taskName`
-          * @param {*} self = false optional, in case you want to chain, and access `Probe{}` through `...).d`
+         * @memberof $update
          */
-        $get(probeID = '', self = false) {
+        update(dataFrom, mergeData = null, probeID = '') {
+            return this._setUpdate(dataFrom, mergeData, probeID, 'update')
+        }
+
+        /**
+         * @memberof $set
+         */
+        _set(dataFrom, probeID = '') {
+            return this._setUpdate(dataFrom, null, probeID, 'set')
+        }
+
+        /**
+         * - declated via $get
+         * @memberof $get
+         */
+        _get(probeID = '', self = false) {
             const returnAs = (val) => {
                 this.d = val
                 return self ? this : this.d
@@ -216,28 +206,6 @@ exports.PocketModule = () => {
             probeID = this.lastProbeID(probeID)
             if (!probeID) return returnAs(null)
             else return returnAs(this.pocket[probeID])
-        }
-
-        /**
-         * ### $update
-         * - update Probe/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
-         * @param {*} dataFrom required, must specify what to update on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
-         * @prop {*} mergeData optional if `true` will merge: `Object.assing({},probe[id].data,mergeData['data'])`
-         * @param {*} probeID required, example format: `${payload.id}::taskName`
-         */
-        $update(dataFrom, mergeData = null, probeID = '') {
-            return this._setUpdate(dataFrom, mergeData, probeID, 'update')
-        }
-
-        /**
-         * ### $set
-         * - as name suggest sets up new new data for Probe/task, it derives from `$update` 
-         * @param {*} dataFrom required, must specify what to set on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
-         * - we should only use `$set` for initialization, this action also calls `clearStoreTransfers`
-         * @param {*} probeID required, example format: `${payload.id}::taskName`
-         */
-        $set(dataFrom, probeID = '') {
-            return this._setUpdate(dataFrom, null, probeID, 'set')
         }
 
         /**
@@ -261,7 +229,10 @@ exports.PocketModule = () => {
             return returnAs(tasks)
         }
 
-        $ready(payloadID = '') {
+        /**
+         * @memberof $ready
+         */
+        ready(payloadID = '') {
             this.d = null
 
             if (!this._ready[payloadID]) throw (`ready[payloadID] is not set, maybe you called it before $payload()`)
@@ -444,6 +415,7 @@ exports.PocketModule = () => {
          *  @param {*} opts.campaign optional
          * 
          * - `Probe` is resolved once `sq.resolve()` is called, sq => `Simple Q` our plugin
+         * @memberof Probe.js module
          */
         get Probe() {
             return newProbe()
@@ -513,6 +485,22 @@ exports.PocketModule = () => {
             return this
         }
 
+        /**
+         * - you can also use it on concurent payloads to existing `projectID`, once initial project is created overy other call will update each Probe{}.data/status, based on payloadData
+         * @param {*} data `required`
+         * @param {*} async `override current opts.sync for this payload`
+         * @param {*} type optional, new/update, `update`: if we call on an existing project we can update `data/status properties` of all assigned tasks at once
+         * 
+         * - `initialize new payload, for as many tasks`
+         * - `sets a multi task with instructions:`
+         * - `data = {
+                id: '', // 1 id for all tasks
+                tasks: [{ taskName: '', data: '', campaign: '' }]
+            }`
+
+         * - `call distributor and setDefer`
+         * @extends payload
+         */
         $payload(data, async, type) {
 
             const returnAs = (val) => {
@@ -520,8 +508,8 @@ exports.PocketModule = () => {
                 return this
             }
             const asAsync = async !== undefined ? async : this.async // override if set
-            if (asAsync && isPromise(data)) return returnAs(data.then(z => super.$payload(z, false, type), err => err))
-            if (!asAsync && !isPromise(data)) return returnAs(super.$payload(data, false, type))
+            if (asAsync && isPromise(data)) return returnAs(data.then(z => this.payload(z, false, type), err => err))
+            if (!asAsync && !isPromise(data)) return returnAs(this.payload(data, false, type))
             else {
                 if (this.debug) onerror(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
                 if (asAsync) return returnAs(Promise.reject())
@@ -533,18 +521,19 @@ exports.PocketModule = () => {
          * ### $project
          * - `an alias on $payload(...), can use either`
          * - refer to `$payload` for specifications :)
+         * @extends $payload
          */
         $project(...args) {
             return this.$payload(...args)
         }
 
         /**
-          * ### $ready
           * - resolves currently active `$payload(...)`
           * - `after completion of Pocket, instance data for all Probes is deleted`
           * - can be called even before project was declared thanks to callback dispather `$projectSetAsync()`
           * @param {*} payloadID ,required
           * @param allowsMultiple optional, when set to true will allow multiple calls to resolved data
+          * @extends ready
           */
         $ready(payloadID, allowsMultiple = false) {
 
@@ -552,9 +541,7 @@ exports.PocketModule = () => {
 
                 const returnAs = (val) => {
                     this.d = val
-                    if (this.d && !allowsMultiple) {
-                        this.d.catch(warn)
-                    }
+                    if (this.d && !allowsMultiple) this.d.catch(warn)
                     return this
                 }
 
@@ -580,7 +567,7 @@ exports.PocketModule = () => {
 
                 // we wrap it if on ready project so it allows declaring `${$ready()}` even before $project was created, cool ha!
                 const p = this.$projectSetAsync(_payloadID).then(({ projectID }) => {
-                    return super.$ready(projectID).then(z => {
+                    return this.ready(projectID).then(z => {
 
                         // NOTE to help problems with loops and using chaining with last selector
                         // will gradualy delete project with specified timeout
@@ -595,10 +582,10 @@ exports.PocketModule = () => {
                         this._ready_method_set[_payloadID] = true
 
                         return z
-                    }, err => Promise.reject(err))
-                }, err => {
-                    return Promise.reject(err)
-                })
+                    }, Promise.reject)
+                    
+                }, Promise.reject)
+
                 this._ready_method_set[_payloadID] = false
                 return returnAs(p)
 

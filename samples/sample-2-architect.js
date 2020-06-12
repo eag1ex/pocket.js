@@ -15,7 +15,7 @@ const Pocket = require('../index').Pocket
 
 
 const DEBUG = true
-const pocket = new Pocket({ async: false, dispatcher: true, completeOnNull:true,deleteWithDelay:2000 }, DEBUG)
+const pocket = new Pocket({ async: false, dispatcher: true, completeOnNull:true,deleteWithDelay:0 }, DEBUG)
 
 const data1 = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
@@ -106,20 +106,19 @@ let loop = (inx) => {
                
                 //console.log('what _lastProbeID', this)
                this.$architect(() => ({ project: d }))
-               console.log('$architect is?', this.d)
-               console.log('what projectID', this.$projectID, d.id)
+             //  console.log('$architect is?', this.d)
+              // console.log('what projectID', this.$projectID, d.id)
               
               // console.log('probe??',this.$get(`::china`))
             } 
         },d.id)
             .$compute(function(){
                 console.log('what is this', this.data)
-                // FIXME issue found, we are not getting the latest data
                 // works > pocket.$data(null, `::china`)
                 // not work > this.data
                 // console.log('what is this.data',this.data, pocket.$data(null, `::china`), this.id, d.id)
                 //this.data ='hello'
-                //this.status = 'complete'
+                this.status = 'complete'
                 //console.log('each compute/status', this)
             })
     }
