@@ -290,7 +290,7 @@ module.exports = (PocketModule) => {
                 // uniq
                 this._lastFilterList[projectID] = lastFilter = lastFilter.filter(z => z.isNONE === undefined)
                     .filter(({ id }, i, all) => {
-                        return all.filter(_probe => id === _probe.id).length === 0
+                        return all.filter(_probe => id === _probe.id).length === 1
                     })
                 lastFilter.forEach(probe => {
                     // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete           

@@ -27,6 +27,13 @@ const data1 = {
             campaign: 'Belt_and_Road_Initiative',
           //  status:'updated'
             //error:'first err'
+        },
+        {
+            task: 'usa',
+            // data: 'a',
+            campaign: 'Belt_and_Road_Initiative',
+          //  status:'updated'
+            //error:'first err'
         }
     ]
 }
@@ -112,8 +119,16 @@ let loop = (inx) => {
               // console.log('probe??',this.$get(`::china`))
             } 
         },d.id)
+            .$filter(function(){
+                //console.log('$filter is', this)
+                return this.campaign ==='Belt_and_Road_Initiative'
+            })
+            .$filter(function(){
+                //console.log('$filter is', this)
+                return this.task ==='china'
+            })
             .$compute(function(){
-                console.log('what is this', this.data)
+                console.log('what is this', this.data, this.task)
                 // works > pocket.$data(null, `::china`)
                 // not work > this.data
                 // console.log('what is this.data',this.data, pocket.$data(null, `::china`), this.id, d.id)
