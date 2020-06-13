@@ -5,7 +5,7 @@
  */
 exports.Probe = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { isString, isArray, warn, log, isNumber, onerror, last, copy, isObject } = require('./utils')
+    const { isString, isArray, warn, log, isNumber, onerror, last, copy, isObject, isFunction } = require('./utils')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     return class Probe {
         /**
@@ -35,7 +35,8 @@ exports.Probe = () => {
             this.task = props.task
             this.id = props.id
             this.status = 'open'
-
+            this._onChange = opts.onChange || null
+            this._onchangeDispatch = null // loads dispatcher when `opts.onChange=true` is set
             this.emitter = opts.emitter || null
             this.completeOnNull = opts.completeOnNull || null // when true allows completion on data still at initial null state
 
@@ -97,6 +98,7 @@ exports.Probe = () => {
             // NOTE  we now use `this.completeOnNull` so can ignore above logic
             this._error.push(v)
             this._error = this._error.filter(z => !!z)
+            this.dispatchChange('error')
         }
 
         /**
@@ -123,6 +125,7 @@ exports.Probe = () => {
             }
             if (this.status === 'complete' || this._campaign.status === 'send') return
             this._ref = v
+            this.dispatchChange('ref')
         }
 
         get campaign() {
@@ -142,6 +145,7 @@ exports.Probe = () => {
             }
 
             this._campaign = v
+            this.dispatchChange('campaign')
         }
 
         set task(v) {
@@ -163,6 +167,7 @@ exports.Probe = () => {
             if (regx.test(v)) throw (`your task is invalid, allowed chars: ${pat}`)
 
             this._task = v.replace(/ /gi, '_').toLowerCase()// every task must be valid with required 
+           
         }
 
         get task() {
@@ -184,6 +189,7 @@ exports.Probe = () => {
             this._dataIndex++
             if (this.status === 'open' && this._data !== null && this._dataIndex > 1) this.status = 'updated'
             this._data = v
+            this.dispatchChange('data')
         }
 
         get data() {
@@ -263,6 +269,7 @@ exports.Probe = () => {
                         this.statusStackOrder[stat].set = true
                         this.onOpenStatus(v) // emit probe when status opens
                         this.setStatusAsync = stat
+                        this.dispatchChange('status')
                         break
 
                     case 'updated':
@@ -275,6 +282,7 @@ exports.Probe = () => {
                             this._status = stat
                             this.statusStackOrder[stat].set = true
                             this.setStatusAsync = stat
+                            this.dispatchChange('status')
                             if (this.debug) log(`id:${this.id}, data updated`)
                         }
 
@@ -289,6 +297,7 @@ exports.Probe = () => {
                         this.setStatusAsync = stat
                         // setTimeout(()=>{
                         this._status = stat
+                        this.dispatchChange('status')
                         this.onComplete(v) // resolve probe when status complete
                         //  })
                        
@@ -303,6 +312,7 @@ exports.Probe = () => {
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
                         this._completeAsync.resolve({ status: this._status, id: this.id })
+                        this.dispatchChange('status')
                         break
 
                     case 'error':
@@ -311,6 +321,7 @@ exports.Probe = () => {
 
                         this.statusStackOrder[stat].set = true
                         this.setStatusAsync = stat
+                        this.dispatchChange('status')
                         this.onComplete(v) // resolve probe when status complete                     
                         break
 
@@ -369,6 +380,87 @@ exports.Probe = () => {
         }
 
         /**
+         * - can be used when `opts.onChange=true` is set
+         * - changes are observed for `[ data,status,ref,error,campaign]`
+         * @param {*} cb(data,id) callback returns updated value in real time
+         * @returns self
+         */
+        onChange(cb, watch = 'all') {
+            if (!this._onChange) {
+                if (this.debug) warn(`[onChange] to use need to set opts.onChange=true`)
+                return this
+            }
+            if (!isFunction(cb)) {
+                if (this.debug) warn(`[onChange] cb must be a function`)
+                return this
+            }
+            const availableWatch = ['all', 'data', 'status', 'ref', 'error', 'campaign']
+            if (!availableWatch.includes(watch)) {
+                if (this.debug) warn(`[onChange] no watch available for ${watch}`)
+                return this
+            }
+
+            const self = this
+
+            if (!this.onchangeDispatch) {
+                if (this.debug) warn(`[onChange] onchangeDispatch no longer active`)
+                return this
+            }
+
+            this.onchangeDispatch.initListener().subscribe(function (data, id) {
+                // NOTE data['changed'] // returned in dispatch only provided name of asset changed
+                // no point to carry data if we can access it direct
+                if (data['changed'] && watch === 'all') {
+                    cb.bind(self)(copy(self.all()), id)
+                    return
+                }
+
+                if (data['changed'] === watch && self[watch] !== undefined) {
+                    cb.bind(self)(copy(self[watch]), id)
+                    return
+                }          
+            })
+            return this
+        }
+
+        /**
+         * - works with onchangeDispatch, onChange 
+         * - emmits next value to `onchangeDispatch` listener
+         * @param {*} changedName required, provide name of Probe prop to alert dispatcher what has changed
+         * @returns self
+         */
+        dispatchChange(changedName) {
+            if (!this._onChange) {
+                return null
+            }
+            if (!this.onchangeDispatch) {
+                return null
+            }
+            this.onchangeDispatch.initListener().next({ changed: changedName })
+            return true
+        }
+        
+
+        /**
+         * initiates dispatcher to handle on change value of [data,status,ref,error,campaign]
+         * @returns dispatcher instance
+         */
+        get onchangeDispatch(){
+            if(!this._onChange){
+                if(this.debug) warn(`[onchangeDispatch] to use need to set opts.onChange=true`)
+                return null
+            }
+
+            if (this._onchangeDispatch) {
+                return this._onchangeDispatch
+            }
+
+            this._onchangeDispatch = require('../libs/dispatcher')(this.id)
+            return this._onchangeDispatch
+        }
+
+
+        /**
          * status watch, when current status changes execute send
          * @param {*} status
          */
@@ -381,8 +473,12 @@ exports.Probe = () => {
                     })
                 }
                 this._status = 'send'
-                this.sq.resolve({ probe: this.all() })       
-                
+                this.sq.resolve({ probe: this.all() })  
+
+                setTimeout(() => {
+                // in case delete listener when data complete     
+                 if(this.onchangeDispatch) this.onchangeDispatch.del()
+                })
             }
         }
 

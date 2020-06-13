@@ -2,8 +2,8 @@
 /**
  * requirejs global event handler
  */
-module.exports = function (uid, debug = null) {
-    return (new function () {
+module.exports = function (_uid, _debug = null) {
+    return (new function (uid, debug) {
         const plugin = `[dispatcher]`
         this.uid = (uid || '').toString() || new Date().getTime()
         this.debug = debug
@@ -56,9 +56,7 @@ module.exports = function (uid, debug = null) {
                     }
 
                     if (this.data) {
-                        if (typeof self.cbQueue[self.uid] === 'function') {
-                            self.cbQueue[self.uid].call(self, this.data, self.uid)
-                        }
+                        if (typeof self.cbQueue[self.uid] === 'function') self.cbQueue[self.uid].call(self, this.data, self.uid)
                     } else {
                         if (this.debug) console.log(`${plugin} no callback data`)
                     }
@@ -67,6 +65,10 @@ module.exports = function (uid, debug = null) {
 
             if (!this.dispatchInstance[this.uid]) this.dispatchInstance[this.uid] = new D()
             return this
+        }
+
+        this.isActive = () => {
+            return this.dispatchInstance[this.uid] ? true : false
         }
 
         this.del = () => {
@@ -99,5 +101,5 @@ module.exports = function (uid, debug = null) {
             if (this.dispatchInstance[this.uid]) this.dispatchInstance[this.uid].next({ type: 'cb', cb })
             return this
         }
-    }(uid, debug))
+    }(_uid, _debug))
 }

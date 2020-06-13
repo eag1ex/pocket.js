@@ -396,7 +396,7 @@ exports.PocketModule = () => {
             try {
                 opts.id = uid
                 const emitter = this.dispatcher !== null ? this._emit.bind(this) : null
-                const p = new this.Probe(opts, { emitter, completeOnNull: this.completeOnNull }, this.debug)
+                const p = new this.Probe(opts, {onChange:this._onChange, emitter, completeOnNull: this.completeOnNull }, this.debug)
                 this.pocket[uid] = p
             } catch (err) {
                 onerror(err)

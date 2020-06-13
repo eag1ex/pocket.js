@@ -13,6 +13,7 @@ module.exports = () => {
         constructor(opts = {}, debug) {
             this.debug = debug || false
             this.async = (opts || {}).async || null
+            this._onChange = (opts || {}).onChange || null // loads watch for changes Probe asset 
             this.completeOnNull = (opts || {}).completeOnNull || null // Allow Probe to complete even if data is null
             // when set enables dispatcher to communicate directly with `probe.js`
             this.dispatcher = (opts || {}).dispatcher ? require('../libs/dispatcher')() : null

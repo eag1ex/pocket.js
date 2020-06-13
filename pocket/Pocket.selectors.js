@@ -544,5 +544,22 @@ module.exports = (PocketModule) => {
             return copy(this.pocket[probeID].all())
         }
 
+        /**
+         * - changes are observed for `[data,status,ref,error,campaign]`
+         * @param watchProp specify what property to watch, defaults to `all`
+         * @param {*} probeID optional/sensitive, select new point of reference
+         * @extends Probe.onChange
+         */
+        $onChange(cb, watchProp, probeID) {
+            if (!this._onChange) {
+                if (this.debug) warn(`[$onChange] opts.onChange=true must be enabled to use this feature`)
+                return this
+            }
+            probeID = this.selectByTask(probeID, true)
+            if (!this.pocket[probeID]) return null
+            this.pocket[probeID].onChange(cb, watchProp)
+            return this
+        }
+
     }
 }

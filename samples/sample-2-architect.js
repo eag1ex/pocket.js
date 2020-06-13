@@ -133,9 +133,11 @@ let loop = (inx) => {
                 // not work > this.data
                 // console.log('what is this.data',this.data, pocket.$data(null, `::china`), this.id, d.id)
                 //this.data ='hello'
-                this.status = 'complete'
+                //this.status = 'complete'
                 //console.log('each compute/status', this)
-            })
+            }).$get(`::china`).onChange(function(data,id){
+                console.log('on change for', this.task, data)
+            }, 'status')
     }
 
     //setTimeout(() => {
