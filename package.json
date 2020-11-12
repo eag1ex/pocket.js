@@ -12,7 +12,7 @@
     "commonjs": "cross-env NODE_ENV=none ./node_modules/.bin/webpack --config webpack/webpack.config.commonjs.js --display-error-details --colors --progress",
     "dev": "cross-env NODE_ENV=development ./node_modules/.bin/webpack --config webpack/webpack.config.dev.js --display-error-details --colors --progress",
     "prod": "cross-env NODE_ENV=production ./node_modules/.bin/webpack --config webpack/webpack.config.prod.js --display-error-details --colors --progress ",
-    "test": "nyc --reporter=html --port=2222 --reporter=text mocha ./test/tests.js --colors --delay"
+    "test": "nyc --reporter=html --port=4444 --reporter=text mocha ./test/tests.js --colors --delay"
   },
   "author": "",
   "license": "ISC",

@@ -15,6 +15,8 @@ module.exports = () => {
             this.async = (opts || {}).async || null
             this._onChange = (opts || {}).onChange || null // loads watch for changes Probe asset 
             this.completeOnNull = (opts || {}).completeOnNull || null // Allow Probe to complete even if data is null
+            this.disableWarnings = (opts||{}).disableWarnings // disable some less relevant warning messages
+
             // when set enables dispatcher to communicate directly with `probe.js`
             this.dispatcher = (opts || {}).dispatcher ? require('../libs/dispatcher')() : null
             this.pocket = {} // example this.pocket[`abc::taskName`] returns Probe{} Instance

@@ -72,9 +72,11 @@ Working examples can be found at `'./samples/**`
 
 
 #### PocketModule methods:
-- **$payload( data ).d:Boolean** : top level method to initiate requested tasks, returns true when succesfull, and false on error.
+- **$payload( data, async,type ).d:Boolean** : top level method to initiate requested tasks, returns true when succesfull, and false on error.
     - `data.id:String`: payload.id that identifies this job
     - `data.tasks:Array[]`: specifies required format/data of tasks to perform. Specifications for this can be found in `./samples/**`
+    - `async`: when passing data is a defer you need to specify data type output as async:true, or set it in global options on POcket instance
+    - `type`: if out payload in in a loop for example and we do not want to overrite existing values, we can set type to type='update' (default is `new`)
 
 - **$probeStatusAsync( probeID ).d:promise** : returns last status changed via async method, the promise is reset everytime new status is updated, so it can be called many times, returns status name
     - `probeID`: must provide probeID example: `${payloadID}::${task}`
@@ -125,7 +127,9 @@ Working examples can be found at `'./samples/**`
 - **$task(probeID):string**:
 - **$error(probeID):[]**:
 - **$all(probeID):probeGetters**:
-- **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. 
+- **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. This method uses $payload inheritance with access to `type` and `async` 
+    - `cb(()=>({project:payloadData, type,async}))`: return callback must return {project:payload} as minimum requirement, when runnign in a loop or repeatitive actions, it is best to set type='update' so that concurent call to the same task wont wont be ignored, `type` is state base, so last setting is kept
+    
 - **$asset(assetName, projectID)**: can access the asset declared in `$architect`
 - **$condition(cb,id)**: declare arguments within callback without exiting Pocket block chain. The `id` you pass:  probe `::id` or `projectID`, will expose access to self of either Probe or Pocket instance. The return of callback is sensitive, if no value is passed the Pocket/self is returned. For example if accessing Probe then probe id can be returned but the chaining will refer to its instance, you may want to return pocket self instead.
 - **$exists(probeID):boolean**: check if probe exists, specify `probeID`, returns boolean.

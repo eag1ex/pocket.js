@@ -1,5 +1,5 @@
 
-const Pocket = require('./pocket/Pocket.module')()
+const Pocket = require('./pocket/Pocket.module').PocketModule()
 const DEBUG = true
 const pc = new Pocket({async:false,dispatcher:false}, DEBUG)
 const data = {
@@ -14,13 +14,26 @@ async function init(){
     if (!pc.$payload(data).d) {
         console.log(' payload not send')
     } else {
-      //  pc.$get('abc123::required').status='error'
+
+      pc.$get('abc123::grab').getStatusAsync.then(z=>{
+        console.log('getStatusAsync 1',z)
+      })
+      // prob['data']={ order: 20, value: 0 }
+    
+      // prob.getStatusAsync.then(z=>{
+      //   console.log('getStatusAsync',z)
+      // })
+
         //setTimeout(()=>{
-         pc.$update('abc123::required',{'status':'complete',compaign:'cocacola'})
+         pc.$update({'status':'complete',compaign:'cocacola'},false,'::required')
        // },500)
 
+       pc.$get('abc123::required').getStatusAsync.then(z=>{
+        console.log('getStatusAsync 1',z)
+      })
+
         setTimeout(()=>{
-          pc.$update('abc123::grab',{status:'complete'})
+          pc.$update({status:'complete'},false,'abc123::grab')
         },300)
      
         // setTimeout(()=>{
@@ -31,12 +44,12 @@ async function init(){
     }
     
     //setTimeout(()=>{
-        pc.$ready('abc123').then(z => {
+        pc.$ready('abc123').d.then(z => {
             console.log('pocketSet [abc123] ready', z)
       //  },2000)
     })
 }
-//init()
+init()
 
 
 function testProbe() {

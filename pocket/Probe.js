@@ -39,6 +39,7 @@ exports.Probe = () => {
             this._onchangeDispatch = null // loads dispatcher when `opts.onChange=true` is set
             this.emitter = opts.emitter || null
             this.completeOnNull = opts.completeOnNull || null // when true allows completion on data still at initial null state
+            this.disableWarnings = (opts||{}).disableWarnings // disable some less relevant warning messages
 
             // assign initial data if differs from default
             if (props.ref !== this._ref) this.ref = props.ref
@@ -135,7 +136,7 @@ exports.Probe = () => {
         set campaign(v) {
             if (v === undefined) return
             if (this._campaign) {
-                if (this.debug) warn(`cannot update already set campaign ${this._campaign}`)
+                if (this.debug && !this.disableWarnings) warn(`cannot update already set campaign ${this._campaign}`)
                 return
             }
             if (!v) return
@@ -151,7 +152,7 @@ exports.Probe = () => {
         set task(v) {
             if (v === undefined) return
             if (this._task) {
-                if (this.debug) warn(`cannot update already set task`)
+                if (this.debug && !this.disableWarnings) warn(`cannot update already set task`)
                 return
             }
 
@@ -182,7 +183,7 @@ exports.Probe = () => {
             const complete = this.status === 'complete' || this.status === 'send'
             if (complete) {
                 // NOTE this can also happen if you are using $transfer().$to from `PocketModule` that is a delayed
-                if (this.debug) warn(`you cannot update data once the status is complete or send`)
+                if (this.debug && !this.disableWarnings) warn(`you cannot update data once the status is complete or send`)
                 return null
             }
 
@@ -204,7 +205,7 @@ exports.Probe = () => {
          */
         update(data, merge = null) {
             if (this.status === 'complete' || this.status === 'send') {
-                if (this.debug) warn(`[Probe][update] cannot update data on complete status`)
+                if (this.debug && !this.disableWarnings) warn(`[Probe][update] cannot update data on complete status`)
                 return this
             }
             if (!isObject(data) && merge) {

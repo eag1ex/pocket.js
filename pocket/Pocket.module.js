@@ -116,7 +116,7 @@ exports.PocketModule = () => {
                 if (!this.payloadData[data.id]) this.payloadData[data.id] = { value: [], status: 'open', timestamp: new Date().getTime() }
                 const exists = this.payloadData[data.id]['value'].filter(z => z.task.indexOf(val.task) !== -1)
                 if (exists.length) {
-                    if (this.debug) warn(`the same task "${val.task}" already exists on the payload, you must choose uniq`)
+                    if (this.debug && !this.disableWarnings) warn(`the same task "${val.task}" already exists on the payload, you must choose uniq`)
                     continue
                 }
 
@@ -258,7 +258,7 @@ exports.PocketModule = () => {
             }
 
             if (!isObject(dataFrom)) {
-                if (this.debug) warn(`[$update] dataFrom must be an `)
+                if (this.debug) warn(`[$update] dataFrom must be an Object`)
                 return returnAs(false)
             }
 
@@ -396,7 +396,11 @@ exports.PocketModule = () => {
             try {
                 opts.id = uid
                 const emitter = this.dispatcher !== null ? this._emit.bind(this) : null
-                const p = new this.Probe(opts, {onChange:this._onChange, emitter, completeOnNull: this.completeOnNull }, this.debug)
+                const p = new this.Probe(opts, {
+                    disableWarnings:this.disableWarnings, // disable some less relevant warning messages
+                    onChange:this._onChange, 
+                    emitter, 
+                    completeOnNull: this.completeOnNull }, this.debug)
                 this.pocket[uid] = p
             } catch (err) {
                 onerror(err)
@@ -590,7 +594,8 @@ exports.PocketModule = () => {
                 return returnAs(p)
 
             } catch (error) {
-                onerror(error)
+                if(!this.disableWarnings) onerror(error)
+                
             }
         }
     }
