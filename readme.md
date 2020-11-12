@@ -127,7 +127,7 @@ Working examples can be found at `'./samples/**`
 - **$task(probeID):string**:
 - **$error(probeID):[]**:
 - **$all(probeID):probeGetters**:
-- **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. This method uses $payload inheritance with access to `type` and `async` 
+- **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. This method uses $payload inheritance with access to `type` and `async`. Things to remember consecutive call to $architect thru  .$condition() method, can only update existing items.
     - `cb(()=>({project:payloadData, type,async}))`: return callback must return {project:payload} as minimum requirement, when runnign in a loop or repeatitive actions, it is best to set type='update' so that concurent call to the same task wont wont be ignored, `type` is state base, so last setting is kept
     
 - **$asset(assetName, projectID)**: can access the asset declared in `$architect`

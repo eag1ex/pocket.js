@@ -15,7 +15,11 @@ const Pocket = require('../index').Pocket
 
 
 const DEBUG = true
-const pocket = new Pocket({ async: false, dispatcher: true, completeOnNull:true,deleteWithDelay:0 }, DEBUG)
+const pocket = new Pocket({ 
+    onChange:true,
+    async: false, 
+    dispatcher: true, 
+    completeOnNull:true,deleteWithDelay:0 }, DEBUG)
 
 const data1 = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
@@ -23,14 +27,14 @@ const data1 = {
     tasks: [
         {
             task: 'china',
-            //data: 'a',
+            data: 'abc',
             campaign: 'Belt_and_Road_Initiative',
           //  status:'updated'
             //error:'first err'
         },
         {
             task: 'usa',
-            // data: 'a',
+             data: 'abc',
             campaign: 'Belt_and_Road_Initiative',
           //  status:'updated'
             //error:'first err'
@@ -43,7 +47,7 @@ const data2 = {
     tasks: [
         {
             task: 'china',
-          //  data: 'a',
+             data: 'efg',
             campaign: 'Belt_and_Road_Initiative',
             //error:'first err'
         }
@@ -109,7 +113,7 @@ let loop = (inx) => {
                         //error:'first err'
                     }
                 ]
-                console.log('data/tasks', d.tasks)
+               // console.log('data/tasks', d.tasks)
                
                 //console.log('what _lastProbeID', this)
                this.$architect(() => ({ project: d }))
@@ -123,21 +127,27 @@ let loop = (inx) => {
                 //console.log('$filter is', this)
                 return this.campaign ==='Belt_and_Road_Initiative'
             })
-            .$filter(function(){
-                //console.log('$filter is', this)
-                return this.task ==='china'
-            })
+            // .$filter(function(){
+            //     //console.log('$filter is', this)
+            //     return this.task ==='china'
+            // })
             .$compute(function(){
-                console.log('what is this', this.data, this.task)
+                console.log('what is this', this.id, this.task)
+               // setTimeout(()=>{
+                    this.data = 1
+               // },100)
+               // 
+                // this.status = 'complete'
                 // works > pocket.$data(null, `::china`)
                 // not work > this.data
                 // console.log('what is this.data',this.data, pocket.$data(null, `::china`), this.id, d.id)
                 //this.data ='hello'
                 //this.status = 'complete'
                 //console.log('each compute/status', this)
-            }).$get(`::china`).onChange(function(data,id){
-                console.log('on change for', this.task, data)
-            }, 'status')
+            })
+            .$get(`pocket-2::china`).onChange(function(data,id){
+                console.log('on change for', data)
+            }, 'all')
     }
 
     //setTimeout(() => {

@@ -42,13 +42,13 @@ const data1 = {
           //  status:'updated'
             //error:'first err'
         },
-        {
-            task: 'poland',
-             data: '000',
-            //status:'complete'
-            campaign: 'Belt_and_Road_Initiative',
-            //error:'first err'
-        }
+        // {
+        //     task: 'poland',
+        //      data: '000',
+        //     //status:'complete'
+        //     campaign: 'Belt_and_Road_Initiative',
+        //     //error:'first err'
+        // }
      ]
 }
 const data2 = {
@@ -68,14 +68,8 @@ const data2 = {
             campaign: 'Silk_Road',
           //  status:'updated'
             //error:'first err'
-        },
-        {
-            task: 'poland',
-            data: '11',
-           // status:'open',
-            campaign: 'Belt_and_Road_Initiative',
-            //error:'first err'
         }
+   
     ]
 }
 
@@ -144,11 +138,12 @@ let loop = (inx) => {
         //         ]
         //     return { project: d }
         // })
+        // NOTE consecutive call to architect thru $condition() can only update existing items 
         .$condition(function () {
         
             if (d && inx==1) {
-                console.log('calling poland update')
-                //d.type = 'update'
+                //console.log('calling poland update')
+                d.type = 'update'
               //  d.id ='pocket-1'
                 d.tasks = [
                     // {
@@ -195,9 +190,9 @@ let loop = (inx) => {
                 //console.log('each compute/status', this)
             })
             
-            .$get(`::poland`).onChange(function(stat,id){
-                console.log('on change for', this.task, stat)
-            }, 'status')
+            // .$get(`::poland`).onChange(function(stat,id){
+            //     console.log('on change for', this.task, stat)
+            // }, 'status')
      }
 
     //setTimeout(() => {
