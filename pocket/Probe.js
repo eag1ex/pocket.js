@@ -39,7 +39,7 @@ exports.Probe = () => {
             this._onchangeDispatch = null // loads dispatcher when `opts.onChange=true` is set
             this.emitter = opts.emitter || null
             this.completeOnNull = opts.completeOnNull || null // when true allows completion on data still at initial null state
-            this.disableWarnings = (opts||{}).disableWarnings // disable some less relevant warning messages
+            this.disableWarnings = (opts || {}).disableWarnings // disable some less relevant warning messages
 
             // assign initial data if differs from default
             if (props.ref !== this._ref) this.ref = props.ref
@@ -418,7 +418,7 @@ exports.Probe = () => {
 
                 if (data['changed'] === watch && self[watch] !== undefined) {
                     cb.bind(self)(copy(self[watch]), id)
-                    return
+                    
                 }          
             })
             return this
@@ -440,15 +440,14 @@ exports.Probe = () => {
             this.onchangeDispatch.initListener().next({ changed: changedName })
             return true
         }
-        
 
         /**
          * initiates dispatcher to handle on change value of [data,status,ref,error,campaign]
          * @returns dispatcher instance
          */
-        get onchangeDispatch(){
-            if(!this._onChange){
-                if(this.debug) warn(`[onchangeDispatch] to use need to set opts.onChange=true`)
+        get onchangeDispatch() {
+            if (!this._onChange) {
+                if (this.debug) warn(`[onchangeDispatch] to use need to set opts.onChange=true`)
                 return null
             }
 
@@ -459,7 +458,6 @@ exports.Probe = () => {
             this._onchangeDispatch = require('../libs/dispatcher')(this.id)
             return this._onchangeDispatch
         }
-
 
         /**
          * status watch, when current status changes execute send
@@ -478,7 +476,7 @@ exports.Probe = () => {
 
                 setTimeout(() => {
                 // in case delete listener when data complete     
-                 if(this.onchangeDispatch) this.onchangeDispatch.del()
+                    if (this.onchangeDispatch) this.onchangeDispatch.del()
                 })
             }
         }

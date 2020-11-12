@@ -68,7 +68,7 @@ module.exports = function (_uid, _debug = null) {
         }
 
         this.isActive = () => {
-            return this.dispatchInstance[this.uid] ? true : false
+            return !!this.dispatchInstance[this.uid]
         }
 
         this.del = () => {

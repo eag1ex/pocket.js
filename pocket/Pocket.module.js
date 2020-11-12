@@ -397,8 +397,8 @@ exports.PocketModule = () => {
                 opts.id = uid
                 const emitter = this.dispatcher !== null ? this._emit.bind(this) : null
                 const p = new this.Probe(opts, {
-                    disableWarnings:this.disableWarnings, // disable some less relevant warning messages
-                    onChange:this._onChange, 
+                    disableWarnings: this.disableWarnings, // disable some less relevant warning messages
+                    onChange: this._onChange, 
                     emitter, 
                     completeOnNull: this.completeOnNull }, this.debug)
                 this.pocket[uid] = p
@@ -594,7 +594,7 @@ exports.PocketModule = () => {
                 return returnAs(p)
 
             } catch (error) {
-                if(!this.disableWarnings) onerror(error)
+                if (!this.disableWarnings) onerror(error)
                 
             }
         }
