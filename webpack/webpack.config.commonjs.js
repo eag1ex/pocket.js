@@ -18,7 +18,7 @@ module.exports = merge(common, {
         // namedModules: true,
         removeEmptyChunks: false,
         mergeDuplicateChunks: false,
-       // minimize: true,
+        minimize: true,
         minimizer: [
             (compiler) => {
                 new TerserPlugin({

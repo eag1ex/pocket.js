@@ -11,6 +11,7 @@ process.on('uncaughtException', function (err) {
 
 const dispatcher = require('../libs/dispatcher')()
 const { log, warn } = require('../index').utils
+// const Pocket = require('../build/js/pocket_commonjs').PocketModule()
 const Pocket = require('../index').Pocket
 
 
