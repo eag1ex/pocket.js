@@ -545,7 +545,12 @@ exports.PocketModule = () => {
 
                 const returnAs = (val) => {
                     this.d = val
-                    if (this.d && !allowsMultiple) this.d.catch(warn)
+                    if (this.d && !allowsMultiple) {
+                        
+                        this.d.catch((err) => {
+                            if (!this.disableWarnings) warn(err)
+                        })
+                    }
                     return this
                 }
 

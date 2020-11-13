@@ -12,14 +12,16 @@ process.on('uncaughtException', function (err) {
 const dispatcher = require('../libs/dispatcher')()
 const { log, warn } = require('../index').utils
 const Pocket = require('../index').Pocket
-
+// const Pocket = require('../build/js/pocket_commonjs').PocketModule()
 
 const DEBUG = true
 const pocket = new Pocket({ 
     onChange:true,
     async: false, 
     dispatcher: true, 
-    completeOnNull:true,deleteWithDelay:0 }, DEBUG)
+    completeOnNull:true,
+    disableWarnings:true, //  disable some less relevant warning messages
+    deleteWithDelay:0 }, DEBUG)
 
 const data1 = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
@@ -53,14 +55,6 @@ const data2 = {
         }
     ]
 }
-
-pocket.$ready(`pocket-1`, true).d.then(z => {
-    console.log('pocket-1 ready', z)
-})
-pocket.$ready(`pocket-2`, true).d.then(z => {
-    console.log('pocket-2 ready', z)
-})
-
 
 /**
  * the problem exists when we call multi declaration and data is no updated within the second $architect
@@ -103,7 +97,7 @@ let loop = (inx) => {
         // })
         .$condition(function () {
             if (d) {
-                d.type = 'update'
+                //d.type = 'update'
                 d.tasks = [
                     {
                         task: 'china',
@@ -127,15 +121,16 @@ let loop = (inx) => {
                 //console.log('$filter is', this)
                 return this.campaign ==='Belt_and_Road_Initiative'
             })
-            .$filter(function(){
-                //console.log('$filter is', this)
-                return this.task ==='china'
-            })
+            // .$filter(function(){
+            //     //console.log('$filter is', this)
+            //     return this.task ==='china'
+            // })
+
             .$compute(function(){
                 console.log('what is this', this.id, this.task)
             //    setTimeout(()=>{
-            //         this.data = 1
-            //         this.status = 'complete'
+                this.data = 1
+              this.status = 'complete'
             //    },3000)
                // 
                 // this.status = 'complete'
@@ -146,9 +141,7 @@ let loop = (inx) => {
                 //this.status = 'complete'
                 //console.log('each compute/status', this)
             })
-            .$get(`pocket-2::china`).onChange(function(data,id){
-                console.log('on change for', data)
-            }, 'all')
+          
     }
 
     //setTimeout(() => {
@@ -157,10 +150,22 @@ let loop = (inx) => {
         loop(inx)     
    // }, 500)
    
+    pocket.$ready(`pocket-1`, true).d.then(z => {
+        console.log('pocket-1 ready', z)
+    })
+    pocket.$ready(`pocket-2`, true).d.then(z => {
+        console.log('pocket-2 ready', z)
+    })
+
 }
 loop(0)
 
-// .$compute(function(){
-  
-// })
+setTimeout(()=>{
+    // pocket.$get(`pocket-2::china`).onChange(function(data,id){
+    //     console.log('on change for', data)
+    // }, 'all')
+},200)
 
+setTimeout(()=>{
+   // pocket.$update({ data: 'hello' }, null, `::china`)
+},2000)

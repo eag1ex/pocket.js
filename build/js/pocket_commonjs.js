@@ -122,7 +122,7 @@ return a&&g(t)?n(t.then((function(t){return i.payload(t,!1,r)}),(function(t){ret
         * @param {*} payloadID ,required
         * @param allowsMultiple optional, when set to true will allow multiple calls to resolved data
         * @extends ready
-        */},{key:"$ready",value:function(t){var e=this,r=arguments.length>1&&void 0!==arguments[1]&&arguments[1];try{var i=function(t){return e.d=t,e.d&&!r&&e.d.catch(u),e},n=this.lastProjectID(t,!1,null);// sofl validation for non existant `payloadID` if called before declaration of a project
+        */},{key:"$ready",value:function(t){var e=this,r=arguments.length>1&&void 0!==arguments[1]&&arguments[1];try{var i=function(t){return e.d=t,e.d&&!r&&e.d.catch((function(t){e.disableWarnings||u(t)})),e},n=this.lastProjectID(t,!1,null);// sofl validation for non existant `payloadID` if called before declaration of a project
 // grab last assigned id incase provided none
 // in case it was called the second time, when already resolved!
 if(!t&&n&&(t=n),"complete"===this.projectsCache[t]&&!r)return i(Promise.reject("[$ready] project: ".concat(t," already complete")));if(void 0!==this._ready_method_set[t]&&!r){if(!0===this._ready_method_set[t])return i(Promise.reject("[$ready] project: ".concat(t," already complete, cannot recall same $ready")));if(!1===this._ready_method_set[t])return i(Promise.reject("[$ready] project: ".concat(t," you already declared $ready somewhere else, this call is ignored")))}if(!n)throw"payloadID must be set";// we wrap it if on ready project so it allows declaring `${$ready()}` even before $project was created, cool ha!
