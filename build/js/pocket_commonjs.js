@@ -869,9 +869,7 @@ t=this.selectByTask(t,!0);let e=this.lastProbeID(t);return this.probeStatusAsync
           * @extends _get
          */$get(t,e){
 // allow use of short ref names example: `::cocalola`
-t=this.selectByTask(t,!0);let r,i=this.lastProbeID(t);try{if(r=this._get(i,e),!r)throw"ups"}catch(t){
-// noop
-r={onChange:()=>{}}}return r}
+t=this.selectByTask(t,!0);let r=this.lastProbeID(t);return this._get(r,e)}
 /**
          * - return array of Probes matched by ref
          * @param {*} probeRef, required

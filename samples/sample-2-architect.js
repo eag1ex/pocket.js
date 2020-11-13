@@ -108,7 +108,7 @@ let loop = (inx) => {
                     {
                         task: 'china',
                         data: 'abc',
-                        //status:'complete'
+                      //  status:'complete'
                         //campaign: 'Belt_and_Road_Initiative',
                         //error:'first err'
                     }
@@ -127,15 +127,16 @@ let loop = (inx) => {
                 //console.log('$filter is', this)
                 return this.campaign ==='Belt_and_Road_Initiative'
             })
-            // .$filter(function(){
-            //     //console.log('$filter is', this)
-            //     return this.task ==='china'
-            // })
+            .$filter(function(){
+                //console.log('$filter is', this)
+                return this.task ==='china'
+            })
             .$compute(function(){
                 console.log('what is this', this.id, this.task)
-               // setTimeout(()=>{
-                    this.data = 1
-               // },100)
+            //    setTimeout(()=>{
+            //         this.data = 1
+            //         this.status = 'complete'
+            //    },3000)
                // 
                 // this.status = 'complete'
                 // works > pocket.$data(null, `::china`)

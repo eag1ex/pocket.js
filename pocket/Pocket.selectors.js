@@ -137,17 +137,7 @@ module.exports = (PocketModule) => {
             // allow use of short ref names example: `::cocalola`
             probeID = this.selectByTask(probeID, true)
             let lastProbeID = this.lastProbeID(probeID)
-            let getBy
-            try{
-                getBy =  this._get(lastProbeID, self)
-                if(!getBy) throw('ups')
-            }catch(err){
-                // noop
-                getBy = {
-                    onChange:()=>{}
-                }
-            }
-            return getBy
+            return this._get(lastProbeID, self)
         }
 
         /**
