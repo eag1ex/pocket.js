@@ -5,7 +5,7 @@
  */
 exports.Probe = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { isString, isArray, warn, log, isNumber, onerror, last, copy, isObject, isFunction } = require('./utils')
+    const { isString, isArray, warn, log, isNumber, onerror, last, copy, isObject, isFunction } = require('x-utils-es/umd')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     return class Probe {
         /**
@@ -60,7 +60,7 @@ exports.Probe = () => {
 
         set id(v) {
             if (this._id) {
-                if (this.debug) warn(`cannot update already set id: ${this._id}`)
+                if (this.debug) warn('[pocket]', `cannot update already set id: ${this._id}`)
                 return
             }
             if (!v) throw ('id is required')
@@ -121,7 +121,7 @@ exports.Probe = () => {
         set ref(v) {
             if (!v) return
             if (!isString(v)) {
-                warn(`[ref] must be a string`)
+                warn('[pocket]', `[ref] must be a string`)
                 return
             }
             if (this.status === 'complete' || this._campaign.status === 'send') return
@@ -136,12 +136,12 @@ exports.Probe = () => {
         set campaign(v) {
             if (v === undefined) return
             if (this._campaign) {
-                if (this.debug && !this.disableWarnings) warn(`cannot update already set campaign ${this._campaign}`)
+                if (this.debug && !this.disableWarnings) warn('[pocket]', `cannot update already set campaign ${this._campaign}`)
                 return
             }
             if (!v) return
             if (!isString(v)) {
-                if (this.debug) warn(`campaign must be a string`, v)
+                if (this.debug) warn('[pocket]', `campaign must be a string`, v)
                 return
             }
 
@@ -152,13 +152,13 @@ exports.Probe = () => {
         set task(v) {
             if (v === undefined) return
             if (this._task) {
-                if (this.debug && !this.disableWarnings) warn(`cannot update already set task`)
+                if (this.debug && !this.disableWarnings) warn('[pocket]', `cannot update already set task`)
                 return
             }
 
             if (!v) return
             if (!isString(v)) {
-                if (this.debug) warn(`task must be a string`)
+                if (this.debug) warn('[pocket]', `task must be a string`)
                 return
             }
             if (v.indexOf("::") !== -1) throw ('task seperator :: is restricted')
@@ -183,7 +183,7 @@ exports.Probe = () => {
             const complete = this.status === 'complete' || this.status === 'send'
             if (complete) {
                 // NOTE this can also happen if you are using $transfer().$to from `PocketModule` that is a delayed
-                if (this.debug && !this.disableWarnings) warn(`you cannot update data once the status is complete or send`)
+                if (this.debug && !this.disableWarnings) warn('[pocket]', `you cannot update data once the status is complete or send`)
                 return null
             }
 
@@ -209,7 +209,7 @@ exports.Probe = () => {
                 return this
             }
             if (!isObject(data) && merge) {
-                if (this.debug) warn(`[Probe][update] cannot update none object 'data' with option 'merge=true' set`)
+                if (this.debug) warn('[pocket]', `[Probe][update] cannot update none object 'data' with option 'merge=true' set`)
                 return this
             }
             if (isObject(data) && merge) this.data = Object.assign({}, this.data, data)
@@ -263,7 +263,7 @@ exports.Probe = () => {
                 switch (stat) {
                     case 'open':
                         if (this._status === 'updated') {
-                            if (this.debug) warn(`cannot set status back to open once set to updated`)
+                            if (this.debug) warn('[pocket]', `cannot set status back to open once set to updated`)
                             break
                         }
                         this._status = stat
@@ -275,7 +275,7 @@ exports.Probe = () => {
 
                     case 'updated':
                         if (this._status === 'complete') {
-                            if (this.debug) warn(`cannot update status to 'updated' then previously set to 'complete'`)
+                            if (this.debug) warn('[pocket]', `cannot update status to 'updated' then previously set to 'complete'`)
                             break
                         }
 
@@ -291,7 +291,7 @@ exports.Probe = () => {
 
                     case 'complete':
                         if (this.data === null && this.completeOnNull !== true) {
-                            if (this.debug) warn(`[status] cannot complete status because data is null, to complete you set data prop to false`)
+                            if (this.debug) warn('[pocket]', `[status] cannot complete status because data is null, to complete you set data prop to false`)
                             break
                         }
                         this.statusStackOrder[stat].set = true
@@ -306,7 +306,7 @@ exports.Probe = () => {
 
                     case 'send':
                         if (this._status !== 'complete') {
-                            if (this.debug) warn(`cannot update status to 'send' then previously not set to 'complete'`)
+                            if (this.debug) warn('[pocket]', `cannot update status to 'send' then previously not set to 'complete'`)
                             break
                         }
                         this._status = stat
@@ -327,7 +327,7 @@ exports.Probe = () => {
                         break
 
                     default:
-                        if (this.debug) warn(`id:${this.id},  you set invalid status: ${stat}, nothing changed`)
+                        if (this.debug) warn('[pocket]', `id:${this.id},  you set invalid status: ${stat}, nothing changed`)
                 }
             })(v)
         }
@@ -388,7 +388,7 @@ exports.Probe = () => {
          */
         onChange(cb, watch = 'all') {
             if (!this._onChange) {
-                if (this.debug) warn(`[onChange] to use need to set opts.onChange=true`)
+                if (this.debug) warn('[pocket]', `[onChange] to use need to set opts.onChange=true`)
                 return this
             }
             if (!isFunction(cb)) {
@@ -397,14 +397,14 @@ exports.Probe = () => {
             }
             const availableWatch = ['all', 'data', 'status', 'ref', 'error', 'campaign']
             if (!availableWatch.includes(watch)) {
-                if (this.debug) warn(`[onChange] no watch available for ${watch}`)
+                if (this.debug) warn('[pocket]', `[onChange] no watch available for ${watch}`)
                 return this
             }
 
             const self = this
 
             if (!this.onchangeDispatch) {
-                if (this.debug) warn(`[onChange] onchangeDispatch no longer active`)
+                if (this.debug) warn('[pocket]', `[onChange] onchangeDispatch no longer active`)
                 return this
             }
 
@@ -447,7 +447,7 @@ exports.Probe = () => {
          */
         get onchangeDispatch() {
             if (!this._onChange) {
-                if (this.debug) warn(`[onchangeDispatch] to use need to set opts.onChange=true`)
+                if (this.debug) warn('[pocket]', `[onchangeDispatch] to use need to set opts.onChange=true`)
                 return null
             }
 

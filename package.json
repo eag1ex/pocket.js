@@ -1,10 +1,10 @@
 {
   "name": "pocket.js",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "data pocket redistribution",
   "main": "index.js",
   "types": "./types/index.d.ts",
-  "scripts": { 
+  "scripts": {
     "example": "node ./examples.js",
     "mocha": "mocha ./test/tests.js --colors --delay",
     "lint": "./node_modules/.bin/eslint  --ext .js pocket libs",
@@ -17,9 +17,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bash-color": "0.0.4",
     "simple-q": "git+ssh://git@eaglex_bitbucket:eag1ex/simple-q.git",
     "util": "^0.12.3",
-    "bash-color": "0.0.4"
+    "x-utils-es": "^1.5.5"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.1.0",

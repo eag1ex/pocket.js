@@ -1,6 +1,7 @@
 exports.PocketModule = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
-    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID, isString } = require('./utils')
+
+    const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID, isString } = require('x-utils-es/umd')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
     const PocketLibs = require('./Pocket.libs')()
     const newProbe = require('./Probe').Probe
@@ -18,16 +19,16 @@ exports.PocketModule = () => {
 
                     if (status === 'error') {
                         // NOTE dispatch data out
-                        if (this.debug) log(`[dispatcher] probe id:${probe.id} error`)
+                        if (this.debug) log('[pocket]', `[dispatcher] probe id:${probe.id} error`)
                     }
 
                     if (status === 'open') {
-                        if (this.debug) log(`[dispatcher] probe id:${probe.id} created`)
+                        if (this.debug) log('[pocket]'`[dispatcher] probe id:${probe.id} created`)
                     }
 
                     if (status === 'complete') {
                         // NOTE dispatch data out
-                        if (this.debug) log(`[dispatcher] probe id:${probe.id} completed`)
+                        if (this.debug) log('[pocket]', `[dispatcher] probe id:${probe.id} completed`)
                     }
                 })
             }
@@ -51,18 +52,18 @@ exports.PocketModule = () => {
             const keys = Object.keys(data)
             // must match all keys
             if (keys.every(el => ['id', 'tasks'].indexOf(el) === -1)) {
-                if (this.debug) onerror(`[$payload] id and tasks are required`)
+                if (this.debug) onerror('[pocket]', `[$payload] id and tasks are required`)
                 return false
             }
             if (!isArray(data['tasks'])) {
-                if (this.debug) onerror(`[$payload] data.tasks must be an array`)
+                if (this.debug) onerror('[pocket]', `[$payload] data.tasks must be an array`)
                 return false
             }
 
             data.id = this.validProjectID(data.id)
 
             if (!data.id) {
-                if (this.debug) onerror(`[$payload] data.id invalid`)
+                if (this.debug) onerror('[pocket]', `[$payload] data.id invalid`)
                 return false
             }
 
@@ -80,12 +81,12 @@ exports.PocketModule = () => {
             // NOTE validate our pocket values before generating each `new Probe()`
             for (let val of data['tasks'].values()) {
                 if (!val['task']) {
-                    if (this.debug) warn('[$payload] task must be set for your tasks')
+                    if (this.debug) warn('[pocket]', '[$payload] task must be set for your tasks')
                     continue
                 }
                 // validate task 
                 if (!this.idRegexValid(val['task']) || val['task'].indexOf('::') !== -1) {
-                    if (this.debug) warn('[$payload] invalid taskName, failed idRegexValid validation')
+                    if (this.debug) warn('[pocket]', '[$payload] invalid taskName, failed idRegexValid validation')
                     continue
                 }
                 
@@ -116,7 +117,7 @@ exports.PocketModule = () => {
                 if (!this.payloadData[data.id]) this.payloadData[data.id] = { value: [], status: 'open', timestamp: new Date().getTime() }
                 const exists = this.payloadData[data.id]['value'].filter(z => z.task.indexOf(val.task) !== -1)
                 if (exists.length) {
-                    if (this.debug && !this.disableWarnings) warn(`the same task "${val.task}" already exists on the payload, you must choose uniq`)
+                    if (this.debug && !this.disableWarnings) warn('[pocket]', `the same task "${val.task}" already exists on the payload, you must choose uniq`)
                     continue
                 }
 
@@ -253,17 +254,17 @@ exports.PocketModule = () => {
 
             let id = this.lastProbeID(probeID)
             if (!id) {
-                if (this.debug) onerror(`[$update] must specify id`)
+                if (this.debug) onerror('[pocket]', `[$update] must specify id`)
                 return returnAs(false)
             }
 
             if (!isObject(dataFrom)) {
-                if (this.debug) warn(`[$update] dataFrom must be an Object`)
+                if (this.debug) warn('[pocket]', `[$update] dataFrom must be an Object`)
                 return returnAs(false)
             }
 
             if (!this.pocket[id]) {
-                if (this.debug) onerror(`[$update] this.pocket with id:${id} not found`)
+                if (this.debug) onerror('[pocket]', `[$update] this.pocket with id:${id} not found`)
                 return returnAs(false)
             }
 
@@ -289,7 +290,7 @@ exports.PocketModule = () => {
                     updated = true
                     continue
                 } else {
-                    if (this.debug) warn(`[$update] not a valid prop/value: { ${key}:${this.pocket[id][key]} }`)
+                    if (this.debug) warn('[pocket]', `[$update] not a valid prop/value: { ${key}:${this.pocket[id][key]} }`)
                 }
             }
             // when setting new data, using `$set()` we should clear any cached Probes and realated data
@@ -315,7 +316,7 @@ exports.PocketModule = () => {
 
             if (!objectSize(this.pocket)) {
                 const msg = `[setDefer] probe is empty, so nothing set, id:${id}`
-                if (this.debug) onerror(msg)
+                if (this.debug) onerror('[pocket]', msg)
                 this._ready[id].reject(msg)
                 return null
             }
@@ -323,7 +324,7 @@ exports.PocketModule = () => {
             const pocketSet = Object.values(this.pocket).filter(z => z.id.indexOf(id) !== -1)
             if (!pocketSet.length) {
                 const msg = `[setDefer] no pocketSet found for id:${id} `
-                if (this.debug) onerror(msg)
+                if (this.debug) onerror('[pocket]', msg)
                 this._ready[id].reject(msg)
                 return null
             }
@@ -348,12 +349,12 @@ exports.PocketModule = () => {
                     this._ready[id].resolve(output)
                 }, err => {
                     // should unlikely happen since we dont have any rejects set
-                    onerror(`[setDefer] Promise.all`, err)
+                    onerror('[pocket]', `[setDefer] Promise.all`, err)
                 })
 
                 return true
             } catch (err) {
-                onerror(`[setDefer]`, err)
+                onerror('[pocket]', `[setDefer]`, err)
             }
 
             return false
@@ -372,7 +373,7 @@ exports.PocketModule = () => {
                 for (let value of el.value.values()) {
                     const pl = { id: key, ...value }
                     const pocketSet = this.setProbe(pl)
-                    if (!pocketSet) onerror(`probe for id:${key} already exists`)
+                    if (!pocketSet) onerror('[pocket]', `probe for id:${key} already exists`)
                 }
             }
             return this
@@ -390,7 +391,7 @@ exports.PocketModule = () => {
 
             const uid = `${opts.id}::${opts.task}`
             if (this.pocket[uid]) {
-                if (this.debug) log(`[setProbe] probe: ${uid} already set`)
+                if (this.debug) log('[pocket]', `[setProbe] probe: ${uid} already set`)
                 return null
             }
             try {
@@ -403,7 +404,7 @@ exports.PocketModule = () => {
                     completeOnNull: this.completeOnNull }, this.debug)
                 this.pocket[uid] = p
             } catch (err) {
-                onerror(err)
+                onerror('[pocket]', err)
                 return null
             }
             return this.pocket[uid]
@@ -436,7 +437,7 @@ exports.PocketModule = () => {
                 this.dispatcher.initListener().next(obj)
                 return true
             } catch (err) {
-                onerror(`[_emit] dispatcher did not emit`)
+                onerror('[pocket]', `[_emit] dispatcher did not emit`)
                 return null
             }
         }
@@ -515,7 +516,7 @@ exports.PocketModule = () => {
             if (asAsync && isPromise(data)) return returnAs(data.then(z => this.payload(z, false, type), err => err))
             if (!asAsync && !isPromise(data)) return returnAs(this.payload(data, false, type))
             else {
-                if (this.debug) onerror(`[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
+                if (this.debug) onerror('[pocket]', `[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
                 if (asAsync) return returnAs(Promise.reject())
                 else return returnAs(false)
             }
@@ -548,7 +549,7 @@ exports.PocketModule = () => {
                     if (this.d && !allowsMultiple) {
                         
                         this.d.catch((err) => {
-                            if (!this.disableWarnings) warn(err)
+                            if (!this.disableWarnings) warn('[pocket]', err)
                         })
                     }
                     return this
@@ -599,7 +600,7 @@ exports.PocketModule = () => {
                 return returnAs(p)
 
             } catch (error) {
-                if (!this.disableWarnings) onerror(error)
+                if (!this.disableWarnings) onerror('[pocket]', error)
                 
             }
         }

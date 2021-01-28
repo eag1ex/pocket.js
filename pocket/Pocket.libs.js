@@ -3,7 +3,7 @@
  * - Top of the stack class of `PocketModule`, all `opt` initial `properties` are set here
  */
 module.exports = () => {
-    const { objectSize, warn, onerror, validID, copy, log, isString } = require('./utils')
+    const { objectSize, warn, onerror, validID, copy, log, isString } = require('x-utils-es/umd')
     return class PocketLibs {
         /**
          * @param {*} opts.async, when set, allow $payload(`data`) to be async object
@@ -109,7 +109,7 @@ module.exports = () => {
                     if (fromProbeID.indexOf(projectID) !== -1) {
                         this._transferCached.splice(i, 1)
                         cleared = true
-                        if (this.debug) log(`[clearStoreTransfers] transferCached for probeID: ${fromProbeID} has been removed`)
+                        if (this.debug) log('[pocket]', `[clearStoreTransfers] transferCached for probeID: ${fromProbeID} has been removed`)
                     }
                 })
             }
@@ -167,12 +167,12 @@ module.exports = () => {
             taskOrProbeID = !isString(taskOrProbeID) ? '' : taskOrProbeID
             if (!this.idRegexValid(taskOrProbeID) && taskOrProbeID) return null
             if (taskOrProbeID.indexOf(':') > 0 && !this.pocket[taskOrProbeID]) {
-                if (this.debug) warn(`[selectByTask] when using '::' prefix selector, it should come at 0 index`)
+                if (this.debug) warn('[pocket]', `[selectByTask] when using '::' prefix selector, it should come at 0 index`)
                 return null
             }
 
             if (taskOrProbeID.split(":").length > 3 || taskOrProbeID.split(":").length === 2) {
-                if (this.debug) warn(`[selectByTask] wrong taskName :${taskOrProbeID}, allowed prefix is '::taskName'`)
+                if (this.debug) warn('[pocket]', `[selectByTask] wrong taskName :${taskOrProbeID}, allowed prefix is '::taskName'`)
                 return null
             }
 
@@ -195,7 +195,7 @@ module.exports = () => {
 
             const newProbeID = dynamicProbeID(taskOrProbeID)
             if (!newProbeID) {
-                if (this.debug) warn(`[selectByTask] newProbeID was not found from taskOrProbeID: ${taskOrProbeID}`)
+                if (this.debug) warn('[pocket]', `[selectByTask] newProbeID was not found from taskOrProbeID: ${taskOrProbeID}`)
             } else if (updateLastProbeID) this.lastProbeID(newProbeID)
             return newProbeID
         }
@@ -255,7 +255,7 @@ module.exports = () => {
             if (!this.idRegexValid(probeID)) return
             if (probeID.indexOf(`::`) === -1) return null
             // if (!this.pocket[probeID]) {
-            //     if (this.debug && debug === null) warn(`[validProbe] did not find probe with probeID ${probeID}`)
+            //     if (this.debug && debug === null) warn('[pocket]',`[validProbe] did not find probe with probeID ${probeID}`)
             //     return null
             // }
             return probeID
@@ -296,7 +296,7 @@ module.exports = () => {
                 if (type === 'data()') this._$cached_data[probeID] = selectedData
                 return self ? this : selectedData
             } catch (err) {
-                if (this.debug) warn(`[$data] no dataProp found on probeID: ${probeID}`)
+                if (this.debug) warn('[pocket]', `[$data] no dataProp found on probeID: ${probeID}`)
                 if (type === 'data()') this._$cached_data[probeID] = selectedData
                 return self ? this : selectedData
             }

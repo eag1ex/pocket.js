@@ -5,8 +5,7 @@
  * - allow selecttion to refference by, example:  `taskName`, `::taskName` and `${projectID}::taskName`, thanks to `selectByTask()` method
  */
 module.exports = (PocketModule) => {
-    const { copy, warn, isArray, onerror, objectSize, isString, uniq, isFunction } = require('./utils')
-
+    const { copy, warn, isArray, onerror, objectSize, isString, uniq, isFunction } = require('x-utils-es/umd')
     return class PocketSelectors extends PocketModule {
 
         constructor(opts, debug) {
@@ -71,7 +70,7 @@ module.exports = (PocketModule) => {
          */
         $condition(cb, id) {
             if (!isFunction(cb)) {
-                if (this.debug) warn(`[$condition] must provide callback`)
+                if (this.debug) warn('[pocket]', `[$condition] must provide callback`)
                 return this
             }
             id = !isString(id) ? '' : id
@@ -82,13 +81,13 @@ module.exports = (PocketModule) => {
                 id = this.lastProbeID(id)
                 selfType = `ProbeSelf`
                 if (!id) {
-                    if (this.debug) warn(`[$condition] probeID not found`)
+                    if (this.debug) warn('[pocket]', `[$condition] probeID not found`)
                     return this
                 }
                 // also updates last selector reference
             } else if (this.lastProjectID(id)) selfType = 'PocketSelf' // if specified id is `projectID`
             else {
-                if (this.debug) warn(`[$condition] projectID not found`)
+                if (this.debug) warn('[pocket]', `[$condition] projectID not found`)
                 return this 
             }
 
@@ -96,7 +95,7 @@ module.exports = (PocketModule) => {
             if (selfType === 'ProbeSelf') self = this.$get(id)
 
             if (!self) {
-                if (this.debug) warn(`[$condition] no valid self value`)
+                if (this.debug) warn('[pocket]', `[$condition] no valid self value`)
                 return this
             }
             
@@ -173,12 +172,12 @@ module.exports = (PocketModule) => {
             probeID = this.selectByTask(probeID, true)
             let lastProbeID = this.lastProbeID(probeID)
             if (!this.pocket[lastProbeID]) {
-                if (this.debug) warn(`[$probe] not found for probeID: ${probeID}`)
+                if (this.debug) warn('[pocket]', `[$probe] not found for probeID: ${probeID}`)
                 return undefined
             }
 
             if (this.pocket[lastProbeID].constructor.name !== 'Probe') {
-                if (this.debug) onerror(`[$probe] probeID: ${probeID} is not an instance of Probe{}`)
+                if (this.debug) onerror('[pocket]', `[$probe] probeID: ${probeID} is not an instance of Probe{}`)
                 return undefined
             }
 
@@ -226,7 +225,7 @@ module.exports = (PocketModule) => {
             if (!isFunction(cb)) return returnAs([])
 
             if (!this.payloadData[projectID]) {
-                if (this.debug) warn(`[$filter] no projectID found`)
+                if (this.debug) warn('[pocket]', `[$filter] no projectID found`)
                 return returnAs(null)
             }
             // when narrowing down $filter.$filter process, lets remember last action
@@ -275,12 +274,12 @@ module.exports = (PocketModule) => {
             }
 
             if (!isFunction(cb)) {
-                if (this.debug) warn(`[$compute] cb must be a function`)
+                if (this.debug) warn('[pocket]', `[$compute] cb must be a function`)
                 return returnAs(null)
             }
 
             if (!this.payloadData[projectID]) {
-                if (this.debug) warn(`[$compute] no project found fo your/last id projectID:${projectID}`)
+                if (this.debug) warn('[pocket]', `[$compute] no project found fo your/last id projectID:${projectID}`)
                 return returnAs(null)
             }
 
@@ -348,7 +347,7 @@ module.exports = (PocketModule) => {
             fromProbeID = this.selectByTask(fromProbeID, true)
             fromProbeID = this.lastProbeID(fromProbeID)
             if (!this.pocket[fromProbeID]) {
-                if (this.debug) warn(`[$transfer] no Probe{} found for this id fromProbeID:${fromProbeID}`)
+                if (this.debug) warn('[pocket]', `[$transfer] no Probe{} found for this id fromProbeID:${fromProbeID}`)
                 return this
             }
             this.storeTransfers(fromProbeID, copy(this.pocket[fromProbeID]['data']))
@@ -373,11 +372,11 @@ module.exports = (PocketModule) => {
             // if (!keepLastPointerReference) toProbeID = this.lastProbeID(toProbeID)
             if (pointToThisProbe) toProbeID = this.validProbe(toProbeID)
             if (!toProbeID) {
-                if (this.debug) warn(`[$to] toProbeID is invalid`)
+                if (this.debug) warn('[pocket]', `[$to] toProbeID is invalid`)
                 return this
             }
             if (!this.pocket[toProbeID]) {
-                if (this.debug) warn(`[$to] no Probe{} found for this id toProbeID:${toProbeID}`)
+                if (this.debug) warn('[pocket]', `[$to] no Probe{} found for this id toProbeID:${toProbeID}`)
                 return this
             }
             if (this.$transfer_lastID) {
@@ -388,7 +387,7 @@ module.exports = (PocketModule) => {
                     const { fromProbeID, data } = lastValidTransfer
                     if (this.$transfer_lastID === fromProbeID) {
                         if (this.pocket[toProbeID].status === 'complete' || this.pocket[toProbeID].status === 'send') {
-                            if (this.debug) warn(`[$to] cannot transfer since toProbeID: ${toProbeID} is already complete`)
+                            if (this.debug) warn('[pocket]', `[$to] cannot transfer since toProbeID: ${toProbeID} is already complete`)
                             this.$transfer_lastID = ''
                             return this
                         }
@@ -396,7 +395,7 @@ module.exports = (PocketModule) => {
                         this.pocket[toProbeID]['data'] = data // $to 
                     }
                 } else {
-                    if (this.debug) warn(`[$to] no last valid transfer found`)
+                    if (this.debug) warn('[pocket]', `[$to] no last valid transfer found`)
                 }
                 this.$transfer_lastID = ''
             }
@@ -552,7 +551,7 @@ module.exports = (PocketModule) => {
          */
         $onChange(cb, watchProp, probeID) {
             if (!this._onChange) {
-                if (this.debug) warn(`[$onChange] opts.onChange=true must be enabled to use this feature`)
+                if (this.debug) warn('[pocket]', `[$onChange] opts.onChange=true must be enabled to use this feature`)
                 return this
             }
             probeID = this.selectByTask(probeID, true)
