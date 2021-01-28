@@ -29,7 +29,7 @@ module.exports = merge(common, {
                         ecma: 7,
                         output: { 
                             beautify: false,
-                            comments: 'all'
+                            //comments: 'all'
                         },
                         mangle: true,
                         parallel: 3
