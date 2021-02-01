@@ -566,10 +566,10 @@ exports.PocketModule = () => {
 
                 if (this._ready_method_set[payloadID] !== undefined && !allowsMultiple) {
                     if (this._ready_method_set[payloadID] === true) {
-                        return returnAs(Promise.reject(`[$ready] project: ${payloadID} already complete, cannot recall same $ready`))
+                        return returnAs(Promise.reject(`[$ready] project: ${payloadID} already complete, cannot recall same $ready, ALLOW_MULTIPLE_FALSE`))
                     }
                     if (this._ready_method_set[payloadID] === false) {
-                        return returnAs(Promise.reject(`[$ready] project: ${payloadID} you already declared $ready somewhere else, this call is ignored`))
+                        return returnAs(Promise.reject(`[$ready] project: ${payloadID} you already declared $ready somewhere else, this call is ignored, ALLOW_MULTIPLE_FALSE`))
                     }
                 }
 
