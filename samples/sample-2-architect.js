@@ -28,6 +28,7 @@ const data1 = {
     id: 'pocket-1', // Belt and Road Initiative
     tasks: [
         {
+            ref:'abc',
             task: 'china',
             data: 'abc',
             campaign: 'Belt_and_Road_Initiative',
@@ -37,6 +38,7 @@ const data1 = {
         {
             task: 'usa',
              data: 'abc',
+             ref:'efg',
             campaign: 'Belt_and_Road_Initiative',
           //  status:'updated'
             //error:'first err'
@@ -130,7 +132,10 @@ let loop = (inx) => {
                 console.log('what is this', this.id, this.task)
             //    setTimeout(()=>{
                 this.data = 1
+                this.ref = '000'
               this.status = 'complete'
+            
+              console.log('ref',this.ref)
             //    },3000)
                // 
                 // this.status = 'complete'

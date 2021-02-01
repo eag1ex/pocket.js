@@ -124,7 +124,8 @@ exports.Probe = () => {
                 warn('[pocket]', `[ref] must be a string`)
                 return
             }
-            if (this.status === 'complete' || this._campaign.status === 'send') return
+            if (this.status === 'complete' || this.status === 'send') return
+
             this._ref = v
             this.dispatchChange('ref')
         }

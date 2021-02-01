@@ -21,12 +21,14 @@ const data = {
     tasks: [
 
         {
+            ref:'abc',
             task: 'china',
             data: { 'assets': 10, type: 'billions', info: 'benefactor' },
             compaign: 'Belt_and_Road_Initiative'
         },
         {
             task: 'srilanka',
+            ref:'efg',
             data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
             compaign: 'Belt_and_Road_Initiative'
         }
