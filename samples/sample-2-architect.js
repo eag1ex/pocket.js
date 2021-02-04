@@ -10,7 +10,7 @@ process.on('uncaughtException', function (err) {
 
 
 const dispatcher = require('../libs/dispatcher')()
-const { log, warn } = require('../index').utils
+const { log, warn } = require('x-utils-es/umd')
 const Pocket = require('../index').Pocket
 // const Pocket = require('../build/js/pocket_commonjs').PocketModule()
 
@@ -145,6 +145,8 @@ let loop = (inx) => {
                 //this.data ='hello'
                 //this.status = 'complete'
                 //console.log('each compute/status', this)
+            }).$onProbeComplete(function(data){
+                log('onProbeComplete',data)
             })
           
     }
@@ -155,10 +157,10 @@ let loop = (inx) => {
         loop(inx)     
    // }, 500)
    
-    pocket.$ready(`pocket-1`, true).d.then(z => {
+    pocket.$ready(`pocket-1`, false).d.then(z => {
         console.log('pocket-1 ready', z)
     })
-    pocket.$ready(`pocket-2`, true).d.then(z => {
+    pocket.$ready(`pocket-2`, false).d.then(z => {
         console.log('pocket-2 ready', z)
     })
 

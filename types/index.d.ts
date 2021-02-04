@@ -64,6 +64,7 @@ declare module Pocket {
     export function $exists(probeID: string): boolean
     export function $projectComplete(projectID:string):boolean
     export function $onChange(cb:Function, watchProp:string, probeID:string):self
+    export function $onProbeComplete(cb:Function, probeID:string):self
 
 }
 
@@ -83,4 +84,7 @@ declare module Probe {
     export function update(data:any, merge:boolean):any
     export function onChange(cb, watchName):self
 }
+
+
+
 

@@ -329,7 +329,9 @@ module.exports = (PocketModule) => {
                 this.projectProbeList(projectID).forEach(probe => {
                     cb(probe.all()) // no access to Probe/instance only copy
                 })
-                if (type === 'self' || !type) return this
+                if (type === 'self' || !type) {
+                    return this
+                }
                 if (type === 'list') return list()
             } else {
                 return list()
@@ -544,8 +546,9 @@ module.exports = (PocketModule) => {
         }
 
         /**
-         * - changes are observed for `[data,status,ref,error,campaign]`
-         * @param watchProp specify what property to watch, defaults to `all`
+         * - changes are observed for `[data,status,ref,error,campaign, status:complete]`
+         * - when watchProp `status:complete` is selected all copy data is returned in callback
+         * @param watchProp specify what property to watch, defaults to `all`, except for `status:complete`
          * @param {*} probeID optional/sensitive, select new point of reference
          * @extends Probe.onChange
          */
@@ -558,6 +561,40 @@ module.exports = (PocketModule) => {
             if (!this.pocket[probeID]) return null
             this.pocket[probeID].onChange(cb, watchProp)
             return this
+        }
+
+        /** 
+         * callback initialted of any probe that was completed, unless specificly selected `probeID`
+         * @param {Function} `cb((allData,id))=>`
+         * @param {*} probeID optional if you only want to listen for changes to specific probe add the id
+        */
+        $onProbeComplete(cb, probeID) {
+            if (!this._onChange) {
+                if (this.debug) warn('[pocket]', `[$onChange] opts.onChange=true must be enabled to use this feature`)
+                return this
+            }
+            // only run available onChange for selected probe by id
+            if (probeID) {
+                probeID = this.selectByTask(probeID, true)
+                if (!this.pocket[probeID]) return null
+                this.pocket[probeID].onChange(cb, watchProp)
+                return this
+            }
+            else{
+                
+                let projectID = this.lastProjectID()           
+                let probeList =  this.projectProbeList(projectID)
+
+                /** 
+                 * callback any probe that completed due process
+                */
+                probeList.forEach(probe=>{
+                    probe.onChange(cb, 'status:complete')
+                })
+
+                return this
+            }
+
         }
 
     }

@@ -135,6 +135,10 @@ Working examples can be found at `'./samples/**`
 - **$exists(probeID):boolean**: check if probe exists, specify `probeID`, returns boolean.
 - **$onChange(cb, watchProp, ProbeID):self**: when `opts.onChange:boolean` is set, watches changes of Probe
     - `watchProp:String`: provide property name to watch, defaults to `all`
+- **$onProbeComplete(cb, probeID):self**: listen to callback on one, or all probes that completed due process
+    - `cb((allData,id))`
+    - `probeID` : optionaly select if wishing on only listen for one probe by id
+
 
 
 #### Code/extentions

@@ -383,7 +383,7 @@ exports.Probe = () => {
 
         /**
          * - can be used when `opts.onChange=true` is set
-         * - changes are observed for `[ data,status,ref,error,campaign]`
+         * - changes are observed for `[ data,status,ref,error,campaign,status:complete]`
          * @param {*} cb(data,id) callback returns updated value in real time
          * @returns self
          */
@@ -396,11 +396,18 @@ exports.Probe = () => {
                 if (this.debug) warn(`[onChange] cb must be a function`)
                 return this
             }
-            const availableWatch = ['all', 'data', 'status', 'ref', 'error', 'campaign']
+            let availableWatch = ['all', 'data', 'status', 'ref', 'error', 'campaign']
+
+            // allo lookout for status complete event only when selected to watch
+            availableWatch = [].concat(availableWatch,['status:complete'])
+
             if (!availableWatch.includes(watch)) {
                 if (this.debug) warn('[pocket]', `[onChange] no watch available for ${watch}`)
                 return this
             }
+
+            let statIndex = availableWatch.indexOf('status:complete')
+            availableWatch.splice(statIndex,1)
 
             const self = this
 
@@ -416,6 +423,18 @@ exports.Probe = () => {
                     cb.bind(self)(copy(self.all()), id)
                     return
                 }
+
+                /** 
+                 * on status complete return all data copy in callback
+                */
+                if(watch==='status:complete'){
+
+                    if (data['changed'] === 'status' && self['status'] ==='send') {
+                        cb.bind(self)(copy(self.all()), id)
+                    }  
+                    return this
+                }
+                 
 
                 if (data['changed'] === watch && self[watch] !== undefined) {
                     cb.bind(self)(copy(self[watch]), id)
