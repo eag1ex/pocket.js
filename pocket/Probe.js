@@ -441,10 +441,8 @@ exports.Probe = () => {
                     return this
                 }
                  
-
                 if (data['changed'] === watch && self[watch] !== undefined) {
-                    cb.bind(self)(copy(self[watch]), id)
-                    
+                    cb.bind(self)(copy(self[watch]), id)                 
                 }          
             })
             return this
