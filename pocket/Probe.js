@@ -35,6 +35,7 @@ exports.Probe = () => {
             this.task = props.task
             this.id = props.id
             this.status = 'open'
+            this._sealed = false // once the pocket is send of complete we set to true
             this._onChange = opts.onChange || null
             this._onchangeDispatch = null // loads dispatcher when `opts.onChange=true` is set
             this.emitter = opts.emitter || null
@@ -429,8 +430,13 @@ exports.Probe = () => {
                 */
                 if(watch==='status:complete'){
 
-                    if (data['changed'] === 'status' && self['status'] ==='send') {
-                        cb.bind(self)(copy(self.all()), id)
+                    if (data['changed'] === 'status' && (self['status'] ==='send' ||  self['status'] ==='complete' && !self._sealed) ) {
+                        let d = {
+                            ...copy(self.all()),
+                            status:'complete'
+                        }
+                        cb.bind(self)(d, id)
+                        self._sealed = true
                     }  
                     return this
                 }
