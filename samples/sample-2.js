@@ -77,6 +77,7 @@ if (pock.$project(data, false, 'new').d) {
         }
         pock.$project(data, false, 'update') 
             .$compute(function(probe, id) {
+                // this.data = this.dataBank
                 log(this.task)
                 log('dataBank', this.dataBank)
                 setTimeout(() => {

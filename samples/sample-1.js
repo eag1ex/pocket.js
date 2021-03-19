@@ -13,7 +13,7 @@ const Pocket = require('../index').Pocket
 // const Pocket = require('../index').Pocket
 const DEBUG = true
 
-const pock = new Pocket({ async: false, dispatcher: true }, DEBUG)
+const pock = new Pocket({ async: false, dispatcher: true, withDataBank: true }, DEBUG)
 
 const data = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
