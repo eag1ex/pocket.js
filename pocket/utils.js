@@ -1,6 +1,8 @@
 /* eslint-disable no-proto */
 // node.js/browser detection
 
+const { isObject } = require('x-utils-es/umd')
+const { v4 } = require('uuid')
 /**
  * @Utils
  * my own lodash/like `Utils`

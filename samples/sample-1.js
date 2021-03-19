@@ -21,14 +21,14 @@ const data = {
     tasks: [
 
         {
-            ref:'abc',
+            ref: 'abc',
             task: 'china',
             data: { 'assets': 10, type: 'billions', info: 'benefactor' },
             compaign: 'Belt_and_Road_Initiative'
         },
         {
             task: 'srilanka',
-            ref:'efg',
+            ref: 'efg',
             data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
             compaign: 'Belt_and_Road_Initiative'
         }
@@ -80,8 +80,8 @@ if (pock.$project(data, false, 'update').d) {
     pock.$project(data, false, 'update')
 
     const l = pock.$compute(function(probe, id) {
-     // this.error = 'error!'        
-    }).$filter(function(){
+        // this.error = 'error!'        
+    }).$filter(function() {
         return true
     }).d
     console.log(pock.$error(`::china`))
@@ -94,7 +94,6 @@ if (pock.$project(data, false, 'update').d) {
             this.data = 'new data'
         })
     console.log('list', pock.$list())  
-    return    
 
     function newEnclosure(cb) {
         const t = (new function () {

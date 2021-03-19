@@ -398,6 +398,7 @@ exports.PocketModule = () => {
                 opts.id = uid
                 const emitter = this.dispatcher !== null ? this._emit.bind(this) : null
                 const p = new this.Probe(opts, {
+                    withDataBank: this.withDataBank,
                     disableWarnings: this.disableWarnings, // disable some less relevant warning messages
                     onChange: this._onChange, 
                     emitter, 

@@ -1,4 +1,3 @@
-`use strict`
 
 process.on('uncaughtException', function (err) {
     console.log('sample-1.js uncaughtException/error', err)
@@ -7,7 +6,7 @@ process.on('uncaughtException', function (err) {
 /**
  * Example, exchange of data regarding `china => covid19 => world`
  */
-const { log, warn,loop } = require('x-utils-es/umd')
+const { log, warn, loop } = require('x-utils-es/umd')
 const Pocket = require('../index').Pocket
 
 // const Pocket = require('../index').Pocket
@@ -20,7 +19,8 @@ const pock = new Pocket({
     disableWarnings: false, 
     completeOnNull: true,
     deleteWithDelay: 4000,
-    architect: false}, DEBUG)
+    withDataBank: true, // keeps probe data history updates in an array var {probe.dataBank[{data},...]}
+    architect: false }, DEBUG)
 
 const data = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
@@ -28,15 +28,15 @@ const data = {
     tasks: [
 
         {
-            ref:'abc',
+            ref: 'abc',
             task: 'china',
-            data: { 'assets': 10, type: 'billions', info: 'benefactor' },
+            data: { 'assets': 15, type: 'billions', info: 'benefactor' },
             compaign: 'Belt_and_Road_Initiative'
         },
         {
             task: 'srilanka',
-            ref:'efg',
-            data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
+            ref: 'efg',
+            data: { 'budget': 1.5, type: 'billions', project: 'naval port' },
             compaign: 'Belt_and_Road_Initiative'
         }
         // {
@@ -50,11 +50,11 @@ const data = {
     ]
 }
 
-//pock.$project(data, false, 'new')
+// pock.$project(data, false, 'new')
 
 if (pock.$project(data, false, 'new').d) {
 
-    loop(2,()=>{
+    loop(2, () => {
 
         const data = {
             // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
@@ -64,11 +64,11 @@ if (pock.$project(data, false, 'new').d) {
                 {
                     task: 'china', 
                     data: { value: 1, message: 'some data' },
-                   // status: 'complete',
+                    // status: 'complete',
                     compaign: 'Belt_and_Road_Initiative'
                 },
                 {
-                   // status: 'complete',
+                    // status: 'complete',
                     task: 'srilanka',
                     data: { 'budget': 1.4, type: 'billions', project: 'naval port' },
                     compaign: 'Belt_and_Road_Initiative'
@@ -76,14 +76,16 @@ if (pock.$project(data, false, 'new').d) {
             ]
         }
         pock.$project(data, false, 'update') 
-        .$compute(function(probe, id) {
-           setTimeout(()=>{
-            this.status = 'complete'
-           },5000)
-         // this.error = 'error!'        
-        })
-        .$onProbeComplete(function(){
-            log('$onProbeComplete/task',this.task)
-        }) 
+            .$compute(function(probe, id) {
+                log(this.task)
+                log('dataBank', this.dataBank)
+                setTimeout(() => {
+                    this.status = 'complete'
+                }, 5000)
+                // this.error = 'error!'        
+            })
+            .$onProbeComplete(function() {
+                log('$onProbeComplete/task', this.task)
+            }) 
     })
 }

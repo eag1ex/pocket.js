@@ -6,8 +6,9 @@
 exports.Probe = () => {
     // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
     const { isString, isArray, warn, log, isNumber, onerror, last, copy, isObject, isFunction } = require('x-utils-es/umd')
+    const ProbeDataBank = require('./Probe.dataBank')
     const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
-    return class Probe {
+    return class Probe extends ProbeDataBank {
         /**
          * @param {*} props.id required, case sensitive, all will be toLowerCase() 
          * @param {*} props.task once set cannot be changed
@@ -19,6 +20,8 @@ exports.Probe = () => {
          * @param {*} debug 
          */
         constructor(props = {}, opts = {}, debug) {
+            super(props, opts, debug)
+
             this.debug = debug || false
             if (isNumber(props.id) || props.id) props.id = props.id.toString()
             if (!props.task || !isString(props.task)) throw ('task as string is required')
@@ -36,9 +39,12 @@ exports.Probe = () => {
             this.id = props.id
             this.status = 'open'
             this._sealed = false // once the pocket is send of complete we set to true
+            
             this._onChange = opts.onChange || null
             this._onchangeDispatch = null // loads dispatcher when `opts.onChange=true` is set
             this.emitter = opts.emitter || null
+            // this will allow storing old data in to an array when curent data gets updated via setter
+            this.withDataBank = opts.withDataBank || false
             this.completeOnNull = opts.completeOnNull || null // when true allows completion on data still at initial null state
             this.disableWarnings = (opts || {}).disableWarnings // disable some less relevant warning messages
 
@@ -191,7 +197,9 @@ exports.Probe = () => {
 
             this._dataIndex++
             if (this.status === 'open' && this._data !== null && this._dataIndex > 1) this.status = 'updated'
+            
             this._data = v
+            if (this.withDataBank) this.dataBank = v
             this.dispatchChange('data')
         }
 
@@ -379,7 +387,10 @@ exports.Probe = () => {
         }
 
         all() {
-            return { error: this.error, ref: this.ref, campaign: this.campaign, data: this.data, id: this.id, task: this.task, status: this.status }
+
+            const d = { error: this.error, ref: this.ref, campaign: this.campaign, data: this.data, id: this.id, task: this.task, status: this.status }
+            if (this.withDataBank) d.dataBank = copy(this.dataBank)
+            return d
         }
 
         /**
@@ -400,7 +411,7 @@ exports.Probe = () => {
             let availableWatch = ['all', 'data', 'status', 'ref', 'error', 'campaign']
 
             // allo lookout for status complete event only when selected to watch
-            availableWatch = [].concat(availableWatch,['status:complete'])
+            availableWatch = [].concat(availableWatch, ['status:complete'])
 
             if (!availableWatch.includes(watch)) {
                 if (this.debug) warn('[pocket]', `[onChange] no watch available for ${watch}`)
@@ -408,7 +419,7 @@ exports.Probe = () => {
             }
 
             let statIndex = availableWatch.indexOf('status:complete')
-            availableWatch.splice(statIndex,1)
+            availableWatch.splice(statIndex, 1)
 
             const self = this
 
@@ -428,12 +439,12 @@ exports.Probe = () => {
                 /** 
                  * on status complete return all data copy in callback
                 */
-                if(watch==='status:complete'){
+                if (watch === 'status:complete') {
 
-                    if (data['changed'] === 'status' && (self['status'] ==='send' ||  self['status'] ==='complete' && !self._sealed) ) {
+                    if (data['changed'] === 'status' && (self['status'] === 'send' || self['status'] === 'complete' && !self._sealed)) {
                         let d = {
                             ...copy(self.all()),
-                            status:'complete'
+                            status: 'complete'
                         }
                         cb.bind(self)(d, id)
                         self._sealed = true
