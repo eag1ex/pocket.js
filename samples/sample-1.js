@@ -1,19 +1,15 @@
-`use strict`
 
-process.on('uncaughtException', function (err) {
-    console.log('sample-1.js uncaughtException/error', err)
-})
+// process.on('uncaughtException', function (err) {
+//     console.log('sample-1.js uncaughtException/error', err)
+// })
 
+// 
+const { log, warn } = require('x-utils-es/umd')
 /**
  * Example, exchange of data regarding `china => covid19 => world`
  */
-const { log, warn } = require('../index').utils
 const Pocket = require('../index').Pocket
-
-// const Pocket = require('../index').Pocket
-const DEBUG = true
-
-const pock = new Pocket({ async: false, dispatcher: true, withDataBank: true }, DEBUG)
+const pock = new Pocket({ async: false, dispatcher: true, withDataBank: true }, true)
 
 const data = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`

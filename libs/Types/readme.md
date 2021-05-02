@@ -1,0 +1,1 @@
+this folder implements jsdocs decorators

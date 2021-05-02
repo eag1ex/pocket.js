@@ -18,7 +18,7 @@ module.exports = merge(common, {
         rules: [
             {
                 test: /\.(js)$/,
-                include: Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js'),
+                include: Path.resolve(__dirname, '../libs/Pocket/versions/Pocket.browser.js'),
                 enforce: 'pre',
                 loader: 'eslint-loader'
                 // options: {
@@ -27,7 +27,7 @@ module.exports = merge(common, {
             },
             {
                 test: /\.(js)$/,
-                include: Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js'),
+                include: Path.resolve(__dirname, '../libs/Pocket/versions/Pocket.browser.js'),
                 loader: 'babel-loader'
             }
         ]

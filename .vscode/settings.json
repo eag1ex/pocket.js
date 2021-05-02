@@ -1,4 +1,5 @@
 {
+    "cSpell.language": "en",
     "jslint.enable": false,
     "standard.enable":true,
     "eslint.nodePath":"./node_modules/eslint",
@@ -151,8 +152,50 @@
         ": ",
         " - "
     ],
+    "commentAnchors.tags.list": [
+        {
+            "tag": "WARN",
+            "iconColor":"red",
+            "isBold": true,
+            "scope": "workspace",
+            "iconColor": "default",
+            "highlightColor": "#ff0000",
+            "styleComment": true
+        },
+        {
+            "tag": "FIX",
+            "iconColor":"yello",
+            "isBold": true,
+            "scope": "workspace",
+            "iconColor": "default",
+            "highlightColor": "#ffff00",
+            "styleComment": true
+        },
+        {
+            "tag": "BUG",
+            "iconColor":"yello",
+            "isBold": true,
+            "scope": "workspace",
+            "iconColor": "default",
+            "highlightColor": "#ffff00",
+            "styleComment": true
+        },
+        {
+            "tag": "UPDATE",
+            "iconColor":"green",
+            "isBold": true,
+            "scope": "workspace",
+            "iconColor": "default",
+            "highlightColor": "#00ff00",
+            "styleComment": true
+        },
+
+    ],
     "typescript.validate.enable": false,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
 }

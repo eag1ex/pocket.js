@@ -1,8 +1,7 @@
 
-
-exports.Pocket = require('./Pocket/Pocket.module').PocketModule()
-exports.Probe = require('./Pocket/Probe').Probe()
-exports.utils = require('./Pocket/utils')
+exports.Pocket = require('./libs/Pocket/PocketExit.module')
+exports.Probe = require('./libs/Probe/Probe')
+// exports.utils = require('./libs/utils')
 
 /**
  * browser/node.js app versions located at `./Pocket/app`

@@ -7,11 +7,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const entry = () => {
     if (process.env.NODE_ENV === 'none') {
         return {
-            'pocket_commonjs': Path.resolve(__dirname, '../Pocket/Pocket.module.js')
+            'pocket_commonjs': Path.resolve(__dirname, '../libs/Pocket/Pocket.module.js')
         }
     } else {
         return {
-            'pocket_browser': Path.resolve(__dirname, '../Pocket/versions/Pocket.browser.js')
+            'pocket_browser': Path.resolve(__dirname, '../libs/Pocket/versions/Pocket.browser.js')
         }
     }
     // executes es6+ app:

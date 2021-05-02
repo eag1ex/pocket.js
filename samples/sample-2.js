@@ -1,8 +1,4 @@
 
-process.on('uncaughtException', function (err) {
-    console.log('sample-1.js uncaughtException/error', err)
-})
-
 /**
  * Example, exchange of data regarding `china => covid19 => world`
  */
@@ -76,12 +72,13 @@ if (pock.$project(data, false, 'new').d) {
             ]
         }
         pock.$project(data, false, 'update') 
-            .$compute(function(probe, id) {
+            .$compute((probe, id) => {
+  
                 // this.data = this.dataBank
-                log(this.task)
-                log('dataBank', this.dataBank)
+                log(probe.task)
+                log('dataBank', probe.dataBank)
                 setTimeout(() => {
-                    this.status = 'complete'
+                    probe.status = 'complete'
                 }, 5000)
                 // this.error = 'error!'        
             })

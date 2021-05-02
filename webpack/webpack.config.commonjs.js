@@ -28,8 +28,8 @@ module.exports = merge(common, {
                         },
                         ecma: 7,
                         output: { 
-                            beautify: false,
-                            //comments: 'all'
+                            beautify: false
+                            // comments: 'all'
                         },
                         mangle: true,
                         parallel: 3
@@ -43,15 +43,15 @@ module.exports = merge(common, {
         rules: [
             {
                 test: /\.(js)$/,
-                include: Path.resolve(__dirname, '../Pocket/Pocket.module.js'),
+                include: Path.resolve(__dirname, '../libs/Pocket/Pocket.module.js'),
                 enforce: 'pre',
                 loader: 'eslint-loader'
              
             }, 
             {
                 test: /\.(js)$/,
-                include: Path.resolve(__dirname, '../Pocket/Pocket.module.js'),
-                loader: 'babel-loader',
+                include: Path.resolve(__dirname, '../libs/Pocket/Pocket.module.js'),
+                loader: 'babel-loader'
                 // options: {
                 //     "plugins": [
                 //         "@babel/plugin-syntax-dynamic-import",
