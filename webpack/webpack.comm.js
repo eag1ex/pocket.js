@@ -11,7 +11,7 @@ const entry = () => {
         }
     } else {
         return {
-            'pocket_browser': Path.resolve(__dirname, '../libs/Pocket/versions/Pocket.browser.js')
+            'pocket_browser': Path.resolve(__dirname, '../libs/versions/Pocket.browser.js')
         }
     }
     // executes es6+ app:

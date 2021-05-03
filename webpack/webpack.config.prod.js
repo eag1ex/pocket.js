@@ -4,6 +4,7 @@ const merge = require('webpack-merge')
 const TerserPlugin = require('terser-webpack-plugin')
 const common = require('./webpack.comm.js')
 
+// https://code.luasoftware.com/tutorials/webpack/merge-multiple-javascript-into-single-file/
 module.exports = merge(common, {
     mode: 'production',
     devtool: 'source-map',
@@ -26,7 +27,7 @@ module.exports = merge(common, {
                             passes: 2
                         },
                         output: {
-                           // comments: 'all',
+                            // comments: 'all',
                             beautify: false
                         },
                         mangle: true,
@@ -35,11 +36,12 @@ module.exports = merge(common, {
 
                 }).apply(compiler)
             }
-        ],
-        splitChunks: {
-            chunks: 'all',
-            name: true
-        }
+        ]
+        // NOTE this avoids chunking files  
+        // splitChunks: {
+        //     chunks: 'all',
+        //     name: true
+        // }
     },
     plugins: [
         new Webpack.DefinePlugin({
