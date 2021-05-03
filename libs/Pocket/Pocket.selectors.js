@@ -3,9 +3,19 @@
  * - Extends PocketModule using selectors for better access to Probes
  * - allow selecttion to refference by, example:  `taskName`, `::taskName` and `${projectID}::taskName`, thanks to `selectByTask()` method
  */
-const { copy, warn, isArray, onerror, objectSize, isString, uniq, isFunction } = require('x-utils-es/umd')
+
+// TYPES
+// eslint-disable-next-line no-unused-vars
 const Probe = require('../Probe/Probe')
+// MODELS AND TYPES
+// eslint-disable-next-line no-unused-vars
 const { $computeCallBack } = require('../Types/pocket.types')
+// eslint-disable-next-line no-unused-vars
+const SetUpdateModel = require('../Models/SetUpdateModel')
+
+const { copy, warn, isArray, onerror, objectSize, isString, uniq, isFunction } = require('x-utils-es/umd')
+const { validProbe, validProjectID } = require('../utils')
+
 const PocketArchitect = require('./Pocket.architect')
 class PocketSelectors extends PocketArchitect {
     constructor(opts, debug) {
@@ -50,23 +60,27 @@ class PocketSelectors extends PocketArchitect {
          * @param {*} projectID required
          */
     $projectSet(projectID = '') {
-        projectID = this.validProjectID(projectID)
+        projectID = validProjectID(projectID)
         if (this.payloadData[projectID]) return true
         return false
     }
 
     /**
-         * - run conditional statement within callback, so we can keep chaining in the same block
-         * @param cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
-         * @param {*} id `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`
-         * @returns by default eturns Pocket/self, or any true value passed inside callback
+         * REVIEW self is inconsistant here we may have to update this logic
+         * @memberof PocketSelectors
+         * run conditional statement within callback, so we can keep chaining in the same block
+         * @param {(pocket:PocketSelectors)=>any} cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
+         * @param {string} id `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`
+         * @returns {PocketSelectors} by default eturns Pocket/self, or any true value passed inside callback
          */
-    $condition(cb, id) {
+    $condition(cb, id = undefined) {
+        
         if (!isFunction(cb)) {
             if (this.debug) warn('[pocket]', `[$condition] must provide callback`)
             return this
         }
         id = !isString(id) ? '' : id
+
         let selfType = 'PocketSelf' // `ProbeSelf`
         let self = null
         if (id.indexOf(`::`) === 0) {
@@ -125,7 +139,7 @@ class PocketSelectors extends PocketArchitect {
          *  methods:`{get,all}` props: `{id,data,tasks,status}`
          * @param {*} probeID required, example format: `${payload.id}::taskName`
          * @param {*} self = false optional, in case you want to chain, and access `Probe{}` through `...).d`
-         */
+        */
     $get(probeID, self) {
         // allow use of short ref names example: `::cocalola`
         probeID = this.selectByTask(probeID, true)
@@ -134,17 +148,19 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-         * - return array of Probes matched by ref
-         * @param {*} probeRef, required
-         * @returns [Probe{},...] array
-         */
-    $getByRef(probeRef = '') {
+     * REVIEW this method must be updated
+     * @deprecated
+     * - return array of Probes matched by ref
+     * @param {*} probeRef, required
+     * @returns [Probe{},...] array
+     */
+    $getByRef(probeRef = '') {       
         return Object.assign(this.pocket).filter(([id, probe], inx) => probe.ref === probeRef)
     }
 
     /**
          * - as name suggest sets up new new data for Probe/task, it derives from `$update`
-         * @param {*} dataFrom required, must specify what to set on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
+         * @param {SetUpdateModel} dataFrom required, must specify what to set on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
          * - we should only use `$set` for initialization, this action also calls `clearStoreTransfers`
          * @param {*} probeID required, example format: `${payload.id}::taskName`
          */
@@ -156,10 +172,11 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-         * ### $probe
-         * - return me as Probe{}, similar as $get(...), although does additional check for instanceOf Probe{}
-         * @param {*} probeID
-         */
+     * ### $probe
+     * - return me as Probe{}, similar as $get(...), although does additional check for instanceOf Probe{}
+     * @param {*} probeID
+     * @returns {Probe}
+     */
     $probe(probeID = '') {
         // allow use of short ref names example: `::cocalola`
         probeID = this.selectByTask(probeID, true)
@@ -179,7 +196,7 @@ class PocketSelectors extends PocketArchitect {
 
     /**
          * update Probe/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
-         * @param {*} dataFrom required, must specify what to update on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
+         * @param {SetUpdateModel} dataFrom required, must specify what to update on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
          * @param {*} mergeData optional if `true` will merge: `Object.assing({},probe[id].data,mergeData['data'])`
          * @param {*} probeID required, example format: `${payload.id}::taskName`
          */
@@ -195,23 +212,25 @@ class PocketSelectors extends PocketArchitect {
          * - select current payloadID/project/job by id you are working on
          * @param {*} projectID optional/sensitive, selects new point of reference.
          */
-    $select(projectID = '') {
+    $select(projectID = undefined) {
         projectID = !isString(projectID) ? '' : projectID
         this.lastProjectID(projectID) // also updates last selector reference
         return this
     }
 
     /**
-         * ### $filter
-         * - filter works together with `$compute` or standalone when specified `.d` to return filtered `list`
-         * @param {*} cb
-         * @param {*} projectID
+         * Filter works together with `$compute` or standalone when specified `.d` to return filtered `list`
+         * @memberof PocketSelectors
+         * @param {(probe:Probe)=>any} cb
+         * @param {string} projectID
+         * @returns {PocketSelectors}
          */
-    $filter(cb, projectID) {
+    $filter(cb, projectID = undefined) {
+        const self = this
         projectID = this.lastProjectID(projectID) // also updates last selector reference
         const returnAs = (val) => {
             this.d = (val || []).filter((z) => z.isNONE === undefined)
-            return this
+            return self
         }
 
         if (!isFunction(cb)) return returnAs([])
@@ -254,7 +273,6 @@ class PocketSelectors extends PocketArchitect {
          * - iterate thru each Probe{}/ instance in a callback, and make changes to it
          * - note: you can only compute thru items that are not `complete`
          * @param {$computeCallBack} cb callback to current Probe instance process
-         * 
          * @param {string} projectID optional/sensitive, selects new point of reference.
          */
     $compute(cb, projectID = '') {
@@ -305,7 +323,7 @@ class PocketSelectors extends PocketArchitect {
          * - list active Probes{} by project id, should return all assigned probe/tasks regardless of status
          * - returns array[] of active Probe{}/tasks or []
          * @param {*} projectID optional/sensitive, selects new point of reference.
-         * @param {*} cb((probe, probeID)=>) optional, when set will loop thru each Probe{} in callback
+         * @param {(probeCopy:object)=>{}} cb((probe, probeID)=>) optional, when set will loop thru each Probe{} in callback
          * @param {*} type optional, set to `list`, will return latest Probes, that includes if initiated cb and made a few changes
          */
     $list(projectID = '', cb = null, type = 'self') {
@@ -363,7 +381,7 @@ class PocketSelectors extends PocketArchitect {
         // allow use of short ref names example: `::cocalola`
         toProbeID = this.selectByTask(toProbeID, pointToThisProbe)
         // if (!keepLastPointerReference) toProbeID = this.lastProbeID(toProbeID)
-        if (pointToThisProbe) toProbeID = this.validProbe(toProbeID)
+        if (pointToThisProbe) toProbeID = validProbe(toProbeID)
         if (!toProbeID) {
             if (this.debug) warn('[pocket]', `[$to] toProbeID is invalid`)
             return this
@@ -414,7 +432,7 @@ class PocketSelectors extends PocketArchitect {
          * @param {*} probeID optional/sensitive, select new point of reference
          * @param {*} self optional,if you want to $cached() last data enquiry and return `self` to keep chaining, nice!
          */
-    $data(dataProp = null /** {}||[] */, probeID = '', self = false) {
+    $data(dataProp = undefined /** {}||[] */, probeID = '', self = false) {
         // allow use of short ref names example: `::cocalola`
         probeID = this.selectByTask(probeID, true)
         if (!this.pocket[probeID]) return self ? this : undefined
@@ -481,11 +499,12 @@ class PocketSelectors extends PocketArchitect {
          * ### $ref
          * - returns Probe{}.ref
          * @param {*} probeID optional/sensitive, select new point of reference
+         * @returns {string}
          */
     $ref(probeID) {
         // allow use of short ref names example: `::cocalola`
         probeID = this.selectByTask(probeID, true)
-        if (!this.pocket[probeID]) return null
+        if (!this.pocket[probeID]) return undefined
         return copy(this.pocket[probeID]['ref'])
     }
 
@@ -493,11 +512,12 @@ class PocketSelectors extends PocketArchitect {
          * ### $status
          * - returns Object copy of `Probe['status']`
          * @param {*} probeID optional/sensitive, select new point of reference
+         * @returns {string}
          */
     $status(probeID) {
         // allow use of short ref names example: `::cocalola`
         probeID = this.selectByTask(probeID, true)
-        if (!this.pocket[probeID]) return null
+        if (!this.pocket[probeID]) return undefined
         return copy(this.pocket[probeID]['status'])
     }
 
@@ -505,11 +525,12 @@ class PocketSelectors extends PocketArchitect {
          * ### $task
          * - returns Object copy of `Probe['task']`
          * @param {*} probeID optional/sensitive, select new point of reference
+         *  @returns {string}
          */
     $task(probeID) {
         // allow use of short ref names example: `::cocalola`
         probeID = this.selectByTask(probeID, true)
-        if (!this.pocket[probeID]) return null
+        if (!this.pocket[probeID]) return undefined
         return copy(this.pocket[probeID]['task'])
     }
 
@@ -517,33 +538,36 @@ class PocketSelectors extends PocketArchitect {
          * ### $task
          * - returns Object copy of `Probe['task']`
          * @param {*} probeID optional/sensitive, select new point of reference
+         * @returns {array}
          */
     $error(probeID) {
         // allow use of short ref names example: `::cocalola`
         probeID = this.selectByTask(probeID, true)
-        if (!this.pocket[probeID]) return null
+        if (!this.pocket[probeID]) return undefined
         return copy(this.pocket[probeID]['error'])
     }
 
     /**
-         * ### $all
-         * - return Object copy of all setters: `{id,status,campaign,task,data}`
-         * @param {*} probeID optional/sensitive, select new point of reference
-         */
+     * ### $all
+     * - return Object copy of all setters: `{id,status,campaign,task,data}`
+     * @param {*} probeID optional/sensitive, select new point of reference
+     * @returns {object}
+     */
     $all(probeID) {
         // allow use of short ref names example: `::cocalola`
         probeID = this.selectByTask(probeID, true)
-        if (!this.pocket[probeID]) return null
+        if (!this.pocket[probeID]) return undefined
         return copy(this.pocket[probeID].all())
     }
 
     /**
-         * - changes are observed for `[data,status,ref,error,campaign, status:complete]`
-         * - when watchProp `status:complete` is selected all copy data is returned in callback
-         * @param watchProp specify what property to watch, defaults to `all`, except for `status:complete`
-         * @param {*} probeID optional/sensitive, select new point of reference
-         * @inheritdoc Probe.onChange
-         */
+     * - changes are observed for `[data,status,ref,error,campaign, status:complete]`
+     * - when watchProp `status:complete` is selected all copy data is returned in callback
+     * @param {(probeCopy:object,id)=>any} cb
+     * @param watchProp specify what property to watch, defaults to `all`, except for `status:complete`
+     * @param {*} probeID optional/sensitive, select new point of reference
+
+     */
     $onChange(cb, watchProp, probeID) {
         if (!this._onChange) {
             if (this.debug) warn('[pocket]', `[$onChange] opts.onChange=true must be enabled to use this feature`)
@@ -556,10 +580,10 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-         * callback initialted of any probe that was completed, unless specificly selected `probeID`
-         * @param {Function} `cb((allData,id))=>`
-         * @param {*} probeID optional if you only want to listen for changes to specific probe add the id
-         */
+     * callback initialted of any probe that was completed, unless specificly selected `probeID`
+     * @param {(probeCopy:object,id)=>any} cb
+     * @param {*} probeID optional if you only want to listen for changes to specific probe add the id
+     */
     $onProbeComplete(cb, probeID) {
         if (!this._onChange) {
             if (this.debug) warn('[pocket]', `[$onChange] opts.onChange=true must be enabled to use this feature`)
@@ -568,8 +592,8 @@ class PocketSelectors extends PocketArchitect {
         // only run available onChange for selected probe by id
         if (probeID) {
             probeID = this.selectByTask(probeID, true)
-            if (!this.pocket[probeID]) return null
-            this.pocket[probeID].onChange(cb, watchProp)
+            if (!this.pocket[probeID]) return undefined
+            this.pocket[probeID].onChange(cb, 'status:complete')
             return this
         } else {
             let projectID = this.lastProjectID()

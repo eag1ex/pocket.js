@@ -5,6 +5,7 @@
 
 const { objectSize, warn, onerror, dispatcher, validID, copy, log, isString } = require('x-utils-es/umd')
 const Imports = require('./Imports')
+const { validProbe, validProjectID, idRegexValid } = require('../utils')
 class PocketLibs extends Imports {
 
     /**
@@ -15,6 +16,7 @@ class PocketLibs extends Imports {
      * @param {boolean} opts.completeOnNull Allow Probe to complete even if data
      * @param {boolean} opts.disableWarnings disable some less relevant warning messages
      * @param {boolean} opts.withDataBank
+     * @param {number} opts.deleteWithDelay
      * @param {dispatcher} opts.dispatcher, when set to true, loads external library `Dispatcher`
      * @param {*} debug optional
      */
@@ -30,7 +32,12 @@ class PocketLibs extends Imports {
         // when set enables dispatcher to communicate directly with `probe.js`
         this.dispatcher = (opts || {}).dispatcher ? dispatcher() : undefined
         this.pocket = {} // example this.pocket[`abc::taskName`] returns Probe{} Instance
+
+        /**
+         * @returns `{ [id]:{ value: [], status: 'open', timestamp: new Date().getTime() },... `
+         */
         this.payloadData = {} // each payload by id
+
         this.lastPocketTimestamp = 0
         this._lastProjectID = null // last cached reference
         this._lastProbeID = null // last cached reference
@@ -38,7 +45,12 @@ class PocketLibs extends Imports {
             /** id:{} */
         } // stores last captured data when calling `$data(..)`
         this.$transfer_lastID = '' // set when we call `$transfer()` and reset after `$to()`
+
+        /**
+         * @return `{[id]:[...probes],...}` as promise
+         */
         this._ready = {} // collect all ready example: `{id:Promise}`
+
         this._ready_method_set = {
             /** [id]:true */
         } // ignore subsequent calls to $ready method
@@ -100,6 +112,7 @@ class PocketLibs extends Imports {
      * - create new dispather to act as a callback for setting new projects in future. NOTE once project is created and using $architect /$project/$payload to update will not recreate `projectSetDispatcher`
      * - works with `$projectSetAsync`
      * @param {*} projectID
+     * @returns `dispatcher`
      */
     projectSetDispatcher(projectID) {
         if (!projectID) {
@@ -193,7 +206,7 @@ class PocketLibs extends Imports {
      */
     selectByTask(taskOrProbeID = '', updateLastProbeID = null) {
         taskOrProbeID = !isString(taskOrProbeID) ? '' : taskOrProbeID
-        if (!this.idRegexValid(taskOrProbeID) && taskOrProbeID) return null
+        if (!idRegexValid(taskOrProbeID) && taskOrProbeID) return null
         if (taskOrProbeID.indexOf(':') > 0 && !this.pocket[taskOrProbeID]) {
             if (this.debug) warn('[pocket]', `[selectByTask] when using '::' prefix selector, it should come at 0 index`)
             return null
@@ -235,7 +248,7 @@ class PocketLibs extends Imports {
      */
     lastProjectID(projectID = '', debug = null, type = 'strict') {
         if (!projectID && this._lastProjectID) projectID = this._lastProjectID
-        if (projectID) projectID = this.validProjectID(projectID, debug)
+        if (projectID) projectID = validProjectID(projectID)
         if (projectID && this.payloadData[projectID]) this._lastProjectID = projectID
         if (!this.payloadData[projectID] && type === 'strict') return null
         if (!projectID) return null
@@ -251,44 +264,13 @@ class PocketLibs extends Imports {
      */
     lastProbeID(probeID = '', debug = null) {
         if (!probeID && this._lastProbeID) probeID = this._lastProbeID
-        if (probeID) probeID = this.validProbe(probeID, debug)
+        if (probeID) probeID = validProbe(probeID)
         if (probeID && this.pocket[probeID]) this._lastProbeID = probeID
         if (!probeID) return null
         if (!this.pocket[probeID]) return null
         return probeID
     }
-
-    /**
-     * ### validProjectID
-     * - `test if projectID is valid`
-     * - return valid id
-     * @param {*} id required
-     */
-    validProjectID(id, debug = null) {
-        id = validID(id)
-        if (!id) return null
-        if ((id || '').split(' ').length > 1) return null
-        if (!this.idRegexValid(id)) return null
-        return id
-    }
-
-    /**
-     * ### validProbe
-     * - returns a valid probe
-     * @param {*} probeID required
-     */
-    validProbe(probeID, debug = null) {
-        probeID = validID(probeID)
-        if (!probeID) return null
-        if (!this.idRegexValid(probeID)) return
-        if (probeID.indexOf(`::`) === -1) return null
-        // if (!this.pocket[probeID]) {
-        //     if (this.debug && debug === null) warn('[pocket]',`[validProbe] did not find probe with probeID ${probeID}`)
-        //     return null
-        // }
-        return probeID
-    }
-
+ 
     /**
      * ### dataPropSelector
      * - works with `$data()` and `$cached()` user selectors
@@ -328,17 +310,6 @@ class PocketLibs extends Imports {
             if (type === 'data()') this._$cached_data[probeID] = selectedData
             return self ? this : selectedData
         }
-    }
-
-    idRegexValid(str) {
-        const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
-        const regx = new RegExp(pat, 'gi')
-        if (regx.test(str)) {
-            // NOT ALWAYS NEEDED TO DISPLAY THE ERROR
-            // if (this.debug) onerror(`your id is invalid, allowed chars: ${pat}`)
-            return null
-        }
-        return true
     }
 
     /**

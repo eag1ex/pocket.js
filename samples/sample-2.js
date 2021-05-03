@@ -73,7 +73,7 @@ if (pock.$project(data, false, 'new').d) {
         }
         pock.$project(data, false, 'update') 
             .$compute((probe, id) => {
-  
+                
                 // this.data = this.dataBank
                 log(probe.task)
                 log('dataBank', probe.dataBank)

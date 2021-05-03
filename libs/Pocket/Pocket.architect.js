@@ -4,6 +4,8 @@
     * a more in depth project architecture setup, allowing more robust configuration, munipulation and data flows
 */
 
+const { validProjectID } = require('../utils')
+
 const { objectSize, isFunction, onerror, warn, isString } = require('x-utils-es/umd')
 const ArchitectModel = require('../Models/ArchitectModel')
 const PocketModuleExt = require('./PocketExtended')
@@ -43,7 +45,7 @@ class PocketArchitect extends PocketModuleExt {
             return undefined
         }
         const lastProject = this.lastProjectID(projectID) // in case we are calling `$architect` on existing project
-        projectID = this.validProjectID(lastProject || projectID)
+        projectID = validProjectID(lastProject || projectID)
 
         if (this.getArchitect(projectID)) {
             if (this.getArchitect(projectID)[assetName] !== undefined) {
@@ -81,7 +83,7 @@ class PocketArchitect extends PocketModuleExt {
 
         const configProjectID = (config['project'] || {}).id
         const lastProject = this.lastProjectID(projectID) // in case we are calling `$architect` on existing project
-        projectID = this.validProjectID(lastProject || projectID || configProjectID)
+        projectID = validProjectID(lastProject || projectID || configProjectID)
 
         if (!projectID) {
             if (this.debug) onerror('[pocket]', `[$architect] if this is a new project, you must specify projectID`)

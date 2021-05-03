@@ -1,6 +1,13 @@
 // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
 
-const { sq, objectSize, log, onerror, warn, isArray, isObject, validID } = require('x-utils-es/umd')
+// MODELS AND TYPES
+const ProjectPayloadModel = require('../Models/ProjectPayloadModel')
+const SetUpdateModel = require('../Models/SetUpdateModel')
+// eslint-disable-next-line no-unused-vars
+const ProbeModel = require('../Probe/Probe') 
+
+const { idRegexValid } = require('../utils')
+const { sq, objectSize, log, onerror, warn, isObject, validID } = require('x-utils-es/umd')
 const PocketLibs = require('./Pocket.libs')
 
 /**
@@ -37,32 +44,20 @@ class PocketModule extends PocketLibs {
     //
 
     /**
-     * @memberof $payload
+     * @memberof PocketModule
+     * @param {ProjectPayloadModel} data
      */
-    payload(data = {}, async, type = 'new') {
+    payload(data = undefined, async, type = 'new') {
+        try {
+            
+            data = new ProjectPayloadModel(data) 
+        } catch (err) {
+            onerror('[payload]', err)
+            return false
+        }
+
         this.d = null
         let isUpdated = null
-
-        // validate payload format
-        if (!isObject(data)) return false
-
-        const keys = Object.keys(data)
-        // must match all keys
-        if (keys.every((el) => ['id', 'tasks'].indexOf(el) === -1)) {
-            if (this.debug) onerror('[pocket]', `[$payload] id and tasks are required`)
-            return false
-        }
-        if (!isArray(data['tasks'])) {
-            if (this.debug) onerror('[pocket]', `[$payload] data.tasks must be an array`)
-            return false
-        }
-
-        data.id = this.validProjectID(data.id)
-
-        if (!data.id) {
-            if (this.debug) onerror('[pocket]', `[$payload] data.id invalid`)
-            return false
-        }
 
         if (this.payloadData[data.id] && (!type || type === 'new')) {
             this._lastProjectID = data.id
@@ -76,13 +71,14 @@ class PocketModule extends PocketLibs {
         if ((this._lastFilterList[data.id] || []).length) this._lastFilterList[data.id] = []
 
         // NOTE validate our pocket values before generating each `new Probe()`
-        for (let val of data['tasks'].values()) {
+        for (let val of data['tasks']) {
+            
             if (!val['task']) {
                 if (this.debug) warn('[pocket]', '[$payload] task must be set for your tasks')
                 continue
             }
             // validate task
-            if (!this.idRegexValid(val['task']) || val['task'].indexOf('::') !== -1) {
+            if (!idRegexValid(val['task']) || val['task'].indexOf('::') !== -1) {
                 if (this.debug) warn('[pocket]', '[$payload] invalid taskName, failed idRegexValid validation')
                 continue
             }
@@ -133,7 +129,7 @@ class PocketModule extends PocketLibs {
             this.projectsCache[data.id] = 'open' // means created project
             this.distributor().setDefer(data.id)
             // NOTE required in order for $projectSetAsync to retrun callback to resolve our promise
-            this.projectSetDispatcher(data.id).initListener().next({ projectID: data.id })
+            this.projectSetDispatcher(data.id).next({ projectID: data.id })
             return true
         } else return false
     }
@@ -143,6 +139,7 @@ class PocketModule extends PocketLibs {
      * - usage: to call before `$project()/$payload()/$architect` were called
      * - for example you have loaded same `Pocket` instance in another part of your code, now checking for it  in future before $project created. This method can `await $projectSetAsync(projectID)` and continue with already set `$project(...).$get(..).$update(..)` etc
      * @param {*} projectID required, this is your `$project/$payload` id
+     * @returns {Promise}
      */
     $projectSetAsync(projectID = '') {
         const self = this
@@ -155,7 +152,6 @@ class PocketModule extends PocketLibs {
          */
         this._projectSetAsync[projectID] = sq()
         this.projectSetDispatcher(projectID)
-            .initListener()
             .subscribe(function (z, id) {
                 self._projectSetAsync[id].resolve(z)
                 this.del() // deletes projectSetDispatcher of self
@@ -179,23 +175,26 @@ class PocketModule extends PocketLibs {
 
     /**
      * @memberof $update
+     * @param {SetUpdateModel} dataFrom
      */
-    update(dataFrom, mergeData = null, probeID = '') {
+    update(dataFrom, mergeData = null, probeID = undefined) {
         return this._setUpdate(dataFrom, mergeData, probeID, 'update')
     }
 
     /**
      * @memberof $set
+     * @param {SetUpdateModel} dataFrom
      */
-    _set(dataFrom, probeID = '') {
+    _set(dataFrom, probeID = undefined) {
         return this._setUpdate(dataFrom, null, probeID, 'set')
     }
 
     /**
      * - declated via $get
-     * @memberof $get
+     * @memberof PocketModule
+     * @returns {PocketModule | ProbeModel}
      */
-    _get(probeID = '', self = false) {
+    _get(probeID = '', self = undefined) {
         const returnAs = (val) => {
             this.d = val
             return self ? this : this.d
@@ -229,7 +228,9 @@ class PocketModule extends PocketLibs {
     }
 
     /**
-     * @memberof $ready
+     * @summary called by $ready() 
+     * @memberof PocketModule
+     * @returns {Promise<ProbeModel[]>}
      */
     ready(payloadID = '') {
         this.d = null
@@ -243,8 +244,16 @@ class PocketModule extends PocketLibs {
     //   :::::: E N D : :  :   :    :     :        :
     // ──────────────────────────────────────────────────────
 
-    // extends  `$update` and `$set`
+    /**
+     * @summary extends  `$update` and `$set`
+     * @param {SetUpdateModel} dataFrom
+     * @param {boolean} mergeData 
+     * @param {string} probeID 
+     * @param {string} type 
+     */
     _setUpdate(dataFrom, mergeData = null, probeID = '', type = 'update') {
+        dataFrom = new SetUpdateModel(dataFrom)
+
         const returnAs = (val) => {
             this.d = val
             return this
@@ -256,8 +265,9 @@ class PocketModule extends PocketLibs {
             return returnAs(false)
         }
 
-        if (!isObject(dataFrom)) {
-            if (this.debug) warn('[pocket]', `[$update] dataFrom must be an Object`)
+        // TODO to remove
+        if (!objectSize(dataFrom)) {
+            if (this.debug) warn('[pocket]', `[$update] dataFrom{} must not be empty`)
             return returnAs(false)
         }
 
@@ -271,15 +281,16 @@ class PocketModule extends PocketLibs {
         // reorder dataFrom, make sure if `status` exists, it is shifted to last position, so the Probe{} doent change state before other values got chance to do so, nice!
 
         // we need to convert dataFrom{} to dataFrom[]>array to achieve this
-        dataFrom = Object.entries(dataFrom).reduce((n, [key, value]) => {
+        
+        let dataFromArr = Object.entries(dataFrom).reduce((n, [key, value]) => {
             const pos = this.probeProps.indexOf(key) // new order
             if (this.probeProps[pos] === key) n.push({ inx: pos, data: { [key]: value } })
             return n
         }, [])
 
-        for (let inx = 0; inx < dataFrom.length; inx++) {
-            if ((dataFrom[inx] || {})['data'] === undefined) continue
-            const [key, value] = Object.entries(dataFrom[inx]['data'])[0]
+        for (let inx = 0; inx < dataFromArr.length; inx++) {
+            if ((dataFromArr[inx] || {})['data'] === undefined) continue
+            const [key, value] = Object.entries(dataFromArr[inx]['data'])[0]
             if (this.pocket[id][key] !== undefined) {
                 if (key === 'data') {
                     if (mergeData === true) this.pocket[id][key] = Object.assign({}, this.pocket[id][key], value)
@@ -317,7 +328,7 @@ class PocketModule extends PocketLibs {
             const msg = `[setDefer] probe is empty, so nothing set, id:${id}`
             if (this.debug) onerror('[pocket]', msg)
             this._ready[id].reject(msg)
-            return null
+            return undefined
         }
 
         const pocketSet = Object.values(this.pocket).filter((z) => z.id.indexOf(id) !== -1)
@@ -325,7 +336,7 @@ class PocketModule extends PocketLibs {
             const msg = `[setDefer] no pocketSet found for id:${id} `
             if (this.debug) onerror('[pocket]', msg)
             this._ready[id].reject(msg)
-            return null
+            return undefined
         }
 
         try {
@@ -343,16 +354,14 @@ class PocketModule extends PocketLibs {
              * when our pocketSet for each this.pocket[id] is marked 'complete'
              * `Probe().resolve(...)` is called, and Promise.all is waiting for `pocketSet` to complete
              */
-            Promise.all(pocketSet.map((z) => z.sq.promise).then(
-                (z) => {
-                    const output = z.map((p) => userOutput(p.probe)).filter((n) => !!n)
-                    this._ready[id].resolve(output)
-                },
-                (err) => {
-                    // should unlikely happen since we dont have any rejects set
-                    onerror('[pocket]', `[setDefer] Promise.all`, err)
-                }
-            )
+            Promise.all(pocketSet.map((z) => z.sq.promise)).then((z) => {
+                const output = z.map((p) => userOutput(p.probe)).filter((n) => !!n)
+                this._ready[id].resolve(output)
+            },
+            (err) => {
+                // should unlikely happen since we dont have any rejects set
+                onerror('[pocket]', `[setDefer] Promise.all`, err)
+            })
 
             return true
         } catch (err) {
@@ -436,13 +445,13 @@ class PocketModule extends PocketLibs {
      */
     _emit(obj) {
         if (!obj) return null
-        if (!this.dispatcher) return null
+        if (!this.dispatcher) return false
         try {
             this.dispatcher.next(obj)
             return true
         } catch (err) {
             onerror('[pocket]', `[_emit] dispatcher did not emit`)
-            return null
+            return false
         }
     }
 }

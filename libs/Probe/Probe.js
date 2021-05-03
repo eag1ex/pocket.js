@@ -10,24 +10,25 @@ const ProbeDataBank = require('./Probe.dataBank')
 class Probe extends ProbeDataBank {
 
     /**
-         * @param {Object} props probe options `{id,task,campaign,data,status,emitter,completeOnNull}`   
-         * @property {string} id required, case sensitive, all will be toLowerCase() 
-         * @property {string} task once set cannot be changed
-         * @property {string} campaign optional, once set cannot be changed
-         * @property {any} data optional any value except undefind, cannot be change once status set to `complete` or send
-         * @property {string} status required to control Probe actions
-         * @property {Dispatcher} emitter optional, dispatcher/emmiter available if not null
-         * @property {boolean} completeOnNull override complete setting even if data was never set
+         * @param {object} props probe options `{id,task,campaign,data,status,emitter,completeOnNull}`   
+         * @param {string} props.id required, case sensitive, all will be toLowerCase() 
+         * @param {string} props.task once set cannot be changed
+         * @param {string} props.campaign optional, once set cannot be changed
+         * @param {any} props.data optional any value except undefind, cannot be change once status set to `complete` or send
+         * @param {string} props.ref (optional) any type of string reference
+         * @param {string} props.status required to control Probe actions
+         * @param {({ prob: Probe, status })=>{}} props.emitter optional, dispatcher/emmiter available if not null
+         * @param {boolean} props.completeOnNull override complete setting even if data was never set
          * @param {boolean} debug 
          */
-    constructor(props = {}, opts = {}, debug) {
+    constructor(props = undefined, opts = {}, debug) {
         super(props, opts, debug)
 
         this.debug = debug || false
         if (isNumber(props.id) || props.id) props.id = props.id.toString()
         if (!props.task || !isString(props.task)) throw ('task as string is required')
         this._id = null
-        this._error = []
+        this._error = [] // REVIEW should be add options for props.error ?
         this._ref = null
         this._task = null
         this._status = null
@@ -58,12 +59,12 @@ class Probe extends ProbeDataBank {
     }
 
     /**
-         * nice and easy, save some coding, and added security
-         */
+     * nice and easy, save some coding, and added security
+     */
     get sq() {
-        if (this[`_sq`]) return this[`_sq`]
-        this[`_sq`] = sq()
-        return this[`_sq`]
+        if (this._sq) return this._sq
+        this._sq = sq()
+        return this._sq
     }
 
     set id(v) {
@@ -100,12 +101,11 @@ class Probe extends ProbeDataBank {
          */
     set error(v) {
         if (!v) return
-        if (!(v || []).length && isArray(v)) return
 
         // in case data is in its initial status state = 'open' we need to update it to change `_dataIndex`
         //  if (this.data === null) this.data = false
         // NOTE  we now use `this.completeOnNull` so can ignore above logic
-        this._error.push(v)
+        this._error.push(isArray(v) ? v.toString() : v)
         this._error = this._error.filter(z => !!z)
         this.dispatchChange('error')
     }
@@ -361,26 +361,33 @@ class Probe extends ProbeDataBank {
         this._statusAsync.push(p)
     }
 
+    /**
+     * Resolve lext promise and returns last status
+     *
+     * @memberof Probe
+     * @returns {Promise} 
+     */
     get setStatusAsync() {
         const lastPromise = last(this._statusAsync.sort((a, b) => a.timestamp - b.timestamp).map(z => z['p']))
-        lastPromise.resolve(copy(this.status)) // << we are unly returning
+        lastPromise.resolve(copy(this.status)) // << we are only returning
         return lastPromise
     }
 
     /**
-         * ### statusAsync
-         * - dynamic promise resolver with `Simple Q` from `eaglex.net`
-         * - works with `setStatusAsync` setter/getter
-         * - return last 'resolve' status from last `timestamp` setting
-         */
+     * ### statusAsync
+     * - dynamic promise resolver with `Simple Q` from `eaglex.net`
+     * - works with `setStatusAsync` setter/getter
+     * - return last 'resolve' status from last `timestamp` setting
+     * @returns {Promise<string>} status name
+     */
     get getStatusAsync() {
         return this.setStatusAsync.promise
     }
 
     /**
-         * - when status is set to complete or send, the promise will then be resolved
-         * @returns {Promise<{status, id}>}
-         */
+     * - when status is set to complete or send, the promise will then be resolved
+     * @returns {Promise<{status, id}>}
+     */
     get completeAsync() {
         return this._completeAsync.promise
     }
@@ -401,11 +408,10 @@ class Probe extends ProbeDataBank {
     }
 
     /**
-         * - can be used when `opts.onChange=true` is set
-         * - changes are observed for `[ data,status,ref,error,campaign,status:complete]`
-         * @param {*} cb(data,id) callback returns updated value in real time
-         * @returns self
-         */
+     * - can be used when `opts.onChange=true` is set
+     * - changes are observed for `[ data,status,ref,error,campaign,status:complete]`
+     * @param {(probeCopy:object,id)=>{}} cb(data,id) callback returns updated value in real time
+     */
     onChange(cb, watch = 'all') {
         if (!this._onChange) {
             if (this.debug) warn('[pocket]', `[onChange] to use need to set opts.onChange=true`)
@@ -439,7 +445,7 @@ class Probe extends ProbeDataBank {
             // NOTE data['changed'] // returned in dispatch only provided name of asset changed
             // no point to carry data if we can access it direct
             if (data['changed'] && watch === 'all') {
-                cb.bind(self)(copy(self.all()), id)
+                cb.bind(self)(self, id)
                 return
             }
 
@@ -474,10 +480,10 @@ class Probe extends ProbeDataBank {
          */
     dispatchChange(changedName) {
         if (!this._onChange) {
-            return null
+            return false
         }
         if (!this.onchangeDispatch) {
-            return null
+            return false
         }
         this.onchangeDispatch.next({ changed: changedName })
         return true
@@ -521,6 +527,7 @@ class Probe extends ProbeDataBank {
                 if (this.onchangeDispatch) this.onchangeDispatch.del()
             })
         }
+        return this
     }
 
     /**
@@ -536,6 +543,7 @@ class Probe extends ProbeDataBank {
                 })
             }
         }
+        return this
     }
 }
 

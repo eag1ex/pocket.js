@@ -1,4 +1,12 @@
-const { objectSize, log, onerror, warn, isArray, isObject, isPromise, validID, isString } = require('x-utils-es/umd')
+
+// providing jsdocs intelesence
+// eslint-disable-next-line no-unused-vars
+const ProbeModel = require('../Probe/Probe') 
+
+// eslint-disable-next-line no-unused-vars
+const ProjectPayloadModel = require('../Models/ProjectPayloadModel')
+
+const { onerror, warn, isPromise, validID, isString } = require('x-utils-es/umd')
 // const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
 // const PocketLibs = require('./Pocket.libs')
 const PocketModule = require('./Pocket.module')
@@ -6,6 +14,12 @@ const PocketModule = require('./Pocket.module')
 class PocketModuleExt extends PocketModule {
     constructor(opts, debug) {
         super(opts, debug)
+
+        /**
+         * @borrows $payload
+         * @function $payload an alias on $payload(...)
+         */
+        this.$project = this.$payload
     }
 
     /**
@@ -48,23 +62,23 @@ class PocketModuleExt extends PocketModule {
         this.deletePocketSet(projectID)
         return this
     }
-
+   
     /**
-         * - you can also use it on concurent payloads to existing `projectID`, once initial project is created overy other call will update each Probe{}.data/status, based on payloadData
-         * @param {*} data `required`
-         * @param {*} async `override current opts.sync for this payload`
-         * @param {*} type optional, new/update, `update`: if we call on an existing project we can update `data/status properties` of all assigned tasks at once
-         * 
-         * - `initialize new payload, for as many tasks`
-         * - `sets a multi task with instructions:`
-         * - `data = {
-                id: '', // 1 id for all tasks
-                tasks: [{ taskName: '', data: '', campaign: '' }]
-            }`
+     * - you can also use it on concurent payloads to existing `projectID`, once initial project is created overy other call will update each Probe{}.data/status, based on payloadData
+     * @param {ProjectPayloadModel | Promise<ProjectPayloadModel>} data required
+     * @param {*} async `override current opts.sync for this payload`
+     * @param {*} type optional, new/update, `update`: if we call on an existing project we can update `data/status properties` of all assigned tasks at once
+     * 
+     * - `initialize new payload, for as many tasks`
+     * - `sets a multi task with instructions:`
+     * - `data = {
+            id: '', // 1 id for all tasks
+            tasks: [{ taskName: '', data: '', campaign: '' }]
+        }`
 
-         * - `call distributor and setDefer`
-         * @extends payload
-         */
+    * - `call distributor and setDefer`
+    * 
+    */
     $payload(data, async, type) {
         const returnAs = (val) => {
             this.d = val
@@ -73,12 +87,14 @@ class PocketModuleExt extends PocketModule {
         const asAsync = async !== undefined ? async : this.async // override if set
         if (asAsync && isPromise(data)) {
             return returnAs(
+                // @ts-ignore
                 data.then(
                     (z) => this.payload(z, false, type),
                     (err) => err
                 )
             )
         }
+        // @ts-ignore
         if (!asAsync && !isPromise(data)) return returnAs(this.payload(data, false, type))
         else {
             if (this.debug) onerror('[pocket]', `[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
@@ -88,22 +104,13 @@ class PocketModuleExt extends PocketModule {
     }
 
     /**
-     * ### $project
-     * - `an alias on $payload(...), can use either`
-     * - refer to `$payload` for specifications :)
-     * @extends $payload
-     */
-    $project(...args) {
-        return this.$payload(...args)
-    }
-
-    /**
+     * @memberof PocketModule
      * - resolves currently active `$payload(...)`
      * - `after completion of Pocket, instance data for all Probes is deleted`
      * - can be called even before project was declared thanks to callback dispather `$projectSetAsync()`
      * @param {*} payloadID ,required
      * @param allowsMultiple optional, when set to true will allow multiple calls to resolved data
-     * @extends ready
+     * @returns {Promise<ProbeModel[]> | PocketModule}
      */
     $ready(payloadID, allowsMultiple = false) {
         try {
@@ -163,8 +170,5 @@ class PocketModuleExt extends PocketModule {
         }
     }
 }
-
-// const PocketSelectors = require('./Pocket.selectors')(PocketArchitect)
-//  return PocketSelectors
 
 module.exports = PocketModuleExt
