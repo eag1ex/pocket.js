@@ -4,13 +4,13 @@ const { isArray, isString } = require('x-utils-es/umd')
 
 /**
  * Data configuration asset required to create new project
- * @param {object} params
+ * @param {object} params `{id,tasks[]}`
  * @param {string} params.id project/Pocket id that identify each project to Probes batch
  * @param {ProbePayload[]} params.tasks each Probe data asset
  */
 function ProjectPayloadModel({ id = '', tasks = [] }) {
 
-    if (!id || isString(id) || !validProjectID(id)) throw ('ProjectPayloadModel/invalid id provided')
+    if (!id || !isString(id) || !validProjectID(id)) throw ('ProjectPayloadModel/invalid id provided')
     if (!isArray(tasks) || !(tasks || []).length) throw ('ProjectPayloadModel/invalid tasks[] provided')
 
     this.id = id

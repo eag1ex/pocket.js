@@ -17,11 +17,11 @@ class PocketLibs extends Imports {
      * @param {boolean} opts.disableWarnings disable some less relevant warning messages
      * @param {boolean} opts.withDataBank
      * @param {number} opts.deleteWithDelay
-     * @param {dispatcher} opts.dispatcher, when set to true, loads external library `Dispatcher`
+     * @param {any} opts.dispatcher, when set to true, loads external library `Dispatcher`
      * @param {*} debug optional
      */
     // @ts-ignore
-    constructor(opts = {}, debug) {
+    constructor(opts, debug) {
         super()
         this.debug = debug || false
         this.async = (opts || {}).async || null

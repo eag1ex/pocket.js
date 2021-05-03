@@ -104,16 +104,22 @@ class PocketModuleExt extends PocketModule {
     }
 
     /**
+     * @exports d
      * @memberof PocketModule
      * - resolves currently active `$payload(...)`
      * - `after completion of Pocket, instance data for all Probes is deleted`
      * - can be called even before project was declared thanks to callback dispather `$projectSetAsync()`
      * @param {*} payloadID ,required
      * @param allowsMultiple optional, when set to true will allow multiple calls to resolved data
-     * @returns {Promise<ProbeModel[]> | PocketModule}
+     * @returns {PocketModule}
      */
     $ready(payloadID, allowsMultiple = false) {
+        
         try {
+            /**
+             * 
+             * @param {Promise<ProbeModel[]>} val 
+             */
             const returnAs = (val) => {
                 this.d = val
                 if (this.d && !allowsMultiple) {

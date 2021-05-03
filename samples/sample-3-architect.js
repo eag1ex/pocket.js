@@ -190,6 +190,7 @@ let loop = (inx) => {
     // }, 500)
    
     pocket.$ready(`pocket-1`, true).d.then(z => {
+        //  z.
         console.log('pocket-1 ready', z)
     })
     pocket.$ready(`pocket-2`, true).d.then(z => {

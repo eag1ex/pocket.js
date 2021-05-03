@@ -14,6 +14,8 @@ function ProbePalyoadModel({ id = undefined, ref = undefined, task = undefined, 
     this.task = task
     this.campaign = campaign
     this.data = data
+    // NOTE this value is only generated when error happens
+    // this.error
 
     // NOTE just a clean up do not pass any undefined vals
     Object.entries(this).forEach(([k, val]) => {

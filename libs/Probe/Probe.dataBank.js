@@ -15,7 +15,7 @@ class ProbeDataBank {
      * accumulate data into historic array
      * this data is never cleared, unless we unset protected var
      * @memberof ProbeDataBank
-     * @returns {*} [{data,data_id},...]
+     * 
      */
     set dataBank(v) {
         // NOTE check if we are trying to assing dataBank to it self
@@ -31,8 +31,14 @@ class ProbeDataBank {
         this._dataBank.push({ data: v, data_id: new Date().getTime().toString() })
         this._dataBank = this._dataBank.filter(n => n.data !== undefined)
     }
-
+    /**
+     *
+     *
+     * @memberof ProbeDataBank
+     * @returns {[{data:any,data_id:string}]} may also return []
+     */
     get dataBank() {
+        // @ts-ignore
         return uniqBy((this._dataBank || []), 'data_id')
     }
 }

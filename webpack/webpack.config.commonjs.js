@@ -43,14 +43,14 @@ module.exports = merge(common, {
         rules: [
             {
                 test: /\.(js)$/,
-                include: Path.resolve(__dirname, '../libs/Pocket/Pocket.module.js'),
+                include: Path.resolve(__dirname, '../libs/Pocket/PocketExit.module.js'),
                 enforce: 'pre',
                 loader: 'eslint-loader'
              
             }, 
             {
                 test: /\.(js)$/,
-                include: Path.resolve(__dirname, '../libs/Pocket/Pocket.module.js'),
+                include: Path.resolve(__dirname, '../libs/Pocket/PocketExit.module.js'),
                 loader: 'babel-loader'
                 // options: {
                 //     "plugins": [

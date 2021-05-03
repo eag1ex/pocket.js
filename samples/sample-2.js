@@ -5,6 +5,7 @@
 const { log, warn, loop } = require('x-utils-es/umd')
 const Pocket = require('../index').Pocket
 
+const { readyOutput } = require('../libs/Intellisense')
 // const Pocket = require('../index').Pocket
 const DEBUG = true
 
@@ -15,9 +16,9 @@ const pock = new Pocket({
     disableWarnings: false, 
     completeOnNull: true,
     deleteWithDelay: 4000,
-    withDataBank: true, // keeps probe data history updates in an array var {probe.dataBank[{data},...]}
-    architect: false }, DEBUG)
-
+    withDataBank: true // keeps probe data history updates in an array var {probe.dataBank[{data},...]}
+}, DEBUG)
+ 
 const data = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
     id: 'pocket-1', // Belt and Road Initiative
@@ -45,7 +46,11 @@ const data = {
         // }
     ]
 }
+pock.$ready(data.id).d.then(n => {
+    // readyOutput(n)
 
+    // log('[ready]', n)
+})   
 // pock.$project(data, false, 'new')
 
 if (pock.$project(data, false, 'new').d) {
@@ -82,7 +87,8 @@ if (pock.$project(data, false, 'new').d) {
                 }, 5000)
                 // this.error = 'error!'        
             })
-            .$onProbeComplete(function() {
+            .$onProbeComplete(function(probeCopy) {
+                
                 log('$onProbeComplete/task', this.task)
             }) 
     })

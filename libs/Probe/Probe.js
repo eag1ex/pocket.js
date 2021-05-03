@@ -114,7 +114,7 @@ class Probe extends ProbeDataBank {
          * @returns an arrays of errors or null
          */
     get error() {
-        if (!this._error.length) return null
+        if (!this._error.length) return undefined
         return this._error
     }
 
@@ -410,7 +410,7 @@ class Probe extends ProbeDataBank {
     /**
      * - can be used when `opts.onChange=true` is set
      * - changes are observed for `[ data,status,ref,error,campaign,status:complete]`
-     * @param {(probeCopy:object,id)=>{}} cb(data,id) callback returns updated value in real time
+     * @param {(probeCopy:{},id)=>{}} cb(data,id) callback returns updated value in real time
      */
     onChange(cb, watch = 'all') {
         if (!this._onChange) {

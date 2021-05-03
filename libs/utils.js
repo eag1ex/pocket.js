@@ -1,5 +1,6 @@
 /* eslint-disable no-proto */
 const { validID } = require('x-utils-es/umd')
+
 // node.js/browser detection
 
 // const { isObject } = require('x-utils-es/umd')
