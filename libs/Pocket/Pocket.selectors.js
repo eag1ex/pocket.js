@@ -136,7 +136,7 @@ class PocketSelectors extends PocketArchitect {
          * - `returns instance`
          *  methods:`{get,all}` props: `{id,data,tasks,status}`
          * @param {*} probeID required, example format: `${payload.id}::taskName`
-         * @param {*} self = false optional, in case you want to chain, and access `Probe{}` through `...).d`
+         * @param {*} self = false optional, in case you want to chain, and access `Probe{}` through `...).d` otheriwe return Pocket
         */
     $get(probeID, self) {
         // allow use of short ref names example: `::cocalola`

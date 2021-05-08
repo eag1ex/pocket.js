@@ -192,7 +192,7 @@ class PocketModule extends PocketLibs {
     /**
      * - declated via $get
      * @memberof PocketModule
-     * @returns {PocketModule | ProbeModel}
+     * @returns {ProbeModel} actually {PocketModule | ProbeModel}
      */
     _get(probeID = '', self = undefined) {
         const returnAs = (val) => {
