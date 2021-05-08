@@ -12,15 +12,6 @@ const Probe = require('../Probe/Probe')
 
 /**
  * @summary Provide Intellisense support
- * @param {Probe} probe
- * @param {string} id 
- * @returns {any}
- */
-exports.$computeCallBack = function(probe, id) {
-}
-
-/**
- * @summary Provide Intellisense support
  * @param {ProbeReadyOutput[]} arr 
  * @returns {ProbeReadyOutput[]}
  */

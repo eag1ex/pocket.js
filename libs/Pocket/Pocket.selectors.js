@@ -9,8 +9,6 @@
 const Probe = require('../Probe/Probe')
 // MODELS AND TYPES
 // eslint-disable-next-line no-unused-vars
-const { $computeCallBack } = require('../Intellisense')
-// eslint-disable-next-line no-unused-vars
 const SetUpdateModel = require('../Models/SetUpdateModel')
 
 const { copy, warn, isArray, onerror, objectSize, isString, uniq, isFunction } = require('x-utils-es/umd')
@@ -272,7 +270,7 @@ class PocketSelectors extends PocketArchitect {
          * @instance
          * - iterate thru each Probe{}/ instance in a callback, and make changes to it
          * - note: you can only compute thru items that are not `complete`
-         * @param {$computeCallBack} cb callback to current Probe instance process
+         * @param {(probe:Probe)=>any} cb cb callback to current Probe instance process
          * @param {string} projectID optional/sensitive, selects new point of reference.
          */
     $compute(cb, projectID = '') {
