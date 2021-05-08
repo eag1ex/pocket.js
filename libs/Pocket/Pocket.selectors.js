@@ -561,7 +561,7 @@ class PocketSelectors extends PocketArchitect {
     /**
      * - changes are observed for `[data,status,ref,error,campaign, status:complete]`
      * - when watchProp `status:complete` is selected all copy data is returned in callback
-     * @param {(probeCopy:{},id)=>any} cb
+     * @param {(probe:Probe,id)=>any} cb
      * @param watchProp specify what property to watch, defaults to `all`, except for `status:complete`
      * @param {*} probeID optional/sensitive, select new point of reference
 
@@ -579,7 +579,7 @@ class PocketSelectors extends PocketArchitect {
 
     /**
      * callback initialted of any probe that was completed, unless specificly selected `probeID`
-     * @param {(probeCopy:{},id)=>any} cb
+     * @param {(probe:Probe,id)=>any} cb
      * @param {*} probeID optional if you only want to listen for changes to specific probe add the id
      */
     $onProbeComplete(cb, probeID) {

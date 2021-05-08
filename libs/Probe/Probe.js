@@ -410,9 +410,10 @@ class Probe extends ProbeDataBank {
     /**
      * - can be used when `opts.onChange=true` is set
      * - changes are observed for `[ data,status,ref,error,campaign,status:complete]`
-     * @param {(probeCopy:{},id)=>{}} cb(data,id) callback returns updated value in real time
+     * @param {(probe:Probe,id)=>{}} cb(data,id) callback returns updated value in real time
      */
     onChange(cb, watch = 'all') {
+        
         if (!this._onChange) {
             if (this.debug) warn('[pocket]', `[onChange] to use need to set opts.onChange=true`)
             return this
@@ -454,9 +455,9 @@ class Probe extends ProbeDataBank {
                 */
             if (watch === 'status:complete') {
 
-                if (data['changed'] === 'status' && (self['status'] === 'send' || self['status'] === 'complete' && !self._sealed)) {
+                if (data['changed'] === 'status' && ((self['status'] === 'send' || self['status'] === 'complete') && !self._sealed)) {
                     let d = {
-                        ...copy(self.all()),
+                        ...copy(self),
                         status: 'complete'
                     }
                     cb.bind(self)(d, id)
@@ -466,7 +467,7 @@ class Probe extends ProbeDataBank {
             }
                  
             if (data['changed'] === watch && self[watch] !== undefined) {
-                cb.bind(self)(copy(self[watch]), id)                 
+                cb.bind(self)(self[watch], id)                 
             }          
         })
         return this
