@@ -16,7 +16,7 @@
     "x-utils-es": "^2.0.1"
   },
   "engine": {
-    "node": "16",
+    "node": "14",
     "npm": "*"
   },
   "devDependencies": {
