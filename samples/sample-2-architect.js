@@ -112,7 +112,6 @@ let loop = (inx) => {
                 } 
             }, d.id)
             .$filter((probe) => {
-                probe.
                 // console.log('$filter is', this)
                 return probe.campaign === 'Belt_and_Road_Initiative'
             })

@@ -1,10 +1,14 @@
-const { v4 } = require('uuid')
-const { uniqBy } = require('./pocket/utils')
+// const { v4 } = require('uuid')
+//const { uniqBy } = require('x-utils-es/umd')
 const arr = [{ a: 1, id: 1 }, { a: 2, id: 1 }, { b: 1, id: 1 }, { b: 2, id: 2 }, { b: 2, id: undefined }]
 
-console.log(uniqBy(arr, 'a'))
-return 
-const Pocket = require('./pocket/Pocket.module').PocketModule()
+// console.log(uniqBy(arr, 'a'))
+// return 
+
+
+const Pocket =  require('./libs/Pocket/Pocket.module')
+
+const PocketModule = new Pocket()
 const DEBUG = true
 const pc = new Pocket({ async: false, dispatcher: false }, DEBUG)
 const data = {

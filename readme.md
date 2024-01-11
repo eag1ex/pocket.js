@@ -7,7 +7,16 @@
 * LICENCE: CC BY-NC-ND
 * SOURCE: https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 
-  
+
+#### Playground
+[ pocket.js on codesandbox ](https://codesandbox.io/p/github/eag1ex/pocket.js)
+<br/>
+
+you can play around with `/samples`
+```sh
+node /samples/sample-2
+```
+
 #### About
 
 *  Easy to use and sophisticated Pocket.js redistribution controller, allowing you to probe data with status management. 
