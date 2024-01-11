@@ -4,7 +4,7 @@
   "description": "data pocket redistribution",
   "main": "index.js",
   "scripts": {
-    "dev":"node /samples/sample-2",
+    "dev":"node samples/sample-2",
     "lint": "./node_modules/.bin/eslint  --ext .js pocket libs",
     "lint:fix": "./node_modules/.bin/eslint --fix --ext .js pocket libs",
     "commonjs": "cross-env NODE_ENV=none ./node_modules/.bin/webpack --config webpack/webpack.config.commonjs.js --display-error-details --colors --progress",
