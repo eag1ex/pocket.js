@@ -7,8 +7,8 @@
     "lint": "./node_modules/.bin/eslint  --ext .js pocket libs",
     "lint:fix": "./node_modules/.bin/eslint --fix --ext .js pocket libs",
     "commonjs": "cross-env NODE_ENV=none ./node_modules/.bin/webpack --config webpack/webpack.config.commonjs.js --display-error-details --colors --progress",
-    "dev": "cross-env NODE_ENV=development ./node_modules/.bin/webpack --config webpack/webpack.config.dev.js --display-error-details --colors --progress",
-    "prod": "cross-env NODE_ENV=production ./node_modules/.bin/webpack --config webpack/webpack.config.prod.js --display-error-details --colors --progress "
+    "build:dev": "cross-env NODE_ENV=development ./node_modules/.bin/webpack --config webpack/webpack.config.dev.js --display-error-details --colors --progress",
+    "build:prod": "cross-env NODE_ENV=production ./node_modules/.bin/webpack --config webpack/webpack.config.prod.js --display-error-details --colors --progress "
   },
   "author": "",
   "license": "ISC",
