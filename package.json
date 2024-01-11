@@ -4,7 +4,6 @@
   "description": "data pocket redistribution",
   "main": "index.js",
   "scripts": {
-    "example": "node ./examples.js",
     "lint": "./node_modules/.bin/eslint  --ext .js pocket libs",
     "lint:fix": "./node_modules/.bin/eslint --fix --ext .js pocket libs",
     "commonjs": "cross-env NODE_ENV=none ./node_modules/.bin/webpack --config webpack/webpack.config.commonjs.js --display-error-details --colors --progress",
@@ -21,6 +20,8 @@
     "npm": "*"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.7",
+    "cross-env": "^7.0.3",
     "uuid": "^9.0.1"
   }
 }

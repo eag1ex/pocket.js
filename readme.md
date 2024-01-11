@@ -17,6 +17,9 @@ you can play around with `/samples`
 node /samples/sample-2
 ```
 
+ps: ready code is on production branch
+
+
 #### About
 
 *  Easy to use and sophisticated Pocket.js redistribution controller, allowing you to probe data with status management. 
@@ -31,7 +34,7 @@ node /samples/sample-2
 * Manage each task Probe/task states and resolutions
 * Re/Distribution of data/scheduled assignments to different areas of your code
 * Creative flexibility - *make your work easier and justifiable*, simply more fun
-* Easy to use, user friendly, chaining methology
+* Easy to use, user friendly, chaining mythology
 
 #### Stack
 
@@ -44,14 +47,14 @@ node /samples/sample-2
 
 - Well documented with debug logging
 - Good catch exceptions
-- In depth `Mocha` tests with good nyc/Instanbul coverage.
+- In depth `Mocha` tests with good nyc/Istanbul coverage.
 
 
 #### What is a Pocket
 - `Pocket > Probe`: Main/parent module managing each new payload and `Probe` until resolved, give tools access to user.
 
 #### What is a Probe
-- `Probe < Pocket`: Child module doesnt know about Pocket, status/state managed so when `complete`, Pocket intercepts it, and waits until all tasks `complete`. Can be used independantly if needed.
+- `Probe < Pocket`: Child module doesnt know about Pocket, status/state managed so when `complete`, Pocket intercepts it, and waits until all tasks `complete`. Can be used independently if needed.
 
 
 #### Test / Mocha and coverage
@@ -71,13 +74,13 @@ Working examples can be found at `'./samples/**`
     - `opts.deleteWithDelay:number`: remove all project data with given dataly after $ready has been resolved, defaults to `1000` ms
     - `opts.async:Boolean`: when set will handle `await payload(asyncData)` as Promise. 
     - `opts.dispatcher:Boolean`: when set will load `Dispatcher module`, in to Pocket instance, and allow additional live on-change logging and direct communication with each Probe, currently this feature is limited to only logging, must set `debug:true` to see it in action. `[dispatcher]...`.
-    - `debug:Boolean`: will log additional messages on what is happening, good for debuging :)!
+    - `debug:Boolean`: will log additional messages on what is happening, good for debugging :)!
 
-- `Probe status logic`: each Probe has `status`, which gives it the required interation behaviour through out each payload. Status list, runs in forward motion, once the status is set to `complete` nothing can be changed:
-    - `open`: When new Probe is created, fisrt status is created automaticly, it status will remain the same until `Probe.data` property is updated, it can never be set back to `open`.
-    - `updated`: status is set automaticly once first `Probe.data` is updated to any true value, it can be re updated, once initial `data` was previously set
+- `Probe status logic`: each Probe has `status`, which gives it the required interaction behavior through out each payload. Status list, runs in forward motion, once the status is set to `complete` nothing can be changed:
+    - `open`: When new Probe is created, first status is created automatically, it status will remain the same until `Probe.data` property is updated, it can never be set back to `open`.
+    - `updated`: status is set automatically once first `Probe.data` is updated to any true value, it can be re updated, once initial `data` was previously set
     - `complete`: when Probe/task is done, `Probe.sq.resolve()` is called, and nothing more can be done.
-    - `send`: automaticly set after `Probe.sq.resolve()` is called, cannot be set manualy, it is used to identify last status
+    - `send`: automaticly set after `Probe.sq.resolve()` is called, cannot be set manually, it is used to identify last status
     - `error` works same as `complete`, with small difference... it is set last in `statusStackOrder`
 
 
@@ -86,7 +89,7 @@ Working examples can be found at `'./samples/**`
     - `data.id:String`: payload.id that identifies this job
     - `data.tasks:Array[]`: specifies required format/data of tasks to perform. Specifications for this can be found in `./samples/**`
     - `async`: when passing data is a defer you need to specify data type output as async:true, or set it in global options on POcket instance
-    - `type`: if out payload in in a loop for example and we do not want to overrite existing values, we can set type to type='update' (default is `new`)
+    - `type`: if out payload in in a loop for example and we do not want to override existing values, we can set type to type='update' (default is `new`)
 
 - **$probeStatusAsync( probeID ).d:promise** : returns last status changed via async method, the promise is reset everytime new status is updated, so it can be called many times, returns status name
     - `probeID`: must provide probeID example: `${payloadID}::${task}`
@@ -98,7 +101,7 @@ Working examples can be found at `'./samples/**`
 
 
 - **$update( dataFrom, mergeData,probeID).d:Boolean** : will select currently available Probe/task by `id`, and update its data, only available fields found on Probe can be updated according to setter/getter requirements 
-    - `probeID:String`: required probeID, each probe `probeID` makes up: `${payload.id}::${task}`, dynamicly created uppon `$payload(..)===true`
+    - `probeID:String`: required probeID, each probe `probeID` makes up: `${payload.id}::${task}`, dynamically created upon `$payload(..)===true`
     - `dataFrom:{}`: avaialble fields example: `dataFrom:{data:'some cola', campaign:'cocacola',status:'complete'}`, will perform an update on Probe[id][data],Probe[id][campaign], etc. Validation is sensitive.
     - `mergeData`: when specified and `dataFrom.data` field is set,  will merge both
 
@@ -106,7 +109,7 @@ Working examples can be found at `'./samples/**`
 - **$activeTasks( payloadID ).d:Array**: returns an `array['taskA','tastB']` from current job payload, will only be available before `$ready(..)` is resolved, and before PocketSet tasks are completed.
 
 
-- **$ready(payloadID, allowMultiple).d:Promise**: last calling method, when your `Pocket` tasks are completed, example: `Probe[id][status]='complete'` only then, will it resolve(), otherwise pending Probe's will remain and `$ready()` will expire, this is the desired effect, most logical behaviour.
+- **$ready(payloadID, allowMultiple).d:Promise**: last calling method, when your `Pocket` tasks are completed, example: `Probe[id][status]='complete'` only then, will it resolve(), otherwise pending Probe's will remain and `$ready()` will expire, this is the desired effect, most logical behavior.
     - `allowMultiple:boolean = false`: if you want to allow calling same project $ready(..) multiple times then set `allowMultiple=true`, otherwise it will give you warning. By default is set to `false`.
 
 - *Final note: All user/interaction methods are prefixed with '$'*
@@ -115,7 +118,7 @@ Working examples can be found at `'./samples/**`
 
 #### PocketModule selectors:
 - `Probe{} selectors list:`
-- **$removeProject(projectID)**: removes the project in case not alredy removed
+- **$removeProject(projectID)**: removes the project in case not already removed
 - **$projectSet(projectID)**: tells if project already created
 - **$of(probeID = ''):self**: selects pointer to Probe{} 
 - **$probeStatusAsync(probeID).d:Promise**: resolves promise when status changes
@@ -123,7 +126,7 @@ Working examples can be found at `'./samples/**`
 - **$getByRef(probeRef):[Array]**: returns an array of probes that match the Probe.ref
 - **$probe(probeID):Probe{}**: returns Probe{} by id
 - **$select(projectID):self**: sets pointer to the project
-- **$filter(cb, projectID):self**: filters probes that match condition true, in a callbacl
+- **$filter(cb, projectID):self**: filters probes that match condition true, in a callback
 - **$compute(cb, projectID = ''):self**: loops thru each probe (if previously filtered/or all) that can be munipulated
 - **$projectID**: getter/ return last projectID
 - **$list(projectID = '', cb = null, type = 'self'):Array[]**:
@@ -138,7 +141,7 @@ Working examples can be found at `'./samples/**`
 - **$error(probeID):[]**:
 - **$all(probeID):probeGetters**:
 - **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. This method uses $payload inheritance with access to `type` and `async`. Things to remember consecutive call to $architect thru  .$condition() method, can only update existing items.
-    - `cb(()=>({project:payloadData, type,async}))`: return callback must return {project:payload} as minimum requirement, when runnign in a loop or repeatitive actions, it is best to set type='update' so that concurent call to the same task wont wont be ignored, `type` is state base, so last setting is kept
+    - `cb(()=>({project:payloadData, type,async}))`: return callback must return {project:payload} as minimum requirement, when running in a loop or repetitive actions, it is best to set type='update' so that concurrent call to the same task wont wont be ignored, `type` is state base, so last setting is kept
     
 - **$asset(assetName, projectID)**: can access the asset declared in `$architect`
 - **$condition(cb,id)**: declare arguments within callback without exiting Pocket block chain. The `id` you pass:  probe `::id` or `projectID`, will expose access to self of either Probe or Pocket instance. The return of callback is sensitive, if no value is passed the Pocket/self is returned. For example if accessing Probe then probe id can be returned but the chaining will refer to its instance, you may want to return pocket self instead.
@@ -157,11 +160,7 @@ for comments/and linting use:
 - `Add jsdoc comments`
 
 
-#### Acronyms and common definitions
-- What is a Pocket:
 
-#### Start / Examples
-- Ready case examples available in `./examples.js` or `npm run example`
 ```sh
 
 ```

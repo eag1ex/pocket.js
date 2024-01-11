@@ -14,3 +14,4 @@ assets
 Dockerfile
 tests
 docker-compose.yml
+__temp
