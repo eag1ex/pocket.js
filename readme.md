@@ -2,27 +2,6 @@
 
 #### [ Developed by Eaglex ](http://eaglex.net)
 
-#### Playground
-
-[ pocket.js on codesandbox ](https://codesandbox.io/p/github/eag1ex/pocket.js)
-<br/>
-
-you can play around with `/samples`
-
-```sh
-## first install
-npm i
-
-## then play :)
-
-node /samples/sample-2
-## or
-npm run example:1
-npm run example:2
-```
-
-ps: ready code is on production branch
-
 #### About
 
 -   Easy to use and sophisticated Pocket.js redistribution controller, allowing you to probe data with status management.
@@ -57,6 +36,27 @@ ps: ready code is on production branch
 #### What is a Probe
 
 -   `Probe < Pocket`: Child module doesnt know about Pocket, status/state managed so when `complete`, Pocket intercepts it, and waits until all tasks `complete`. Can be used independently if needed.
+
+#### Playground
+
+[ pocket.js on codesandbox ](https://codesandbox.io/p/github/eag1ex/pocket.js)
+<br/>
+
+you can play around with `/samples`
+
+```sh
+## first install
+npm i
+
+## then play :)
+
+node /samples/sample-2
+## or
+npm run example:1
+npm run example:2
+```
+
+_ps: ready code is on production branch_
 
 #### Examples
 
