@@ -108,8 +108,8 @@ let loop = (inx) => {
                         // ]
                     },
                     asset: { name: "dispatch", value: { data: true } } // must provide both
-                    // tell architect we want to keep persistant values
-                    // if `project:true/or asset:true` we want to persist previous value, do not overide
+                    // tell architect we want to keep persistent values
+                    // if `project:true/or asset:true` we want to persist previous value, do not override
                     // defaults to `false` for both
                     // cache: { project: false, asset: true }
                 }

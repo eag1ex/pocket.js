@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Pocket/Pocket.libs.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Pocket.html">Pocket</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PocketLibs.html">PocketLibs</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#accessLastValidTransfer">accessLastValidTransfer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#clearStoreTransfers">clearStoreTransfers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#dataPropSelector">dataPropSelector</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#lastProbeID">lastProbeID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#lastProjectID">lastProjectID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#projectProbeList">projectProbeList</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#projectSetDispatcher">projectSetDispatcher</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#selectByTask">selectByTask</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#storeTransfers">storeTransfers</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PocketModule.html">PocketModule</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#$activeTasks">$activeTasks</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#$projectSetAsync">$projectSetAsync</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#_emit">_emit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#_get">_get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#_setUpdate">_setUpdate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#distributor">distributor</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#payload">payload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#ready">ready</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#setDefer">setDefer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#setProbe">setProbe</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Probe.html">Probe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#dispatchChange">dispatchChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#onChange">onChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#onComplete">onComplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#onOpenStatus">onOpenStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#update">update</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="Pocket_Pocket.module_selectors.html">selectors</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-d.html">d</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#ArchitectModel">ArchitectModel</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#PocketSelectors">PocketSelectors</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#ProbePalyoadModel">ProbePalyoadModel</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#ProbeReadyOutput">ProbeReadyOutput</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#ProjectPayloadModel">ProjectPayloadModel</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#SetUpdateModel">SetUpdateModel</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#asPocket">asPocket</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#asProbe">asProbe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#errorMessages">errorMessages</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#readyOutput">readyOutput</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#validProbe">validProbe</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Pocket/Pocket.libs.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * ### PocketLibs
+ * - Top of the stack class of `PocketModule`, all `opt` initial `properties` are set here
+ */
+
+const { objectSize, warn, onerror, dispatcher, validID, copy, log, isString } = require("x-utils-es/umd")
+const Imports = require("./Imports")
+const { validProbe, validProjectID, idRegexValid } = require("../utils")
+class PocketLibs extends Imports {
+    /**
+     *
+     * @param {Object} opts available options
+     * @param {boolean} opts.async  when set, allow $payload(`data`) to be async object
+     * @param {boolean} opts.onChange loads watch for changes Probe asset
+     * @param {boolean} opts.completeOnNull Allow Probe to complete even if data
+     * @param {boolean} opts.disableWarnings disable some less relevant warning messages
+     * @param {boolean} opts.withDataBank
+     * @param {number} opts.deleteWithDelay
+     * @param {any} opts.dispatcher, when set to true, loads external library `Dispatcher`
+     * @param {*} debug optional
+     */
+    // @ts-ignore
+    constructor(opts, debug) {
+        super()
+        this.debug = debug || false
+        this.async = (opts || {}).async || null
+        this._onChange = (opts || {}).onChange || null // loads watch for changes Probe asset
+        this.completeOnNull = (opts || {}).completeOnNull || null // Allow Probe to complete even if data is null
+        this.disableWarnings = (opts || {}).disableWarnings
+        this.withDataBank = (opts || {}).withDataBank || false
+        // when set enables dispatcher to communicate directly with `probe.js`
+        this.dispatcher = (opts || {}).dispatcher ? dispatcher() : undefined
+        this.pocket = {} // example this.pocket[`abc::taskName`] returns Probe{} Instance
+
+        /**
+         * @returns `{ [id]:{ value: [], status: 'open', timestamp: new Date().getTime() },... `
+         */
+        this.payloadData = {} // each payload by id
+
+        this.lastPocketTimestamp = 0
+        this._lastProjectID = null // last cached reference
+        this._lastProbeID = null // last cached reference
+        this._$cached_data = {
+            /** id:{} */
+        } // stores last captured data when calling `$data(..)`
+        this.$transfer_lastID = "" // set when we call `$transfer()` and reset after `$to()`
+
+        /**
+         * @return `{[id]:[...probes],...}` as promise
+         */
+        this._ready = {} // collect all ready example: `{id:Promise}`
+
+        this._ready_method_set = {
+            /** [id]:true */
+        } // ignore subsequent calls to $ready method
+        this.d = undefined // NOTE user reference data, careful when using selectors from previous target, always access last
+        this._projectSet = {
+            /** projectID:promise */
+        }
+        this._transferCached = [
+            /** {timestamp,fromProbeID,data} */
+        ]
+        this._projectSetDispatcher = {
+            /** id:dispatcher */
+        }
+        this._projectSetAsync = {
+            /** id:SQ */
+        } // collect all $projectSetAsync promises
+        this._lastFilterList = {
+            /** id:[probe references only] */
+        }
+        this.projectsCache = {
+            /** [id]:'open/complete' */
+        } // keep reference of completed projects, this variable is never purged
+        this.deleteWithDelay = (opts || {}).deleteWithDelay || 1000 // after project is completed and $ready(..) is resolved set delay to when it should be deleted
+        // this.createArchitect() // only when pocketInstance is set
+    }
+
+    // NOTE abolished functional class, doesnt work well with es6 class
+    // createArchitect() {
+    //     if (this.architect &amp;&amp; !this["architect_set"]) {
+    //         try {
+    //             const Architect = require('./Pocket.architect')()
+    //             Architect.prototype = Object.create(this)
+    //             Architect.prototype.constructor = Architect
+    //             Object.assign(this, new Architect())
+    //         } catch (err) {
+    //             console.log(`[createArchitect] error`, err)
+    //         }
+
+    //         this["architect_set"] = true
+    //     }
+    // }
+
+    /**
+     * - return latest Probe by reference from `this._lastFilterList[projectID]`
+     * @param {*} projectID
+     */
+    // getProbesByFilterRef(projectID) {
+    //     if (!projectID) return []
+    //     if (!this._lastFilterList[projectID]) return []
+    //     return this._lastFilterList[projectID].reduce((n, ref, inx) => {
+    //         if (ref.id &amp;&amp; ref.isNONE === undefined &amp;&amp; this.pocket[ref.id]) n.push(this.pocket[ref.id])
+    //         else if (this.pocket[ref.id]) n.push({ id: ref.id, isNONE: true })
+    //         return n
+    //     }, []).filter(z => !!z)
+    // }
+
+    /**
+     * ### projectSetDispatcher
+     * - create new dispather to act as a callback for setting new projects in future. NOTE once project is created and using $architect /$project/$payload to update will not recreate `projectSetDispatcher`
+     * - works with `$projectSetAsync`
+     * @param {*} projectID
+     * @returns `dispatcher`
+     */
+    projectSetDispatcher(projectID) {
+        if (!projectID) {
+            if (this.debug) onerror(`[projectSetDispatcher] projectID must be set`)
+            return null
+        }
+        if (this._projectSetDispatcher[projectID]) return this._projectSetDispatcher[projectID]
+        if (!this._projectSetDispatcher[projectID]) this._projectSetDispatcher[projectID] = dispatcher(projectID)
+        return this._projectSetDispatcher[projectID]
+    }
+
+    /**
+     * @param {*} projectID
+     * @returns array [Probe{},...] of selected project
+     */
+    projectProbeList(projectID) {
+        if (!projectID) return []
+        return Object.entries(this.pocket)
+            .filter(([id]) => id.indexOf(projectID) === 0)
+            .map(([id, probe]) => probe)
+    }
+
+    /**
+     * ### clearStoreTransfers
+     * - clear any pending transfers
+     * @param {*} projectID required
+     */
+    clearStoreTransfers(projectID = "") {
+        if (!projectID) return
+        let cleared = false
+        if (this._transferCached.length) {
+            this._transferCached.forEach((element, i) => {
+                const { fromProbeID } = element || {}
+                if (!fromProbeID) return
+                if (fromProbeID.indexOf(projectID) !== -1) {
+                    this._transferCached.splice(i, 1)
+                    cleared = true
+                    if (this.debug) log("[pocket]", `[clearStoreTransfers] transferCached for probeID: ${fromProbeID} has been removed`)
+                }
+            })
+        }
+        return cleared
+    }
+    /**
+     * ### storeTransfers
+     * - caches pending transfers when using `$transfer` with `$to()`
+     * - access last data by timestamp
+     * @param {*} fromProbeID  required
+     * @param {*} data required
+     */
+    storeTransfers(fromProbeID, data) {
+        this._transferCached.push({ timestamp: new Date().getTime(), fromProbeID, data })
+        return this._transferCached
+    }
+
+    /**
+     * ### accessLastValidTransfer
+     * returns latest transfer that is inRange from `fromAverageTimeHasPast` in `ms` vs current Date.getTime
+     * - removes _transferCached that was found
+     */
+    accessLastValidTransfer(fromAverageTimeHasPast = 100) {
+        if (!this._transferCached.length) return {}
+
+        this._transferCached.sort((a, b) => a.timestamp - b.timestamp)
+        const transferCachedCopy = copy(this._transferCached)
+
+        const coundCache = transferCachedCopy.reduce((n, el, i) => {
+            const { timestamp } = el
+
+            // calculate max wait between transfers, so if we have timeout we can only wait as long as `fromAverageTimeHasPast`
+            const currentOffset = new Date().getTime() + fromAverageTimeHasPast
+            const diff = currentOffset - timestamp - fromAverageTimeHasPast
+            const timeInRange = currentOffset > timestamp &amp;&amp; diff &lt;= fromAverageTimeHasPast
+            if (timeInRange) {
+                n = el
+                // delete found cache
+                this._transferCached.splice(i, 1)
+            }
+            return n
+        }, {})
+
+        if (!objectSize(coundCache)) return {}
+        else return coundCache
+    }
+
+    /**
+     * ### selectByTask
+     * - works with `PocketSelectors class`, when `::taskNames, taskName` are specified, extracts full probeID by matching previous pointer reference and updates `lastProbeID()`
+     * - returns valid probeID or null
+     * @param {*} taskOrProbeID  required, but optional
+     */
+    selectByTask(taskOrProbeID = "", updateLastProbeID = null) {
+        taskOrProbeID = !isString(taskOrProbeID) ? "" : taskOrProbeID
+        if (!idRegexValid(taskOrProbeID) &amp;&amp; taskOrProbeID) return null
+        if (taskOrProbeID.indexOf(":") > 0 &amp;&amp; !this.pocket[taskOrProbeID]) {
+            if (this.debug) warn("[pocket]", `[selectByTask] when using '::' prefix selector, it should come at 0 index`)
+            return null
+        }
+
+        if (taskOrProbeID.split(":").length > 3 || taskOrProbeID.split(":").length === 2) {
+            if (this.debug) warn("[pocket]", `[selectByTask] wrong taskName :${taskOrProbeID}, allowed prefix is '::taskName'`)
+            return null
+        }
+
+        if (updateLastProbeID) this.lastProbeID(taskOrProbeID, true) // if a match we receive below updated `_lastProbeID`
+        if (this.pocket[taskOrProbeID]) {
+            if (updateLastProbeID) this.lastProbeID(taskOrProbeID)
+            return taskOrProbeID // we have a valid ref so use that
+        }
+
+        /**
+         * - generate valid probeID `${projectID}::${probeTaskName}` //
+         */
+        const dynamicProbeID = (name) => {
+            const n = name.split("::")[1] || name // in case we are using prefixed taskName, example "::cocacola"
+            const matchByProbeID = (this._lastProbeID || "").indexOf(n) > 0
+            if (matchByProbeID &amp;&amp; n) return this._lastProbeID
+            else if (this._lastProjectID &amp;&amp; n) return this._lastProjectID + `::` + n
+            return this._lastProbeID
+        }
+
+        const newProbeID = dynamicProbeID(taskOrProbeID)
+        if (!newProbeID) {
+            if (this.debug) warn("[pocket]", `[selectByTask] newProbeID was not found from taskOrProbeID: ${taskOrProbeID}`)
+        } else if (updateLastProbeID) this.lastProbeID(newProbeID)
+        return newProbeID
+    }
+
+    /**
+     * ### lastProjectID
+     * - every project is a job initiated by payload, so `payload.id === lastProjectID()`
+     * @param type strictly validate against scoped projectID
+     */
+    lastProjectID(projectID = "", debug = null, type = "strict") {
+        if (!projectID &amp;&amp; this._lastProjectID) projectID = this._lastProjectID
+        if (projectID) projectID = validProjectID(projectID)
+        if (projectID &amp;&amp; this.payloadData[projectID]) this._lastProjectID = projectID
+        if (!this.payloadData[projectID] &amp;&amp; type === "strict") return null
+        if (!projectID) return null
+        if (projectID &amp;&amp; !this._lastProjectID) this._lastProjectID = projectID
+        return projectID
+    }
+
+    /**
+     * ### lastProbeID
+     * - return last reference to probeID
+     * - cache with `_lastProbeID`
+     * @param {*} probeID
+     */
+    lastProbeID(probeID = "", debug = null) {
+        if (!probeID &amp;&amp; this._lastProbeID) probeID = this._lastProbeID
+        if (probeID) probeID = validProbe(probeID)
+        if (probeID &amp;&amp; this.pocket[probeID]) this._lastProbeID = probeID
+        if (!probeID) return null
+        if (!this.pocket[probeID]) return null
+        return probeID
+    }
+
+    /**
+     * ### dataPropSelector
+     * - works with `$data()` and `$cached()` user selectors
+     * - refer to `PocketSelectors` module
+     * @param {*} probeID required
+     * @param {*} dataProp optional
+     * @param {*} self optional
+     * @param {*} probeData{} required our referencing probeData{}
+     */
+    dataPropSelector(type = "data()", probeID = "", dataProp = {}, self = false, probeData = {}) {
+        let selectedData
+        /**
+         * NOTE if calling via `$cached()`,  `probeData` already comes as `this._$cached_data` so dont need to cache  it again!
+         */
+        try {
+            /**
+             * NOTE IMPORTANT
+             * assembly order: `dataProp &lt; probeData > selectedData`
+             * if are asking for multiple, example `selectedData:{a,b,value:1111}`, will return those available
+             * as an Object{}. But if asking for only 1 `selectedData:{value:1111}`, will return the value `11111`, only because we know what we asked for initially
+             */
+            selectedData = Object.entries(dataProp).reduce((n, [k, val], i) => {
+                if (probeData[k] !== undefined) n[k] = probeData[k]
+                return n
+            }, {})
+
+            if (!objectSize(selectedData)) selectedData = undefined
+
+            // selct only value if `dataProp` === `selectedData` is size ( 1 + 1 === 2 )
+            if (objectSize(selectedData) + objectSize(dataProp) === 2) selectedData = Object.values(selectedData).shift()
+
+            // if coming from `$data()` we cache our data
+            if (type === "data()") this._$cached_data[probeID] = selectedData
+            return self ? this : selectedData
+        } catch (err) {
+            if (this.debug) warn("[pocket]", `[$data] no dataProp found on probeID: ${probeID}`)
+            if (type === "data()") this._$cached_data[probeID] = selectedData
+            return self ? this : selectedData
+        }
+    }
+
+    /**
+     * ### probeProps
+     * - `each probe props that can be available and send on ready`
+     * - `order is important, keep 'status' last`
+     * - only updatable props are: `'campaign', 'data', 'error', 'ref', 'status'(limited)`
+     */
+    get probeProps() {
+        return ["campaign", "data", "task", "ref", "error", "id", "status"]
+    }
+}
+
+module.exports = PocketLibs
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Fri Feb 02 2024 18:32:56 GMT+0700 (Indochina Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

@@ -3,6 +3,9 @@
     "jslint.enable": false,
     "standard.enable": true,
     "eslint.nodePath": "./node_modules/eslint",
+    "files.associations": {
+        "*.json": "jsonc"
+    },
     "node-module-intellisense.scanBuiltinModules": true,
     "node-module-intellisense.scanDevDependencies": true,
     "node-module-intellisense.scanFileModules": true,

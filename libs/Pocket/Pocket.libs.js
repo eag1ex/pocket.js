@@ -3,11 +3,10 @@
  * - Top of the stack class of `PocketModule`, all `opt` initial `properties` are set here
  */
 
-const { objectSize, warn, onerror, dispatcher, validID, copy, log, isString } = require('x-utils-es/umd')
-const Imports = require('./Imports')
-const { validProbe, validProjectID, idRegexValid } = require('../utils')
+const { objectSize, warn, onerror, dispatcher, validID, copy, log, isString } = require("x-utils-es/umd")
+const Imports = require("./Imports")
+const { validProbe, validProjectID, idRegexValid } = require("../utils")
 class PocketLibs extends Imports {
-
     /**
      *
      * @param {Object} opts available options
@@ -27,7 +26,7 @@ class PocketLibs extends Imports {
         this.async = (opts || {}).async || null
         this._onChange = (opts || {}).onChange || null // loads watch for changes Probe asset
         this.completeOnNull = (opts || {}).completeOnNull || null // Allow Probe to complete even if data is null
-        this.disableWarnings = (opts || {}).disableWarnings 
+        this.disableWarnings = (opts || {}).disableWarnings
         this.withDataBank = (opts || {}).withDataBank || false
         // when set enables dispatcher to communicate directly with `probe.js`
         this.dispatcher = (opts || {}).dispatcher ? dispatcher() : undefined
@@ -44,7 +43,7 @@ class PocketLibs extends Imports {
         this._$cached_data = {
             /** id:{} */
         } // stores last captured data when calling `$data(..)`
-        this.$transfer_lastID = '' // set when we call `$transfer()` and reset after `$to()`
+        this.$transfer_lastID = "" // set when we call `$transfer()` and reset after `$to()`
 
         /**
          * @return `{[id]:[...probes],...}` as promise
@@ -54,7 +53,7 @@ class PocketLibs extends Imports {
         this._ready_method_set = {
             /** [id]:true */
         } // ignore subsequent calls to $ready method
-        this.d = undefined // NOTE user reference data, carefull when using selectors from previous target, always access last
+        this.d = undefined // NOTE user reference data, careful when using selectors from previous target, always access last
         this._projectSet = {
             /** projectID:promise */
         }
@@ -66,7 +65,7 @@ class PocketLibs extends Imports {
         }
         this._projectSetAsync = {
             /** id:SQ */
-        } // collect all $projectSetAsync promisses
+        } // collect all $projectSetAsync promises
         this._lastFilterList = {
             /** id:[probe references only] */
         }
@@ -140,7 +139,7 @@ class PocketLibs extends Imports {
      * - clear any pending transfers
      * @param {*} projectID required
      */
-    clearStoreTransfers(projectID = '') {
+    clearStoreTransfers(projectID = "") {
         if (!projectID) return
         let cleared = false
         if (this._transferCached.length) {
@@ -150,7 +149,7 @@ class PocketLibs extends Imports {
                 if (fromProbeID.indexOf(projectID) !== -1) {
                     this._transferCached.splice(i, 1)
                     cleared = true
-                    if (this.debug) log('[pocket]', `[clearStoreTransfers] transferCached for probeID: ${fromProbeID} has been removed`)
+                    if (this.debug) log("[pocket]", `[clearStoreTransfers] transferCached for probeID: ${fromProbeID} has been removed`)
                 }
             })
         }
@@ -204,16 +203,16 @@ class PocketLibs extends Imports {
      * - returns valid probeID or null
      * @param {*} taskOrProbeID  required, but optional
      */
-    selectByTask(taskOrProbeID = '', updateLastProbeID = null) {
-        taskOrProbeID = !isString(taskOrProbeID) ? '' : taskOrProbeID
+    selectByTask(taskOrProbeID = "", updateLastProbeID = null) {
+        taskOrProbeID = !isString(taskOrProbeID) ? "" : taskOrProbeID
         if (!idRegexValid(taskOrProbeID) && taskOrProbeID) return null
-        if (taskOrProbeID.indexOf(':') > 0 && !this.pocket[taskOrProbeID]) {
-            if (this.debug) warn('[pocket]', `[selectByTask] when using '::' prefix selector, it should come at 0 index`)
+        if (taskOrProbeID.indexOf(":") > 0 && !this.pocket[taskOrProbeID]) {
+            if (this.debug) warn("[pocket]", `[selectByTask] when using '::' prefix selector, it should come at 0 index`)
             return null
         }
 
-        if (taskOrProbeID.split(':').length > 3 || taskOrProbeID.split(':').length === 2) {
-            if (this.debug) warn('[pocket]', `[selectByTask] wrong taskName :${taskOrProbeID}, allowed prefix is '::taskName'`)
+        if (taskOrProbeID.split(":").length > 3 || taskOrProbeID.split(":").length === 2) {
+            if (this.debug) warn("[pocket]", `[selectByTask] wrong taskName :${taskOrProbeID}, allowed prefix is '::taskName'`)
             return null
         }
 
@@ -227,8 +226,8 @@ class PocketLibs extends Imports {
          * - generate valid probeID `${projectID}::${probeTaskName}` //
          */
         const dynamicProbeID = (name) => {
-            const n = name.split('::')[1] || name // in case we are using prefixed taskName, example "::cocacola"
-            const matchByProbeID = (this._lastProbeID || '').indexOf(n) > 0
+            const n = name.split("::")[1] || name // in case we are using prefixed taskName, example "::cocacola"
+            const matchByProbeID = (this._lastProbeID || "").indexOf(n) > 0
             if (matchByProbeID && n) return this._lastProbeID
             else if (this._lastProjectID && n) return this._lastProjectID + `::` + n
             return this._lastProbeID
@@ -236,7 +235,7 @@ class PocketLibs extends Imports {
 
         const newProbeID = dynamicProbeID(taskOrProbeID)
         if (!newProbeID) {
-            if (this.debug) warn('[pocket]', `[selectByTask] newProbeID was not found from taskOrProbeID: ${taskOrProbeID}`)
+            if (this.debug) warn("[pocket]", `[selectByTask] newProbeID was not found from taskOrProbeID: ${taskOrProbeID}`)
         } else if (updateLastProbeID) this.lastProbeID(newProbeID)
         return newProbeID
     }
@@ -244,13 +243,13 @@ class PocketLibs extends Imports {
     /**
      * ### lastProjectID
      * - every project is a job initiated by payload, so `payload.id === lastProjectID()`
-     * @param type strictly validate against scoped projecjID
+     * @param type strictly validate against scoped projectID
      */
-    lastProjectID(projectID = '', debug = null, type = 'strict') {
+    lastProjectID(projectID = "", debug = null, type = "strict") {
         if (!projectID && this._lastProjectID) projectID = this._lastProjectID
         if (projectID) projectID = validProjectID(projectID)
         if (projectID && this.payloadData[projectID]) this._lastProjectID = projectID
-        if (!this.payloadData[projectID] && type === 'strict') return null
+        if (!this.payloadData[projectID] && type === "strict") return null
         if (!projectID) return null
         if (projectID && !this._lastProjectID) this._lastProjectID = projectID
         return projectID
@@ -262,7 +261,7 @@ class PocketLibs extends Imports {
      * - cache with `_lastProbeID`
      * @param {*} probeID
      */
-    lastProbeID(probeID = '', debug = null) {
+    lastProbeID(probeID = "", debug = null) {
         if (!probeID && this._lastProbeID) probeID = this._lastProbeID
         if (probeID) probeID = validProbe(probeID)
         if (probeID && this.pocket[probeID]) this._lastProbeID = probeID
@@ -270,7 +269,7 @@ class PocketLibs extends Imports {
         if (!this.pocket[probeID]) return null
         return probeID
     }
- 
+
     /**
      * ### dataPropSelector
      * - works with `$data()` and `$cached()` user selectors
@@ -280,7 +279,7 @@ class PocketLibs extends Imports {
      * @param {*} self optional
      * @param {*} probeData{} required our referencing probeData{}
      */
-    dataPropSelector(type = 'data()', probeID = '', dataProp = {}, self = false, probeData = {}) {
+    dataPropSelector(type = "data()", probeID = "", dataProp = {}, self = false, probeData = {}) {
         let selectedData
         /**
          * NOTE if calling via `$cached()`,  `probeData` already comes as `this._$cached_data` so dont need to cache  it again!
@@ -303,11 +302,11 @@ class PocketLibs extends Imports {
             if (objectSize(selectedData) + objectSize(dataProp) === 2) selectedData = Object.values(selectedData).shift()
 
             // if coming from `$data()` we cache our data
-            if (type === 'data()') this._$cached_data[probeID] = selectedData
+            if (type === "data()") this._$cached_data[probeID] = selectedData
             return self ? this : selectedData
         } catch (err) {
-            if (this.debug) warn('[pocket]', `[$data] no dataProp found on probeID: ${probeID}`)
-            if (type === 'data()') this._$cached_data[probeID] = selectedData
+            if (this.debug) warn("[pocket]", `[$data] no dataProp found on probeID: ${probeID}`)
+            if (type === "data()") this._$cached_data[probeID] = selectedData
             return self ? this : selectedData
         }
     }
@@ -319,7 +318,7 @@ class PocketLibs extends Imports {
      * - only updatable props are: `'campaign', 'data', 'error', 'ref', 'status'(limited)`
      */
     get probeProps() {
-        return ['campaign', 'data', 'task', 'ref', 'error', 'id', 'status']
+        return ["campaign", "data", "task", "ref", "error", "id", "status"]
     }
 }
 

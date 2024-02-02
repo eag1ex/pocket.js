@@ -1,5 +1,5 @@
 /* eslint-disable no-proto */
-const { validID } = require('x-utils-es/umd')
+const { validID } = require("x-utils-es/umd")
 
 // node.js/browser detection
 
@@ -7,9 +7,9 @@ const { validID } = require('x-utils-es/umd')
 // const { v4 } = require('uuid')
 
 /**
-* - accepting object of messages, example: `{'001':['my message',001],...}`
-* - returns : {'001':{message,code},...}
-*/
+ * - accepting object of messages, example: `{'001':['my message',001],...}`
+ * - returns : {'001':{message,code},...}
+ */
 exports.errorMessages = (messages) => {
     const msgs = {}
     for (let [k, v] of Object.entries(messages)) {
@@ -18,9 +18,9 @@ exports.errorMessages = (messages) => {
     return msgs
 }
 
-const idRegexValid = (str = '') => {
+const idRegexValid = (str = "") => {
     const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
-    const regx = new RegExp(pat, 'gi')
+    const regx = new RegExp(pat, "gi")
     if (regx.test(str)) {
         // NOT ALWAYS NEEDED TO DISPLAY THE ERROR
         // if (this.debug) onerror(`your id is invalid, allowed chars: ${pat}`)
@@ -29,10 +29,10 @@ const idRegexValid = (str = '') => {
     return true
 }
 
-exports.validProjectID = (id = '') => {
-    // id = validID(id) // bad idea we should alwasy provide valid id, not modifying inputs
+exports.validProjectID = (id = "") => {
+    // id = validID(id) // bad idea we should always provide valid id, not modifying inputs
     if (!id) return undefined
-    if ((id || '').split(' ').length > 1) return undefined
+    if ((id || "").split(" ").length > 1) return undefined
     if (!idRegexValid(id)) return undefined
     return id
 }
@@ -41,7 +41,7 @@ exports.validProjectID = (id = '') => {
  * Evaluate ProbeID
  * @param {string} probeID (required)
  */
-exports.validProbe = (probeID = '') => {
+exports.validProbe = (probeID = "") => {
     probeID = validID(probeID)
     if (!probeID) return undefined
     if (!idRegexValid(probeID)) return

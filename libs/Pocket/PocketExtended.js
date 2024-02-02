@@ -1,15 +1,15 @@
-
-// providing jsdocs intelesence
+// providing jsdocs intellisense
 // eslint-disable-next-line no-unused-vars
-const ProbeModel = require('../Probe/Probe') 
+const ProbeModel = require("../Probe/Probe")
 
 // eslint-disable-next-line no-unused-vars
-const ProjectPayloadModel = require('../Models/ProjectPayloadModel')
+const ProjectPayloadModel = require("../Models/ProjectPayloadModel")
 
-const { onerror, warn, isPromise, validID, isString } = require('x-utils-es/umd')
+// @ts-ignore
+const { onerror, warn, isPromise, validID, isString } = require("x-utils-es/umd")
 // const sq = require('simple-q') // nice and simple promise/defer by `eaglex.net`
 // const PocketLibs = require('./Pocket.libs')
-const PocketModule = require('./Pocket.module')
+const PocketModule = require("./Pocket.module")
 
 class PocketModuleExt extends PocketModule {
     constructor(opts, debug) {
@@ -43,6 +43,7 @@ class PocketModuleExt extends PocketModule {
 
         // from PocketArchitect dynamicly assigned
         try {
+            // @ts-ignore
             if (this.architectConfig[id]) delete this.architectConfig[id]
         } catch (err) {
             // blah
@@ -57,14 +58,14 @@ class PocketModuleExt extends PocketModule {
      * @param {*} projectID
      */
     $removeProject(projectID) {
-        projectID = !isString(projectID) ? '' : projectID
+        projectID = !isString(projectID) ? "" : projectID
         projectID = this.lastProjectID(projectID) // also updates last selector reference
         this.deletePocketSet(projectID)
         return this
     }
-   
+
     /**
-     * - you can also use it on concurent payloads to existing `projectID`, once initial project is created overy other call will update each Probe{}.data/status, based on payloadData
+     * - you can also use it on concurrent payloads to existing `projectID`, once initial project is created every other call will update each Probe{}.data/status, based on payloadData
      * @param {ProjectPayloadModel | Promise<ProjectPayloadModel>} data required
      * @param {*} async `override current opts.sync for this payload`
      * @param {*} type optional, new/update, `update`: if we call on an existing project we can update `data/status properties` of all assigned tasks at once
@@ -97,7 +98,7 @@ class PocketModuleExt extends PocketModule {
         // @ts-ignore
         if (!asAsync && !isPromise(data)) return returnAs(this.payload(data, false, type))
         else {
-            if (this.debug) onerror('[pocket]', `[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
+            if (this.debug) onerror("[pocket]", `[payload] with opts.async=true, data must be a promise, or do not set async when not a promise`)
             if (asAsync) return returnAs(Promise.reject())
             else return returnAs(false)
         }
@@ -108,34 +109,33 @@ class PocketModuleExt extends PocketModule {
      * @memberof PocketModule
      * - resolves currently active `$payload(...)`
      * - `after completion of Pocket, instance data for all Probes is deleted`
-     * - can be called even before project was declared thanks to callback dispather `$projectSetAsync()`
+     * - can be called even before project was declared thanks to callback dispatcher `$projectSetAsync()`
      * @param {*} payloadID ,required
      * @param allowsMultiple optional, when set to true will allow multiple calls to resolved data
      * @returns {PocketModule}
      */
     $ready(payloadID, allowsMultiple = false) {
-        
         try {
             /**
-             * 
-             * @param {Promise<ProbeModel[]>} val 
+             *
+             * @param {Promise<ProbeModel[]>} val
              */
             const returnAs = (val) => {
                 this.d = val
                 if (this.d && !allowsMultiple) {
                     this.d.catch((err) => {
-                        if (!this.disableWarnings) warn('[pocket]', err)
+                        if (!this.disableWarnings) warn("[pocket]", err)
                     })
                 }
                 return this
             }
 
-            // sofl validation for non existant `payloadID` if called before declaration of a project
+            // soft validation for non existent `payloadID` if called before declaration of a project
             let _payloadID = this.lastProjectID(payloadID, false, null)
             if (!payloadID && _payloadID) payloadID = _payloadID // grab last assigned id incase provided none
 
             // in case it was called the second time, when already resolved!
-            if (this.projectsCache[payloadID] === 'complete' && !allowsMultiple) {
+            if (this.projectsCache[payloadID] === "complete" && !allowsMultiple) {
                 return returnAs(Promise.reject(`[$ready] project: ${payloadID} already complete`))
             }
 
@@ -154,7 +154,7 @@ class PocketModuleExt extends PocketModule {
             const p = this.$projectSetAsync(_payloadID).then(({ projectID }) => {
                 return this.ready(projectID).then((z) => {
                     // NOTE to help problems with loops and using chaining with last selector
-                    // will gradualy delete project with specified timeout
+                    // will gradually delete project with specified timeout
                     if (!this.deleteWithDelay) this.deletePocketSet(projectID)
                     else {
                         setTimeout(() => {
@@ -162,7 +162,7 @@ class PocketModuleExt extends PocketModule {
                         }, this.deleteWithDelay)
                     }
 
-                    this.projectsCache[projectID] = 'complete'
+                    this.projectsCache[projectID] = "complete"
                     this._ready_method_set[_payloadID] = true
 
                     return z
@@ -172,7 +172,7 @@ class PocketModuleExt extends PocketModule {
             this._ready_method_set[_payloadID] = false
             return returnAs(p)
         } catch (error) {
-            if (!this.disableWarnings) onerror('[pocket]', error)
+            if (!this.disableWarnings) onerror("[pocket]", error)
         }
     }
 }

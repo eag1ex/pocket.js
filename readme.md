@@ -4,16 +4,17 @@
 
 #### About
 
--   Easy to use and sophisticated Pocket.js redistribution controller, allowing you to probe data with status management.
+-   Easy to use, lightly sophisticated Pocket.js redistribution controller, allowing you to probe data with status management.
 -   Well documented, clean beautified code.
 -   You assign tasks associated to individual `Probes` controlled by `Pocket.js`, once your payload status is: `complete`, `await ready(id)` can be resolved.
 
 #### Why use it
 
 -   Project is status driven, requires tasks to complete
+    -   many iterating, looping thru data
 -   Specify `tasks`, and receive results by assignment
--   Manage each task Probe/task states and resolutions
--   Re/Distribution of data/scheduled assignments to different areas of your code
+-   Manage each task ( Probe/task ) states and resolutions
+-   Re/distribution of data/scheduled assignments to different areas of your code
 -   Creative flexibility - _make your work easier and justifiable_, simply more fun
 -   Easy to use, user friendly, chaining mythology
 
@@ -35,7 +36,7 @@
 
 #### What is a Probe
 
--   `Probe < Pocket`: Child module doesnt know about Pocket, status/state managed so when `complete`, Pocket intercepts it, and waits until all tasks `complete`. Can be used independently if needed.
+-   `Probe < Pocket`: Child module doesnt know about Pocket, status/state managed so when `complete`, Pocket intercepts it, and waits until all Probe tasks `complete`. Can be used independently if needed.
 
 #### Playground
 
@@ -75,7 +76,7 @@ Working examples can be found at `'./samples/**`
     -   `debug:Boolean`: will log additional messages on what is happening, good for debugging :)!
 
 -   `Probe status logic`: each Probe has `status`, which gives it the required interaction behavior through out each payload. Status list, runs in forward motion, once the status is set to `complete` nothing can be changed:
-    -   `open`: When new Probe is created, first status is created automatically, it status will remain the same until `Probe.data` property is updated, it can never be set back to `open`.
+    -   `open`: When new Probe is created, first status is created automatically, its status will remain the same until `Probe.data` property is updated, it can never be set back to `open`.
     -   `updated`: status is set automatically once first `Probe.data` is updated to any true value, it can be re updated, once initial `data` was previously set
     -   `complete`: when Probe/task is done, `Probe.sq.resolve()` is called, and nothing more can be done.
     -   `send`: automatically set after `Probe.sq.resolve()` is called, cannot be set manually, it is used to identify last status
@@ -83,12 +84,12 @@ Working examples can be found at `'./samples/**`
 
 #### PocketModule methods:
 
--   **$payload( data, async,type ).d:Boolean** : top level method to initiate requested tasks, returns true when successfully, and false on error.
+-   **$payload( data, async,type ).d:Boolean** : top level method to initiate requested tasks, returns true when successful, and false on error.
 
     -   `data.id:String`: payload.id that identifies this job
     -   `data.tasks:Array[]`: specifies required format/data of tasks to perform. Specifications for this can be found in `./samples/**`
-    -   `async`: when passing data is a defer you need to specify data type output as async:true, or set it in global options on POcket instance
-    -   `type`: if out payload in in a loop for example and we do not want to override existing values, we can set type to type='update' (default is `new`)
+    -   `async`: when passing data is a defer you need to specify data type output as async:true, or set it in global options on Pocket instance
+    -   `type`: if our payload is in the loop, for example: we do not want to override existing values, we can set it to type='update' (default is `new`)
 
 -   **$probeStatusAsync( probeID ).d:promise** : returns last status changed via async method, the promise is reset overtime new status is updated, so it can be called many times, returns status name
 
@@ -103,7 +104,7 @@ Working examples can be found at `'./samples/**`
 -   **$update( dataFrom, mergeData,probeID).d:Boolean** : will select currently available Probe/task by `id`, and update its data, only available fields found on Probe can be updated according to setter/getter requirements
 
     -   `probeID:String`: required probeID, each probe `probeID` makes up: `${payload.id}::${task}`, dynamically created upon `$payload(..)===true`
-    -   `dataFrom:{}`: avaialble fields example: `dataFrom:{data:'some cola', campaign:'cocacola',status:'complete'}`, will perform an update on Probe[id][data],Probe[id][campaign], etc. Validation is sensitive.
+    -   `dataFrom:{}`: available fields example: `dataFrom:{data:'some cola', campaign:'cocacola',status:'complete'}`, will perform an update on Probe[id][data], Probe[id][campaign], etc. Validation is sensitive.
     -   `mergeData`: when specified and `dataFrom.data` field is set, will merge both
 
 -   **$activeTasks( payloadID ).d:Array**: returns an `array['taskA','taskB']` from current job payload, will only be available before `$ready(..)` is resolved, and before PocketSet tasks are completed.
@@ -129,10 +130,10 @@ Working examples can be found at `'./samples/**`
 -   **$filter(cb, projectID):self**: filters probes that match condition true, in a callback
 -   **$compute(cb, projectID = ''):self**: loops thru each probe (if previously filtered/or all) that can be manipulated
 -   **$projectID**: getter/ return last projectID
--   **$list(projectID = '', cb = null, type = 'self'):Array[]**:
--   **$transfer(fromProbeID = ''):self**:
--   **$to(toProbeID = '', pointToThisProbe = true, maxDelay = 100):self**:
--   **$data(dataProp:{}||[] , probeID = '', self = false)**:
+-   **$list(projectID = '', cb = null, type = 'self'):Array[]**: list active Probes{} by project id, should return all assigned probe/tasks regardless of status
+-   **$transfer(fromProbeID = ''):self**: select data from `fromProbeID` and hold it in `_transferCache`, until `$to(probeID)` is called
+-   **$to(toProbeID = '', pointToThisProbe = true, maxDelay = 100):self**: works together with `$transfer`, will transfer `data` from one Probe{} to another
+-   **$data(dataProp:{}||[] , probeID = '', self = false)**: returns Object copy of `Probe['data']`
 -   **$cached(dataProp = {}, probeID = ''):{}**:
 -   **$campaign(probeID):string**:
 -   **$ref(probeID)**:
