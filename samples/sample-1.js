@@ -3,7 +3,8 @@ const { log, warn } = require("x-utils-es/umd")
 /**
  * Example, exchange of data regarding `china => covid19 => world`
  */
-const Pocket = require("../index").Pocket
+//const Pocket = require("../index").Pocket
+const Pocket = require("../build/js/pocket_commonjs")
 const pock = new Pocket({ async: false, dispatcher: true, withDataBank: true }, true)
 
 const data = {
@@ -108,6 +109,7 @@ if (pock.$project(data, false, "update").d) {
     })
 }
 
+pock.$data()
 // accessors
 console.log("[pock.$get][data]", pock.$get("pocket-1::china").data)
 console.log("[pock.$get][dataBank]", "pocket-1::china", pock.$get("pocket-1::china").dataBank)
