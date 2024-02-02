@@ -106,7 +106,7 @@ Working examples can be found at `'./samples/**`
     -   `dataFrom:{}`: avaialble fields example: `dataFrom:{data:'some cola', campaign:'cocacola',status:'complete'}`, will perform an update on Probe[id][data],Probe[id][campaign], etc. Validation is sensitive.
     -   `mergeData`: when specified and `dataFrom.data` field is set, will merge both
 
--   **$activeTasks( payloadID ).d:Array**: returns an `array['taskA','tastB']` from current job payload, will only be available before `$ready(..)` is resolved, and before PocketSet tasks are completed.
+-   **$activeTasks( payloadID ).d:Array**: returns an `array['taskA','taskB']` from current job payload, will only be available before `$ready(..)` is resolved, and before PocketSet tasks are completed.
 
 -   **$ready(payloadID, allowMultiple).d:Promise**: last calling method, when your `Pocket` tasks are completed, example: `Probe[id][status]='complete'` only then, will it resolve(), otherwise pending Probe's will remain and `$ready()` will expire, this is the desired effect, most logical behavior.
 
