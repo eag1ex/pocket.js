@@ -15,6 +15,7 @@
     },
     "author": "eaglex",
     "license": "ISC",
+    "engineStrict": true,
     "engine": {
         "node": "16",
         "npm": "*"
