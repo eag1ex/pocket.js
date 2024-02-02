@@ -19,7 +19,7 @@
 
 #### Stack
 
--   Node.js, ES6, JavaScript, data-management, state/management, Promise, prototyping, class chaining, Istanbul/nyc, Eslint, Mocha/Chai, Custom Utils, debug/error exception handling, user/friendly logging.
+-   Node.js, ES6, JavaScript, data-management, state/management, Promise, prototyping, class chaining, Istanbul/nyc, Eslint, Mocha/Chai, Custom Utils, debug/error exception handling, user/friendly logging, jsdocs
 
 #### About the code:
 
@@ -39,7 +39,7 @@
 
 #### Playground
 
-[ pocket.js on codesandbox ](https://codesandbox.io/p/github/eag1ex/pocket.js)
+[ pocket.js on codesandbox ](https://codesandbox.io/p/github/eag1ex/pocket.js/codesandbox)
 <br/>
 
 you can play around with `/samples`
