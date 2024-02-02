@@ -13,7 +13,7 @@
         "build:prod": "cross-env NODE_ENV=production ./node_modules/.bin/webpack --config webpack/webpack.config.prod.js --display-error-details --colors --progress ",
         "test": "nyc --reporter=html --port=4444 --reporter=text mocha ./test/tests.js --colors --delay"
     },
-    "author": "",
+    "author": "eaglex",
     "license": "ISC",
     "engine": {
         "node": "16",

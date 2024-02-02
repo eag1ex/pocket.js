@@ -2,11 +2,6 @@
 
 #### [ Developed by Eaglex ](http://eaglex.net)
 
-##### LICENSE
-
--   LICENSE: CC BY-NC-ND
--   SOURCE: https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
-
 #### Playground
 
 [ pocket.js on codesandbox ](https://codesandbox.io/p/github/eag1ex/pocket.js)
@@ -62,12 +57,6 @@ ps: ready code is on production branch
 #### What is a Probe
 
 -   `Probe < Pocket`: Child module doesnt know about Pocket, status/state managed so when `complete`, Pocket intercepts it, and waits until all tasks `complete`. Can be used independently if needed.
-
-#### Test / Mocha and coverage
-
--   To run a Mocha test: `npm run mocha`
--   To run full coverage test with Instanbul: `npm run test`
--   Coverage can be found in `./coverage/index.html`
 
 #### Examples
 
@@ -175,6 +164,17 @@ for comments/and linting use:
 -   **(add)** browser version support.
 -   **(add)** history state management.
 
+#### Test / Mocha and coverage
+
+-   To run a Mocha test: `npm run mocha`
+-   To run full coverage test with Instanbul: `npm run test`
+-   Coverage can be found in `./coverage/index.html`
+
 ##### Contact
 
 -   Have questions, or would like to submit feedback, `contact me at: https://eaglex.net/app/contact?product=Pocket.js`
+
+##### LICENSE
+
+-   LICENSE: CC BY-NC-ND
+-   SOURCE: https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
