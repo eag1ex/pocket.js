@@ -127,7 +127,7 @@ Working examples can be found at `'./samples/**`
 -   **$probe(probeID):Probe{}**: returns Probe{} by id
 -   **$select(projectID):self**: sets pointer to the project
 -   **$filter(cb, projectID):self**: filters probes that match condition true, in a callback
--   **$compute(cb, projectID = ''):self**: loops thru each probe (if previously filtered/or all) that can be munipulated
+-   **$compute(cb, projectID = ''):self**: loops thru each probe (if previously filtered/or all) that can be manipulated
 -   **$projectID**: getter/ return last projectID
 -   **$list(projectID = '', cb = null, type = 'self'):Array[]**:
 -   **$transfer(fromProbeID = ''):self**:
