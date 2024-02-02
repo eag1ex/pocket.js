@@ -59,6 +59,10 @@ npm run example:2
 
 _ps: ready code is on production branch_
 
+### Code Documentation
+
+Project docs are available on github pages at: [ Pocket.js ](https://eag1ex.github.io/pocket.js/)
+
 #### Examples
 
 Working examples can be found at `'./samples/**`
@@ -151,6 +155,10 @@ Working examples can be found at `'./samples/**`
 -   **$onProbeComplete(cb, probeID):self**: listen to callback on one, or all probes that completed due process
     -   `cb((allData,id))`
     -   `probeID` : optionally select if wishing on only listen for one probe by id
+
+## How to build
+
+Building project for production: `common.js` and` Windows/browser` is available, take a look inside `package.json`, more documentation will become available soon.
 
 #### Code/extensions
 
