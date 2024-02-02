@@ -1,25 +1,19 @@
 {
     "cSpell.language": "en",
     "jslint.enable": false,
-    "standard.enable":true,
-    "eslint.nodePath":"./node_modules/eslint",
+    "standard.enable": true,
+    "eslint.nodePath": "./node_modules/eslint",
     "node-module-intellisense.scanBuiltinModules": true,
     "node-module-intellisense.scanDevDependencies": true,
     "node-module-intellisense.scanFileModules": true,
-    "node-module-intellisense.fileModuleExtensions": [
-        ".js",
-        ".jsx",
-        ".ts",
-        ".d.ts",
-        ".tsx",
-        ".vue",
-        ".json"
-      ],
+    "node-module-intellisense.fileModuleExtensions": [".js", ".jsx", ".ts", ".d.ts", ".tsx", ".vue", ".json"],
+    "prettier.semi": false,
+
     "eslint.enable": true,
-    "eslint.autoFixOnSave":true,
-    "javascript.validate.enable":true,
+    "eslint.autoFixOnSave": false,
+    "javascript.validate.enable": true,
     "javascript.format.enable": true,
-    "eslint.codeAction.showDocumentation":{
+    "eslint.codeAction.showDocumentation": {
         "enable": true
     },
     "eslint.validate": [
@@ -33,45 +27,21 @@
     "editor.wordWrap": "on",
     "beautify.language": {
         "js": {
-            "type": [
-                "javascript"
-            ],
-            "filename": [
-                ".jshintrc",
-                ".jsbeautifyrc"
-            ]
+            "type": ["javascript"],
+            "filename": [".jshintrc", ".jsbeautifyrc"]
         },
-        "css": [
-            "css",
-            "scss"
-        ],
-        "html": [
-            "htm",
-            "html"
-        ]
+        "css": ["css", "scss"],
+        "html": ["htm", "html"]
         // ^^ providing just an array sets the VS Code file type
     },
     "standard.options": {
-        "globals": [
-            "$",
-            "jQuery",
-            "fetch"
-        ],
-        "ignore": [
-            "node_modules/**"
-        ],
-        "plugins": [
-            "html"
-        ],
+        "globals": ["$", "jQuery", "fetch"],
+        "ignore": ["node_modules/**"],
+        "plugins": ["html"],
         "parser": "babel-eslint",
-        "envs": [
-            "jest"
-        ]
+        "envs": ["jest"]
     },
-    "standard.validate": [
-        "javascript",
-        "html"
-    ],
+    "standard.validate": ["javascript", "html"],
     "peacock.elementAdjustments": {
         "activityBar": "lighten"
     },
@@ -128,20 +98,20 @@
             "value": "#42b883"
         }
     ],
+    "eslint.options": {
+        "overrideConfigFile": ".eslintrc"
+    },
+    "javascript.format.semicolons": "remove",
     "commentAnchors.workspace.enabled": true,
     "commentAnchors.tagHighlights.enabled": true,
     "commentAnchors.workspace.lazyLoad": true,
     "commentAnchors.workspace.excludeFiles": "**/{node_modules,.git,.idea,target,out,build,vendor,public,dist}/**/*",
     "commentAnchors.tags.displayInSidebar": true,
-    "commentAnchors.tags.separators": [
-        " ",
-        ": ",
-        " - "
-    ],
+    "commentAnchors.tags.separators": [" ", ": ", " - "],
     "commentAnchors.tags.list": [
         {
             "tag": "WARN",
-            "iconColor":"red",
+            "iconColor": "red",
             "isBold": true,
             "scope": "workspace",
             "iconColor": "default",
@@ -150,7 +120,7 @@
         },
         {
             "tag": "FIX",
-            "iconColor":"yello",
+            "iconColor": "yello",
             "isBold": true,
             "scope": "workspace",
             "iconColor": "default",
@@ -159,7 +129,7 @@
         },
         {
             "tag": "BUG",
-            "iconColor":"yello",
+            "iconColor": "yello",
             "isBold": true,
             "scope": "workspace",
             "iconColor": "default",
@@ -168,14 +138,13 @@
         },
         {
             "tag": "UPDATE",
-            "iconColor":"green",
+            "iconColor": "green",
             "isBold": true,
             "scope": "workspace",
             "iconColor": "default",
             "highlightColor": "#00ff00",
             "styleComment": true
-        },
-
+        }
     ],
     "typescript.validate.enable": false,
     "editor.codeActionsOnSave": {

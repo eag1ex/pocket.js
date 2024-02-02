@@ -1,41 +1,47 @@
-`use strict`
+/* eslint-disable */
 
-const assert = require('assert');
-const chai = require('chai');
+;`use strict`
+
+const assert = require('assert')
+const chai = require('chai')
 //const should = chai.should();
-const expect = chai.expect;
+const expect = chai.expect
 
 // asset
 // const { log } = require('../Pocket/utils')
-const {Pocket} = require('../index')
+const { Pocket } = require('../index')
 const DEBUG = false
 
 // help: https://mochajs.org/
 // help: https://www.chaijs.com/
 
-
 describe('PocketSet/asyncData should succeed with tasks: [required, final]', function () {
-
     const pc = new Pocket({ async: true }, DEBUG)
     const payloadData = {
         id: 'job-two',
         // NOTE each task is a probe
         // task name and id are required to create new Probe
-        tasks: [{ task: 'required', data: { 'value': 0, type: 'payment' }, }, { task: 'final', data: { 'value': 0, type: 'fee' } }]
+        tasks: [
+            { task: 'required', data: { value: 0, type: 'payment' } },
+            { task: 'final', data: { value: 0, type: 'fee' } },
+        ],
     }
     const asyncData = pc.$payload(Promise.resolve(payloadData)).d
     let payloadOK = null
 
     // initialize payload
     beforeEach(function (done) {
-        asyncData.then(z => {
-            payloadOK = z
-            done()
-        }, err => {
-            payloadOK = err
-            done(err)
-        })
-    });
+        asyncData.then(
+            (z) => {
+                payloadOK = z
+                done()
+            },
+            (err) => {
+                payloadOK = err
+                done(err)
+            }
+        )
+    })
 
     it(`$payload() should be a Promise`, function (done) {
         expect(asyncData.__proto__ === Promise.prototype).to.equal(true)
@@ -50,7 +56,6 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
     ////////////////// start all other test
     setTimeout(function () {
         describe(`PocketSet tasks should perform status check and data update`, function () {
-
             const tasks = payloadData.tasks
             const job = payloadData.id
 
@@ -67,8 +72,8 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
 
                 it(`task: ${task}, should update status`, function (done) {
                     probe.data = {
-                        'value': 10000,
-                        'fee': 500
+                        value: 10000,
+                        fee: 500,
                     }
                     expect(pc.$get(probeID).status).equal('updated')
                     done()
@@ -83,7 +88,10 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
                 id: 'job-two',
                 // NOTE each task is a probe
                 // task name and id are required to create new Probe
-                tasks: [{ task: 'required', data: { 'value': -1, type: 'payment' }, }, { task: 'final', data: { 'value': 0, type: 'fee' } }]
+                tasks: [
+                    { task: 'required', data: { value: -1, type: 'payment' } },
+                    { task: 'final', data: { value: 0, type: 'fee' } },
+                ],
             }
 
             const payload = pc.$payload(plData, false).d
@@ -124,7 +132,6 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
         })
 
         describe(`Probe/task should not update 'data' if status is set to 'complete'`, function () {
-
             const tasks = payloadData.tasks
             const job = payloadData.id
 
@@ -179,20 +186,22 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
 
                 //: ${payloadData.id} is send, ready, and disposed, with valid data
                 it(`be ready/resolved`, function (done) {
-
-                    pc.$ready(payloadData.id).d.then(z => {
-                        expect(z).to.have.lengthOf(2);
-                        resolvePromise(z)
-                        done()
-                    }, err => {
-                        rejectPromise(err)
-                        done(err)
-                    })
-                    // expect(pc.$get(z.id)).null              
+                    pc.$ready(payloadData.id).d.then(
+                        (z) => {
+                            expect(z).to.have.lengthOf(2)
+                            resolvePromise(z)
+                            done()
+                        },
+                        (err) => {
+                            rejectPromise(err)
+                            done(err)
+                        }
+                    )
+                    // expect(pc.$get(z.id)).null
                 })
 
                 it(`have valid data from each task`, function (done) {
-                    readyData.then(z => {
+                    readyData.then((z) => {
                         z.forEach((el, inx) => {
                             expect(el['data']['value']).equal(10000)
                             expect(el['data']['fee']).equal(500)
@@ -202,7 +211,7 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
                 })
 
                 it(`each Probe instance should already be disposed`, function (done) {
-                    readyData.then(z => {
+                    readyData.then((z) => {
                         z.forEach((el, inx) => {
                             expect(pc.pocket[el.id]).undefined
                         })
@@ -211,44 +220,45 @@ describe('PocketSet/asyncData should succeed with tasks: [required, final]', fun
                 })
             })
         })
-        run();
-    }, 100);
+        run()
+    }, 100)
     /// end of setTimeout
 })
 
 describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
-
     const pc = new Pocket({ async: false, dispatcher: true }, DEBUG)
     let payloadData = null
 
     describe(`should fail executing user $methods`, function () {
-
         before(async function () {
-            return payloadData = {
+            return (payloadData = {
                 //id: 'job-one',
-                tasks: [{ task: 'start', data: { 'value': 0, type: 'payment' }, }, { task: 'end', data: { 'value': 10000000000, type: 'gift' } }]
-            }
+                tasks: [
+                    { task: 'start', data: { value: 0, type: 'payment' } },
+                    { task: 'end', data: { value: 10000000000, type: 'gift' } },
+                ],
+            })
         })
 
         it(`$payload() should fail`, function (done) {
-            expect(pc.$payload(payloadData).d).to.be.false;
+            expect(pc.$payload(payloadData).d).to.be.false
             done()
         })
 
         it(`no new Pocket() should exist`, function (done) {
-            expect(Object.entries(pc.pocket)).to.have.lengthOf(0);
+            expect(Object.entries(pc.pocket)).to.have.lengthOf(0)
             done()
         })
 
         it(`$update() should fail`, function (done) {
-            expect(pc.$update().d).to.be.false;
-            expect(pc.$update('1').d).to.be.false;
-            expect(pc.$update('1', '').d).to.be.false;
+            expect(pc.$update().d).to.be.false
+            expect(pc.$update('1').d).to.be.false
+            expect(pc.$update('1', '').d).to.be.false
             done()
         })
 
         it(`$get() should fail`, function (done) {
-            expect(pc.$get()).to.be.null;
+            expect(pc.$get()).to.be.null
             done()
         })
 
@@ -258,25 +268,25 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
         })
 
         it(`$ready() promise should fail`, function (done) {
-
-            expect(() => pc.$ready().d).to.throw('payloadID must be set');
-            expect(() => pc.$ready('wrong').d).to.throw('ready[payloadID] is not set, maybe you called it before $payload()');
+            expect(() => pc.$ready().d).to.throw('payloadID must be set')
+            expect(() => pc.$ready('wrong').d).to.throw('ready[payloadID] is not set, maybe you called it before $payload()')
             done()
         })
-
     })
-
 
     describe(`should set $payload() and new Pocket/tasks`, function () {
         before(async function () {
-            return payloadData = {
+            return (payloadData = {
                 id: 'job-one',
-                tasks: [{ task: 'start', data: { 'value': 0, type: 'payment' }, }, { task: 'end', data: { 'value': 10000000000, type: 'gift' } }]
-            }
+                tasks: [
+                    { task: 'start', data: { value: 0, type: 'payment' } },
+                    { task: 'end', data: { value: 10000000000, type: 'gift' } },
+                ],
+            })
         })
 
         it(`$payload() success`, function (done) {
-            expect(pc.$payload(payloadData).d).to.be.true;
+            expect(pc.$payload(payloadData).d).to.be.true
             done()
         })
 
@@ -290,7 +300,7 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
                 const probeID = `${payloadData.id}::start`
                 pc.$get(probeID).data = Object.assign({}, pc.$get(probeID).data, { value: 5000 })
                 expect(pc.$get(probeID).data).to.have.property('value')
-                expect(pc.$get(probeID).data['value']).to.equal(5000);
+                expect(pc.$get(probeID).data['value']).to.equal(5000)
                 done()
             })
 
@@ -301,11 +311,10 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
             })
 
             it(`$activeTasks() display current [2] tasks`, function (done) {
-                expect(pc.$activeTasks().d).to.have.lengthOf(2);
-                expect(pc.$activeTasks(payloadData.id).d).to.have.lengthOf(2);
+                expect(pc.$activeTasks().d).to.have.lengthOf(2)
+                expect(pc.$activeTasks(payloadData.id).d).to.have.lengthOf(2)
                 done()
             })
-
         })
 
         describe(`Pocket/task 'end' should:`, function () {
@@ -315,8 +324,10 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
                 const startValue = pc.$get(`${payloadData.id}::start`).data['value']
                 const endValue = pc.$get(probeID).data.value
                 const newData = Object.assign({}, pc.$get(probeID).data, { value: startValue + endValue })
-                pc.$update({ data: Object.assign({}, pc.$get(probeID).data, newData) },null,probeID).d
-                expect(pc.$get(probeID).data).to.have.property('value').equal(startValue + endValue)
+                pc.$update({ data: Object.assign({}, pc.$get(probeID).data, newData) }, null, probeID).d
+                expect(pc.$get(probeID).data)
+                    .to.have.property('value')
+                    .equal(startValue + endValue)
                 done()
             })
 
@@ -344,11 +355,11 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
                 })
 
                 it(`PocketSet id:'job-one' should be ready`, function (done) {
-                    pc.$ready(payloadData.id).d.then(z => {
+                    pc.$ready(payloadData.id).d.then((z) => {
                         z.forEach((el, i) => {
                             expect(el).to.have.property('data')
                         })
-                        expect(Object.entries(pc.pocket)).to.have.lengthOf(0);
+                        expect(Object.entries(pc.pocket)).to.have.lengthOf(0)
                         done()
                     }, done)
                 })
@@ -357,16 +368,14 @@ describe('PocketSet/Data should succeed with tasks: [start, end]', function () {
     })
 })
 
-
 // NOTE test `Probe.js intependantly, outside PocketModule, for all states`
 describe(`Independant new Probe({}) tests`, function () {
-
-    const {Probe} = require('../index')
+    const { Probe } = require('../index')
     const config = {
         id: 'cocacola::drink',
         task: 'drink',
         data: { order: 10, value: 0 },
-        compaign: 'charity'
+        compaign: 'charity',
     }
 
     const prob = new Probe(config)
@@ -397,9 +406,8 @@ describe(`Independant new Probe({}) tests`, function () {
         })
 
         it(`status should change to 'complete => send'`, function (done) {
-
             prob.status = 'complete'
-            prob.getStatusAsync.then(z => {
+            prob.getStatusAsync.then((z) => {
                 expect(prob.status === z && z === 'send' ? 'send' : prob.status).equal(`send`)
                 done()
             })
