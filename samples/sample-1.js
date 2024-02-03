@@ -5,7 +5,7 @@ const { log, warn } = require("x-utils-es/umd")
  */
 
 // can use production/bundle after running: /$ npm run build:umd
-const Pocket = require("../build")
+const Pocket = require("../build/index")
 
 // const Pocket = require("../index").Pocket
 
