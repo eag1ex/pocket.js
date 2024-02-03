@@ -1,0 +1,7 @@
+{
+    "name": "Pocket.js",
+    "main": "index.js",
+    "esm": {
+        "mode": "auto"
+    }
+}

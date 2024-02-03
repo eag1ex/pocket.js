@@ -3,8 +3,12 @@ const { log, warn } = require("x-utils-es/umd")
 /**
  * Example, exchange of data regarding `china => covid19 => world`
  */
-//const Pocket = require("../index").Pocket
-const Pocket = require("../build/js/pocket_commonjs")
+
+// can use production/bundle after running: /$ npm run build:umd
+// const Pocket = require("../build").Pocket
+
+const Pocket = require("../index").Pocket
+
 const pock = new Pocket({ async: false, dispatcher: true, withDataBank: true }, true)
 
 const data = {
@@ -93,6 +97,7 @@ if (pock.$project(data, false, "update").d) {
     })
         .purchase({ srilanka: pock.$get(`::srilanka`) })
         .then(({ order, projectName }) => {
+            console.log("pock is", pock.$of(`::china`).$probe())
             return pock
                 .$of(`::china`)
                 .$update({ data: { assets: pock.$data(["assets"]) - order.cost } })
@@ -109,7 +114,7 @@ if (pock.$project(data, false, "update").d) {
     })
 }
 
-pock.$data()
+// pock.$data()
 // accessors
 console.log("[pock.$get][data]", pock.$get("pocket-1::china").data)
 console.log("[pock.$get][dataBank]", "pocket-1::china", pock.$get("pocket-1::china").dataBank)

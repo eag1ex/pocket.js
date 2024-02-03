@@ -175,7 +175,7 @@ class PocketSelectors extends PocketArchitect {
 
     /**
      * ### $probe
-     * - return me as Probe{}, similar as $get(...), although does additional check for instanceOf Probe{}
+     * - return as Probe{}, similar as $get(...), although does additional check for instanceOf Probe{}
      * @param {*} probeID
      * @returns {Probe}
      */

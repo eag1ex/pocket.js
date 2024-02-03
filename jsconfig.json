@@ -13,6 +13,7 @@
         "allowSyntheticDefaultImports": true,
         "baseUrl": "."
     },
+    "files": ["./libs/Pocket/PocketExit.module.js", "./libs/Probe/Probe.js", "./libs/utils.js"],
     "paths": {
         "*": ["node_modules/*"]
     },
