@@ -18,5 +18,5 @@
         "*": ["node_modules/*"]
     },
     "include": ["libs"],
-    "exclude": ["node_modules", "tmp"]
+    "exclude": ["node_modules", "tmp", "build"]
 }

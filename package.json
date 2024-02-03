@@ -1,10 +1,11 @@
 {
     "name": "pocket.js",
-    "version": "2.0.2",
+    "version": "2.1.0",
     "description": "data pocket redistribution",
     "main": "index.js",
     "types": "types/index.ts",
     "typings": "types/index.ts",
+    "module": "build/index.js",
     "scripts": {
         "docs": "jsdoc -c .jsdoc.json --verbose",
         "example:1": "node samples/sample-2",
