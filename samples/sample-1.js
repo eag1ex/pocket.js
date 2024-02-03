@@ -4,10 +4,7 @@ const { log, warn } = require("x-utils-es/umd")
  * Example, exchange of data regarding `china => covid19 => world`
  */
 
-// can use production/bundle after running: /$ npm run build:umd
-const Pocket = require("../build/index")
-
-// const Pocket = require("../index").Pocket
+const Pocket = require("../index").Pocket
 
 const pock = new Pocket({ async: false, dispatcher: true, withDataBank: true }, true)
 

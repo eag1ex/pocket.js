@@ -1,22 +1,19 @@
 const { log } = require("x-utils-es/umd")
-const { asPocket } = require("../libs/Intellisense")
 const Pocket = require("../index").Pocket
 
 const DEBUG = true
-const pocket = asPocket(
-    new Pocket(
-        {
-            withDataBank: false,
-            onChange: true,
-            async: false,
-            dispatcher: true,
-            completeOnNull: true,
-            //  disable some less relevant warning messages
-            disableWarnings: true,
-            deleteWithDelay: 0
-        },
-        DEBUG
-    )
+const pocket = new Pocket(
+    {
+        withDataBank: false,
+        onChange: true,
+        async: false,
+        dispatcher: true,
+        completeOnNull: true,
+        //  disable some less relevant warning messages
+        disableWarnings: true,
+        deleteWithDelay: 0
+    },
+    DEBUG
 )
 
 const data1 = {
@@ -64,7 +61,8 @@ let loop = (inx) => {
 
     if (datas[inx]) {
         const d = datas[inx]
-        console.log("calling id", d.id)
+
+        // with architect option we can reorganize global settings
         pocket
             .$architect(() => {
                 // when assigning project `data` must also specify if `async` and `type`
@@ -110,8 +108,8 @@ let loop = (inx) => {
             })
     }
 
-    console.log("next loop")
     inx = inx + 1
+
     loop(inx)
 
     pocket
@@ -122,6 +120,7 @@ let loop = (inx) => {
         .catch((err) => {
             console.log("ups", err)
         })
+
     pocket
         .$ready(`pocket-2`, false)
         .d.then((z) => {
@@ -131,9 +130,14 @@ let loop = (inx) => {
             console.log("ups", err)
         })
 }
+
 loop(0)
 
 // access pocket data state changes
+pocket.$get(`pocket-1::usa`).onChange(function (data, id) {
+    console.log("pocket-1::usa onChange", data)
+}, "all")
+
 pocket.$get(`pocket-2::china`).onChange(function (data, id) {
-    console.log("on change for", data)
+    console.log("pocket-2::china onChange", data)
 }, "all")
