@@ -72,6 +72,7 @@ Building project for production: `common.js` and` Windows/browser` are available
 3. <img src="./screens/build.pocket_umd.png" width="300"/>
 4. To use in browser just include script source `<script src="build/js/pocket_umd.js"/>`
     1. then access via: `new Window.Pocket({...})`
+        1. <img src="./screens/window.pocket.png" width="500"/>
 
 #### PocketModule config/opts and status logic:
 
