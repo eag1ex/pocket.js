@@ -40,7 +40,9 @@
 
 #### Playground
 
-[ pocket.js on codesandbox ](https://codesandbox.io/p/github/eag1ex/pocket.js/codesandbox)
+[ pocket.js on codesandbox ](https://codesandbox.io/p/github/eag1ex/pocket.js/)
+
+_ps: login to get the latest code_
 <br/>
 
 you can play around with `/samples`
@@ -55,8 +57,6 @@ node /samples/simple
 ## or
 npm run example
 ```
-
-_ps: ready code is on production branch_
 
 ### Pocket code documentation
 
