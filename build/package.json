@@ -1,6 +1,8 @@
 {
     "name": "Pocket.js",
     "main": "index.js",
+    "types": "index.d.ts",
+    "typings": "index.d.ts",
     "esm": {
         "mode": "auto"
     }
