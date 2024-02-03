@@ -64,12 +64,14 @@ Project docs are available on github pages at: [ Pocket.js ](https://eag1ex.gith
 
 ## How to build
 
-Building project for production: `common.js` and` Windows/browser` is available, take a look inside `package.json`.
+Building project for production: `common.js` and` Windows/browser` are available, take a look inside `package.json`.
 
 1. To run build from source, run `npm run build:umd`, this will create universal production bundle available to use in browser and Node.js backend.
 
 2. there is already an available build you can use, `require("./build")`, if importing as package `require("pocket/build")`
 3. <img src="./screens/build.pocket_umd.png" width="300"/>
+4. To use in browser just include script source `<script src="build/js/pocket_umd.js"/>`
+    1. then access via: `new Window.Pocket({...})`
 
 #### PocketModule config/opts and status logic:
 
