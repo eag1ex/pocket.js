@@ -2,9 +2,10 @@
     "compileOnSave": false,
     "resolution": "",
     "compilerOptions": {
-        // "emitDeclarationOnly": true,
-        // "typeRoots": ["./libs", "./types"],
+        "emitDeclarationOnly": true,
+        "typeRoots": ["./libs", "./types"],
         "checkJs": true,
+        "declaration": true,
         "moduleResolution": "node",
         "module": "commonJS",
         "target": "es5",
@@ -13,6 +14,7 @@
         "allowSyntheticDefaultImports": true,
         "baseUrl": "."
     },
+    "outDir": "./types",
     "files": ["./libs/Pocket/PocketExit.module.js", "./libs/Probe/Probe.js", "./libs/utils.js"],
     "paths": {
         "*": ["node_modules/*"]
