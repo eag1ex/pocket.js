@@ -1,3 +1,3 @@
-import { PocketType as Pocket } from "../types"
+import { Pocket } from "../types"
 export = Pocket
 export as namespace Pocket

@@ -1,8 +1,8 @@
 /**
- * @typedef {import('../types').PocketType} PocketType
+ * @typedef {import('../types').Pocket} Pocket
  */
 
 /**
- * @type {PocketType}
+ * @type {Pocket}
  */
 module.exports = require("./js/pocket_umd")
