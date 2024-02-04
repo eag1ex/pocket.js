@@ -17,10 +17,11 @@
 -   Re/distribution of data/scheduled assignments to different areas of your code
 -   Creative flexibility - _make your work easier and justifiable_, simply more fun
 -   Easy to use, user friendly, chaining mythology
+-   Consider each task of the Pocket to be a campaign that you are running, once all campaigns are `complete=>send` Pocket will resolve().
 
 #### Stack
 
--   Node.js, ES6, JavaScript, data-management, state/management, Promise, prototyping, class chaining, Istanbul/nyc, Eslint, Mocha/Chai, Custom Utils, debug/error exception handling, user/friendly logging, jsdocs
+-   Node.js, ES6, JavaScript, data-management, state/management, Promise (sync/async), prototyping, class chaining, OOP (SETTERS/GETTER), Istanbul/nyc, Eslint, Mocha/Chai, Custom Utils, debug/error exception handling, user/friendly logging, jsdocs, task runners
 
 #### About the code:
 
@@ -36,7 +37,8 @@
 
 #### What is a Probe
 
--   `Probe < Pocket`: Child module doesnt know about Pocket, status/state managed so when `complete`, Pocket intercepts it, and waits until all Probe tasks `complete`. Can be used independently if needed.
+-   `Probe < Pocket`: Child module doesnt know about Pocket, its status/state managed, when `complete`, Pocket intercepts, and waits until all Probe tasks `complete`. Can be used independently if needed.
+    -   You can consider each probe to me a campaign.
 
 #### Playground
 
