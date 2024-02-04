@@ -69,10 +69,11 @@ class PocketLibs extends Imports {
         this._lastFilterList = {
             /** id:[probe references only] */
         }
+
         this.projectsCache = {
             /** [id]:'open/complete' */
         } // keep reference of completed projects, this variable is never purged
-        this.deleteWithDelay = (opts || {}).deleteWithDelay || 1000 // after project is completed and $ready(..) is resolved set delay to when it should be deleted
+        this.deleteWithDelay = (opts || {}).deleteWithDelay !== 0 ? 1000 : (opts || {}).deleteWithDelay // after project is completed and $ready(..) is resolved set delay to when it should be deleted
         // this.createArchitect() // only when pocketInstance is set
     }
 

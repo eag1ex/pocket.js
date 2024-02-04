@@ -267,6 +267,7 @@ class Probe extends ProbeDataBank {
         // order of status and allowed values
         ;((stat) => {
             try {
+                console.log("his.statusStackOrder[stat].value is", this.statusStackOrder[stat].value, stat)
                 // meaning do not allow any status changes beyond `updated`
                 if (this.statusStackOrder[stat].value > 2 && this.statusStackOrder[stat].set === true) return false
             } catch (err) {
@@ -280,10 +281,11 @@ class Probe extends ProbeDataBank {
 
             switch (stat) {
                 case "open":
-                    if (this._status === "updated") {
-                        if (this.debug) warn("[pocket]", `cannot set status back to open once set to updated`)
+                    if (this._status === "updated" || this._status === "send" || this._status === "complete") {
+                        if (this.debug) warn("[pocket]", `cannot set status back to open once set to updated/complete/send`)
                         break
                     }
+
                     this._status = stat
                     this.statusStackOrder[stat].set = true
                     this.onOpenStatus(v) // emit probe when status opens
@@ -292,8 +294,8 @@ class Probe extends ProbeDataBank {
                     break
 
                 case "updated":
-                    if (this._status === "complete") {
-                        if (this.debug) warn("[pocket]", `cannot update status to 'updated' then previously set to 'complete'`)
+                    if (this._status === "complete" || this._status === "send") {
+                        if (this.debug) warn("[pocket]", `cannot update status to 'updated' then previously set to 'complete/send'`)
                         break
                     }
 
@@ -327,6 +329,7 @@ class Probe extends ProbeDataBank {
                         if (this.debug) warn("[pocket]", `cannot update status to 'send' then previously not set to 'complete'`)
                         break
                     }
+
                     this._status = stat
                     this.statusStackOrder[stat].set = true
                     this.setStatusAsync = stat

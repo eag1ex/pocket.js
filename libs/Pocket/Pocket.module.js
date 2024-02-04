@@ -46,6 +46,7 @@ class PocketModule extends PocketLibs {
     /**
      * @memberof PocketModule
      * @param {ProjectPayloadModel} data
+     * @param {'new'|'update'} type
      */
     payload(data = undefined, async, type = "new") {
         try {
@@ -60,7 +61,7 @@ class PocketModule extends PocketLibs {
 
         if (this.payloadData[data.id] && (!type || type === "new")) {
             this._lastProjectID = data.id
-            // if (this.debug) warn(`[$payload] this payload.id already exists`)
+            if (this.debug) warn(`[$payload] this payload.id already exists`)
             return true
         }
 
@@ -249,7 +250,8 @@ class PocketModule extends PocketLibs {
      * @param {string} type
      */
     _setUpdate(dataFrom, mergeData = null, probeID = "", type = "update") {
-        dataFrom = new SetUpdateModel(dataFrom)
+        // @ts-ignore
+        dataFrom = new SetUpdateModel(dataFrom || {})
 
         const returnAs = (val) => {
             this.d = val

@@ -140,22 +140,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">123x</span>
-<span class="cline-any cline-yes">123x</span>
-<span class="cline-any cline-yes">123x</span>
+<span class="cline-any cline-yes">205x</span>
+<span class="cline-any cline-yes">205x</span>
+<span class="cline-any cline-yes">205x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">123x</span>
+<span class="cline-any cline-yes">205x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -163,20 +163,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
+<span class="cline-any cline-yes">148x</span>
+<span class="cline-any cline-yes">148x</span>
+<span class="cline-any cline-yes">148x</span>
+<span class="cline-any cline-yes">148x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">84x</span>
+<span class="cline-any cline-yes">148x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* eslint-disable no-proto */
-const { validID } = require('x-utils-es/umd')
+const { validID } = require("x-utils-es/umd")
 &nbsp;
 // node.js/browser detection
 &nbsp;
@@ -184,9 +184,9 @@ const { validID } = require('x-utils-es/umd')
 // const { v4 } = require('uuid')
 &nbsp;
 /**
-* - accepting object of messages, example: `{'001':['my message',001],...}`
-* - returns : {'001':{message,code},...}
-*/
+ * - accepting object of messages, example: `{'001':['my message',001],...}`
+ * - returns : {'001':{message,code},...}
+ */
 exports.errorMessages = <span class="fstat-no" title="function not covered" >(m</span>essages) =&gt; {
     const msgs = <span class="cstat-no" title="statement not covered" >{}</span>
 <span class="cstat-no" title="statement not covered" >    for (let [k, v] of Object.entries(messages)) {</span>
@@ -195,9 +195,9 @@ exports.errorMessages = <span class="fstat-no" title="function not covered" >(m<
 <span class="cstat-no" title="statement not covered" >    return msgs</span>
 }
 &nbsp;
-const idRegexValid = (str = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> =&gt; {
+const idRegexValid = (str = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> =&gt; {
     const pat = /[`~!@#$%^&amp;*()\=?;'",.&lt;&gt;\{\}\[\]\\\/]/gi
-    const regx = new RegExp(pat, 'gi')
+    const regx = new RegExp(pat, "gi")
     <span class="missing-if-branch" title="if path not taken" >I</span>if (regx.test(str)) {
         // NOT ALWAYS NEEDED TO DISPLAY THE ERROR
         // if (this.debug) onerror(`your id is invalid, allowed chars: ${pat}`)
@@ -206,10 +206,10 @@ const idRegexValid = (str = <span class="branch-0 cbranch-no" title="branch not 
     return true
 }
 &nbsp;
-exports.validProjectID = (id = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> =&gt; {
-    // id = validID(id) // bad idea we should alwasy provide valid id, not modifying inputs
+exports.validProjectID = (id = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> =&gt; {
+    // id = validID(id) // bad idea we should always provide valid id, not modifying inputs
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!id) <span class="cstat-no" title="statement not covered" >return undefined</span>
-    <span class="missing-if-branch" title="if path not taken" >I</span>if ((id || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.split(' ').length &gt; 1) <span class="cstat-no" title="statement not covered" >return undefined</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if ((id || <span class="branch-1 cbranch-no" title="branch not covered" >"")</span>.split(" ").length &gt; 1) <span class="cstat-no" title="statement not covered" >return undefined</span>
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!idRegexValid(id)) <span class="cstat-no" title="statement not covered" >return undefined</span>
     return id
 }
@@ -218,7 +218,7 @@ exports.validProjectID = (id = <span class="branch-0 cbranch-no" title="branch n
  * Evaluate ProbeID
  * @param {string} probeID (required)
  */
-exports.validProbe = (probeID = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> =&gt; {
+exports.validProbe = (probeID = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> =&gt; {
     probeID = validID(probeID)
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!probeID) <span class="cstat-no" title="statement not covered" >return undefined</span>
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!idRegexValid(probeID)) <span class="cstat-no" title="statement not covered" >return</span>
@@ -238,7 +238,7 @@ exports.idRegexValid = idRegexValid
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-02T04:09:25.693Z
+                at 2024-02-04T13:24:18.234Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

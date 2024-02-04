@@ -676,7 +676,10 @@
 <a name='L611'></a><a href='#L611'>611</a>
 <a name='L612'></a><a href='#L612'>612</a>
 <a name='L613'></a><a href='#L613'>613</a>
-<a name='L614'></a><a href='#L614'>614</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L614'></a><a href='#L614'>614</a>
+<a name='L615'></a><a href='#L615'>615</a>
+<a name='L616'></a><a href='#L616'>616</a>
+<a name='L617'></a><a href='#L617'>617</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -693,6 +696,10 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -750,7 +757,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -819,9 +825,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">29x</span>
-<span class="cline-any cline-yes">29x</span>
-<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">37x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -879,9 +885,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1292,20 +1298,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * ### PocketSelectors
  * - Extends PocketModule using selectors for better access to Probes
- * - allow selecttion to refference by, example:  `taskName`, `::taskName` and `${projectID}::taskName`, thanks to `selectByTask()` method
+ * - allow selection to reference by, example:  `taskName`, `::taskName` and `${projectID}::taskName`, thanks to `selectByTask()` method
  */
 &nbsp;
 // TYPES
 // eslint-disable-next-line no-unused-vars
-const Probe = require('../Probe/Probe')
+const Probe = require("../Probe/Probe")
 // MODELS AND TYPES
 // eslint-disable-next-line no-unused-vars
-const SetUpdateModel = require('../Models/SetUpdateModel')
+const SetUpdateModel = require("../Models/SetUpdateModel")
 &nbsp;
-const { copy, warn, isArray, onerror, objectSize, isString, uniq, isFunction } = require('x-utils-es/umd')
-const { validProbe, validProjectID } = require('../utils')
+const { copy, warn, isArray, onerror, objectSize, isString, uniq, isFunction } = require("x-utils-es/umd")
+const { validProbe, validProjectID } = require("../utils")
 &nbsp;
-const PocketArchitect = require('./Pocket.architect')
+const PocketArchitect = require("./Pocket.architect")
+&nbsp;
+/**
+ * @module
+ */
 class PocketSelectors extends PocketArchitect {
     constructor(opts, debug) {
         super(opts, debug)
@@ -1326,51 +1336,50 @@ class PocketSelectors extends PocketArchitect {
     }
 &nbsp;
     /**
-         * - check is probe exists on PocketModule
-         * @param {*} probeID required, can specify `::taskName` or full id `{projectID}::{probeID}`
-         * @returns boolean
-         */
+     * - check is probe exists on PocketModule
+     * @param {*} probeID required, can specify `::taskName` or full id `{projectID}::{probeID}`
+     * @returns boolean
+     */
 <span class="fstat-no" title="function not covered" >    $e</span>xists(probeID) {
 <span class="cstat-no" title="statement not covered" >        return !!this.selectByTask(probeID)</span>
     }
 &nbsp;
     /**
-         * @param projectID required
-         * @returns boolean `true/false/null`, determined by project completion
-         */
+     * @param projectID required
+     * @returns boolean `true/false/null`, determined by project completion
+     */
 <span class="fstat-no" title="function not covered" >    $p</span>rojectComplete(projectID) {
 <span class="cstat-no" title="statement not covered" >        if (!this.projectsCache[projectID]) <span class="cstat-no" title="statement not covered" >return null</span></span>
-<span class="cstat-no" title="statement not covered" >        return this.projectsCache[projectID] === 'complete'</span>
+<span class="cstat-no" title="statement not covered" >        return this.projectsCache[projectID] === "complete"</span>
     }
 &nbsp;
     /**
-         * ### $projectSet
-         * - use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
-         * @param {*} projectID required
-         */
-<span class="fstat-no" title="function not covered" >    $p</span>rojectSet(projectID = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> {
+     * ### $projectSet
+     * - use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
+     * @param {*} projectID required
+     */
+<span class="fstat-no" title="function not covered" >    $p</span>rojectSet(projectID = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> {
 <span class="cstat-no" title="statement not covered" >        projectID = validProjectID(projectID)</span>
 <span class="cstat-no" title="statement not covered" >        if (this.payloadData[projectID]) <span class="cstat-no" title="statement not covered" >return true</span></span>
 <span class="cstat-no" title="statement not covered" >        return false</span>
     }
 &nbsp;
     /**
-         * REVIEW self is inconsistant here we may have to update this logic
-         * @memberof PocketSelectors
-         * run conditional statement within callback, so we can keep chaining in the same block
-         * @param {(pocket:PocketSelectors)=&gt;any} cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
-         * @param {string} id `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`
-         * @returns {PocketSelectors} by default eturns Pocket/self, or any true value passed inside callback
-         */
+     * REVIEW self is inconsistent here we may have to update this logic
+     * @memberof PocketSelectors
+     * run conditional statement within callback, so we can keep chaining in the same block
+     * @param {(pocket:PocketSelectors)=&gt;any} cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
+     * @param {string} id `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`
+     * @returns {PocketSelectors} by default returns Pocket/self, or any true value passed inside callback
+     */
 <span class="fstat-no" title="function not covered" >    $c</span>ondition(cb, id = <span class="branch-0 cbranch-no" title="branch not covered" >undefined)</span> {
-        
 <span class="cstat-no" title="statement not covered" >        if (!isFunction(cb)) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$condition] must provide callback`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$condition] must provide callback`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
-<span class="cstat-no" title="statement not covered" >        id = !isString(id) ? '' : id</span>
+<span class="cstat-no" title="statement not covered" >        id = !isString(id) ? "" : id</span>
 &nbsp;
-        let selfType = <span class="cstat-no" title="statement not covered" >'PocketSelf' </span>// `ProbeSelf`
+        let selfType = <span class="cstat-no" title="statement not covered" >"PocketSelf" </span>// `ProbeSelf`
         let self = <span class="cstat-no" title="statement not covered" >null</span>
 <span class="cstat-no" title="statement not covered" >        if (id.indexOf(`::`) === 0) {</span>
             // if specified id is `probeID`
@@ -1378,22 +1387,22 @@ class PocketSelectors extends PocketArchitect {
 <span class="cstat-no" title="statement not covered" >            id = this.lastProbeID(id)</span>
 <span class="cstat-no" title="statement not covered" >            selfType = `ProbeSelf`</span>
 <span class="cstat-no" title="statement not covered" >            if (!id) {</span>
-<span class="cstat-no" title="statement not covered" >                if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$condition] probeID not found`)</span></span>
+<span class="cstat-no" title="statement not covered" >                if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$condition] probeID not found`)</span></span>
 <span class="cstat-no" title="statement not covered" >                return this</span>
             }
             // also updates last selector reference
-        } else <span class="cstat-no" title="statement not covered" >if (this.lastProjectID(id)) <span class="cstat-no" title="statement not covered" >selfType = 'PocketSelf'</span></span>
+        } else <span class="cstat-no" title="statement not covered" >if (this.lastProjectID(id)) <span class="cstat-no" title="statement not covered" >selfType = "PocketSelf"</span></span>
         // if specified id is `projectID`
         else {
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$condition] projectID not found`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$condition] projectID not found`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (selfType === 'PocketSelf') <span class="cstat-no" title="statement not covered" >self = this</span></span>
-<span class="cstat-no" title="statement not covered" >        if (selfType === 'ProbeSelf') <span class="cstat-no" title="statement not covered" >self = this.$get(id)</span></span>
+<span class="cstat-no" title="statement not covered" >        if (selfType === "PocketSelf") <span class="cstat-no" title="statement not covered" >self = this</span></span>
+<span class="cstat-no" title="statement not covered" >        if (selfType === "ProbeSelf") <span class="cstat-no" title="statement not covered" >self = this.$get(id)</span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (!self) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$condition] no valid self value`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$condition] no valid self value`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
 &nbsp;
@@ -1404,17 +1413,17 @@ class PocketSelectors extends PocketArchitect {
     }
 &nbsp;
     /**
-         * @returns last selected projectID
-         */
+     * @returns last selected projectID
+     */
 <span class="fstat-no" title="function not covered" >    ge</span>t $projectID() {
 <span class="cstat-no" title="statement not covered" >        return this._lastProjectID</span>
     }
 &nbsp;
     /**
-         * - return last probe status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
-         * @param {*} probeID
-         */
-<span class="fstat-no" title="function not covered" >    $p</span>robeStatusAsync(probeID = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> {
+     * - return last probe status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
+     * @param {*} probeID
+     */
+<span class="fstat-no" title="function not covered" >    $p</span>robeStatusAsync(probeID = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
         let lastProbeID = <span class="cstat-no" title="statement not covered" >this.lastProbeID(probeID)</span>
@@ -1422,14 +1431,14 @@ class PocketSelectors extends PocketArchitect {
     }
 &nbsp;
     /**
-         * ### $get
-         * - `get probe by 'id::taskName'`
-         * - `returns instance`
-         *  methods:`{get,all}` props: `{id,data,tasks,status}`
-         * @param {*} probeID required, example format: `${payload.id}::taskName`
-         * @param {*} self = false optional, in case you want to chain, and access `Probe{}` through `...).d` otheriwe return Pocket
-         * @returns {Probe} actually {Pcket | Probe}
-        */
+     * ### $get
+     * - `get probe by 'id::taskName'`
+     * - `returns instance`
+     *  methods:`{get,all}` props: `{id,data,tasks,status}`
+     * @param {*} probeID required, example format: `${payload.id}::taskName`
+     * @param {*} self = false optional, in case you want to chain, and access `Probe{}` through `...).d` otheriwe return Pocket
+     * @returns {Probe} actually {Pcket | Probe}
+     */
     $get(probeID, self) {
         // allow use of short ref names example: `::cocalola`
         probeID = this.selectByTask(probeID, true)
@@ -1444,16 +1453,16 @@ class PocketSelectors extends PocketArchitect {
      * @param {*} probeRef, required
      * @returns [Probe{},...] array
      */
-<span class="fstat-no" title="function not covered" >    $g</span>etByRef(probeRef = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> {       
+<span class="fstat-no" title="function not covered" >    $g</span>etByRef(probeRef = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> {
 <span class="cstat-no" title="statement not covered" >        return Object.assign(this.pocket).filter(<span class="fstat-no" title="function not covered" >([</span>id, probe], inx) =&gt; <span class="cstat-no" title="statement not covered" >probe.ref === probeRef)</span></span>
     }
 &nbsp;
     /**
-         * - as name suggest sets up new new data for Probe/task, it derives from `$update`
-         * @param {SetUpdateModel} dataFrom required, must specify what to set on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
-         * - we should only use `$set` for initialization, this action also calls `clearStoreTransfers`
-         * @param {*} probeID required, example format: `${payload.id}::taskName`
-         */
+     * - as name suggest sets up new new data for Probe/task, it derives from `$update`
+     * @param {SetUpdateModel} dataFrom required, must specify what to set on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
+     * - we should only use `$set` for initialization, this action also calls `clearStoreTransfers`
+     * @param {*} probeID required, example format: `${payload.id}::taskName`
+     */
 <span class="fstat-no" title="function not covered" >    $s</span>et(dataFrom, probeID) {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
@@ -1463,21 +1472,21 @@ class PocketSelectors extends PocketArchitect {
 &nbsp;
     /**
      * ### $probe
-     * - return me as Probe{}, similar as $get(...), although does additional check for instanceOf Probe{}
+     * - return as Probe{}, similar as $get(...), although does additional check for instanceOf Probe{}
      * @param {*} probeID
      * @returns {Probe}
      */
-<span class="fstat-no" title="function not covered" >    $p</span>robe(probeID = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> {
+<span class="fstat-no" title="function not covered" >    $p</span>robe(probeID = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
         let lastProbeID = <span class="cstat-no" title="statement not covered" >this.lastProbeID(probeID)</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.pocket[lastProbeID]) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$probe] not found for probeID: ${probeID}`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$probe] not found for probeID: ${probeID}`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return undefined</span>
         }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (this.pocket[lastProbeID].constructor.name !== 'Probe') {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >onerror('[pocket]', `[$probe] probeID: ${probeID} is not an instance of Probe{}`)</span></span>
+<span class="cstat-no" title="statement not covered" >        if (this.pocket[lastProbeID].constructor.name !== "Probe") {</span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >onerror("[pocket]", `[$probe] probeID: ${probeID} is not an instance of Probe{}`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return undefined</span>
         }
 &nbsp;
@@ -1485,11 +1494,11 @@ class PocketSelectors extends PocketArchitect {
     }
 &nbsp;
     /**
-         * update Probe/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
-         * @param {SetUpdateModel} dataFrom required, must specify what to update on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
-         * @param {*} mergeData optional if `true` will merge: `Object.assing({},probe[id].data,mergeData['data'])`
-         * @param {*} probeID required, example format: `${payload.id}::taskName`
-         */
+     * update Probe/task, for convenience, so we dont have do this, example: `pc.$get('abc123::grab').status='complete'`
+     * @param {SetUpdateModel} dataFrom required, must specify what to update on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
+     * @param {*} mergeData optional if `true` will merge: `Object.assing({},probe[id].data,mergeData['data'])`
+     * @param {*} probeID required, example format: `${payload.id}::taskName`
+     */
     $update(dataFrom, mergeData, probeID) {
         // allow use of short ref names example: `::cocalola`
         probeID = this.selectByTask(probeID, true)
@@ -1498,23 +1507,23 @@ class PocketSelectors extends PocketArchitect {
     }
 &nbsp;
     /**
-         * ### $select
-         * - select current payloadID/project/job by id you are working on
-         * @param {*} projectID optional/sensitive, selects new point of reference.
-         */
+     * ### $select
+     * - select current payloadID/project/job by id you are working on
+     * @param {*} projectID optional/sensitive, selects new point of reference.
+     */
 <span class="fstat-no" title="function not covered" >    $s</span>elect(projectID = <span class="branch-0 cbranch-no" title="branch not covered" >undefined)</span> {
-<span class="cstat-no" title="statement not covered" >        projectID = !isString(projectID) ? '' : projectID</span>
+<span class="cstat-no" title="statement not covered" >        projectID = !isString(projectID) ? "" : projectID</span>
 <span class="cstat-no" title="statement not covered" >        this.lastProjectID(projectID) </span>// also updates last selector reference
 <span class="cstat-no" title="statement not covered" >        return this</span>
     }
 &nbsp;
     /**
-         * Filter works together with `$compute` or standalone when specified `.d` to return filtered `list`
-         * @memberof PocketSelectors
-         * @param {(probe:Probe)=&gt;any} cb
-         * @param {string} projectID
-         * @returns {PocketSelectors}
-         */
+     * Filter works together with `$compute` or standalone when specified `.d` to return filtered `list`
+     * @memberof PocketSelectors
+     * @param {(probe:Probe)=&gt;any} cb
+     * @param {string} projectID
+     * @returns {PocketSelectors}
+     */
 <span class="fstat-no" title="function not covered" >    $f</span>ilter(cb, projectID = <span class="branch-0 cbranch-no" title="branch not covered" >undefined)</span> {
         const self = <span class="cstat-no" title="statement not covered" >this</span>
 <span class="cstat-no" title="statement not covered" >        projectID = this.lastProjectID(projectID) </span>// also updates last selector reference
@@ -1526,7 +1535,7 @@ class PocketSelectors extends PocketArchitect {
 <span class="cstat-no" title="statement not covered" >        if (!isFunction(cb)) <span class="cstat-no" title="statement not covered" >return returnAs([])</span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (!this.payloadData[projectID]) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$filter] no projectID found`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$filter] no projectID found`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return returnAs(null)</span>
         }
         // when narrowing down $filter.$filter process, lets remember last action
@@ -1558,14 +1567,14 @@ class PocketSelectors extends PocketArchitect {
     }
 &nbsp;
     /**
-         * ### $compute
-         * @instance
-         * - iterate thru each Probe{}/ instance in a callback, and make changes to it
-         * - note: you can only compute thru items that are not `complete`
-         * @param {(probe:Probe)=&gt;any} cb cb callback to current Probe instance process
-         * @param {string} projectID optional/sensitive, selects new point of reference.
-         */
-<span class="fstat-no" title="function not covered" >    $c</span>ompute(cb, projectID = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> {
+     * ### $compute
+     * @instance
+     * - iterate thru each Probe{}/ instance in a callback, and make changes to it
+     * - note: you can only compute thru items that are not `complete`
+     * @param {(probe:Probe)=&gt;any} cb cb callback to current Probe instance process
+     * @param {string} projectID optional/sensitive, selects new point of reference.
+     */
+<span class="fstat-no" title="function not covered" >    $c</span>ompute(cb, projectID = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> {
 <span class="cstat-no" title="statement not covered" >        projectID = this.lastProjectID(projectID)</span>
         const returnAs = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(v</span>al) =&gt; {</span>
             // delete last filtered list after it was consumed
@@ -1575,12 +1584,12 @@ class PocketSelectors extends PocketArchitect {
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (!isFunction(cb)) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$compute] cb must be a function`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$compute] cb must be a function`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return returnAs(null)</span>
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (!this.payloadData[projectID]) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$compute] no project found fo your/last id projectID:${projectID}`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$compute] no project found fo your/last id projectID:${projectID}`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return returnAs(null)</span>
         }
 &nbsp;
@@ -1594,7 +1603,7 @@ class PocketSelectors extends PocketArchitect {
                 })
 <span class="cstat-no" title="statement not covered" >            lastFilter.forEach(<span class="fstat-no" title="function not covered" >(p</span>robe) =&gt; {</span>
                 // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete
-<span class="cstat-no" title="statement not covered" >                if (probe.status !== 'complete' &amp;&amp; probe.status !== 'send') <span class="cstat-no" title="statement not covered" >cb.call(probe, probe)</span></span>
+<span class="cstat-no" title="statement not covered" >                if (probe.status !== "complete" &amp;&amp; probe.status !== "send") <span class="cstat-no" title="statement not covered" >cb.call(probe, probe)</span></span>
             })
             // finally only return not none list on probes, then clear _lastFilterList
 <span class="cstat-no" title="statement not covered" >            return returnAs(this._lastFilterList[projectID])</span>
@@ -1602,21 +1611,21 @@ class PocketSelectors extends PocketArchitect {
 <span class="cstat-no" title="statement not covered" >            this.projectProbeList(projectID).forEach(<span class="fstat-no" title="function not covered" >(p</span>robe) =&gt; {</span>
                 // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                if (probe.status !== 'complete' &amp;&amp; probe.status !== 'send') <span class="cstat-no" title="statement not covered" >cb.call(probe, probe)</span></span>
+<span class="cstat-no" title="statement not covered" >                if (probe.status !== "complete" &amp;&amp; probe.status !== "send") <span class="cstat-no" title="statement not covered" >cb.call(probe, probe)</span></span>
             })
 <span class="cstat-no" title="statement not covered" >            return returnAs(this.projectProbeList(projectID))</span>
         }
     }
 &nbsp;
     /**
-         * ### $list
-         * - list active Probes{} by project id, should return all assigned probe/tasks regardless of status
-         * - returns array[] of active Probe{}/tasks or []
-         * @param {*} projectID optional/sensitive, selects new point of reference.
-         * @param {(probeCopy:object)=&gt;{}} cb((probe, probeID)=&gt;) optional, when set will loop thru each Probe{} in callback
-         * @param {*} type optional, set to `list`, will return latest Probes, that includes if initiated cb and made a few changes
-         */
-<span class="fstat-no" title="function not covered" >    $l</span>ist(projectID = <span class="branch-0 cbranch-no" title="branch not covered" >'',</span> cb = <span class="branch-0 cbranch-no" title="branch not covered" >null,</span> type = <span class="branch-0 cbranch-no" title="branch not covered" >'self')</span> {
+     * ### $list
+     * - list active Probes{} by project id, should return all assigned probe/tasks regardless of status
+     * - returns array[] of active Probe{}/tasks or []
+     * @param {*} projectID optional/sensitive, selects new point of reference.
+     * @param {(probeCopy:object)=&gt;{}} cb((probe, probeID)=&gt;) optional, when set will loop thru each Probe{} in callback
+     * @param {*} type optional, set to `list`, will return latest Probes, that includes if initiated cb and made a few changes
+     */
+<span class="fstat-no" title="function not covered" >    $l</span>ist(projectID = <span class="branch-0 cbranch-no" title="branch not covered" >"",</span> cb = <span class="branch-0 cbranch-no" title="branch not covered" >null,</span> type = <span class="branch-0 cbranch-no" title="branch not covered" >"self")</span> {
 <span class="cstat-no" title="statement not covered" >        projectID = this.lastProjectID(projectID)</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.payloadData[projectID]) <span class="cstat-no" title="statement not covered" >return []</span></span>
         const list = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
@@ -1629,55 +1638,55 @@ class PocketSelectors extends PocketArchitect {
 <span class="cstat-no" title="statement not covered" >            this.projectProbeList(projectID).forEach(<span class="fstat-no" title="function not covered" >(p</span>robe) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                cb(probe.all()) </span>// no access to Probe/instance only copy
             })
-<span class="cstat-no" title="statement not covered" >            if (type === 'self' || !type) {</span>
+<span class="cstat-no" title="statement not covered" >            if (type === "self" || !type) {</span>
 <span class="cstat-no" title="statement not covered" >                return this</span>
             }
-<span class="cstat-no" title="statement not covered" >            if (type === 'list') <span class="cstat-no" title="statement not covered" >return list()</span></span>
+<span class="cstat-no" title="statement not covered" >            if (type === "list") <span class="cstat-no" title="statement not covered" >return list()</span></span>
         } else {
 <span class="cstat-no" title="statement not covered" >            return list()</span>
         }
     }
 &nbsp;
     /**
-         * ### $transfer
-         * - select data from `fromProbeID` and hold it in `_transferCache`, until `$to(probeID)` is called
-         * - warning, action removes `Probe[fromProbeID].data` and overrides it on Probe[probeID].data, only when `$to(probeID)` is called, simple as that!
-         * @param {*} fromProbeID optional/sensitive, selects new point of reference.
-         */
-<span class="fstat-no" title="function not covered" >    $t</span>ransfer(fromProbeID = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> {
+     * ### $transfer
+     * - select data from `fromProbeID` and hold it in `_transferCache`, until `$to(probeID)` is called
+     * - warning, action removes `Probe[fromProbeID].data` and overrides it on Probe[probeID].data, only when `$to(probeID)` is called, simple as that!
+     * @param {*} fromProbeID optional/sensitive, selects new point of reference.
+     */
+<span class="fstat-no" title="function not covered" >    $t</span>ransfer(fromProbeID = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        fromProbeID = this.selectByTask(fromProbeID, true)</span>
 <span class="cstat-no" title="statement not covered" >        fromProbeID = this.lastProbeID(fromProbeID)</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.pocket[fromProbeID]) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$transfer] no Probe{} found for this id fromProbeID:${fromProbeID}`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$transfer] no Probe{} found for this id fromProbeID:${fromProbeID}`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
-<span class="cstat-no" title="statement not covered" >        this.storeTransfers(fromProbeID, copy(this.pocket[fromProbeID]['data']))</span>
+<span class="cstat-no" title="statement not covered" >        this.storeTransfers(fromProbeID, copy(this.pocket[fromProbeID]["data"]))</span>
         // NOTE needed for extra security to make sure it was called before we can update `$to()`
 <span class="cstat-no" title="statement not covered" >        this.$transfer_lastID = fromProbeID</span>
 <span class="cstat-no" title="statement not covered" >        return this</span>
     }
 &nbsp;
     /**
-         * ### $to
-         * - works together with `$transfer`, will transfer `data` from one Probe{} to another
-         * if `_transferCache` is set, the cache is cleared.
-         * @param {*} toProbeID optional/sensitive, points to Probe{} `data` will be packed, it is not previous reference pointer, but the next.
-         * - will only work if `toProbeID` is not yet complete
-         * @param {*} pointToThisProbe to stay on the current pointer reference
-         * @param {*} maxDelay, keep at minimum! Time between transaction can take place, relates to `fromAverageTimeHasPast` found in `accessLastValidTransfer()`
-         */
-<span class="fstat-no" title="function not covered" >    $t</span>o(toProbeID = <span class="branch-0 cbranch-no" title="branch not covered" >'',</span> pointToThisProbe = <span class="branch-0 cbranch-no" title="branch not covered" >true,</span> maxDelay = <span class="branch-0 cbranch-no" title="branch not covered" >100)</span> {
+     * ### $to
+     * - works together with `$transfer`, will transfer `data` from one Probe{} to another
+     * if `_transferCache` is set, the cache is cleared.
+     * @param {*} toProbeID optional/sensitive, points to Probe{} `data` will be packed, it is not previous reference pointer, but the next.
+     * - will only work if `toProbeID` is not yet complete
+     * @param {*} pointToThisProbe to stay on the current pointer reference
+     * @param {*} maxDelay, keep at minimum! Time between transaction can take place, relates to `fromAverageTimeHasPast` found in `accessLastValidTransfer()`
+     */
+<span class="fstat-no" title="function not covered" >    $t</span>o(toProbeID = <span class="branch-0 cbranch-no" title="branch not covered" >"",</span> pointToThisProbe = <span class="branch-0 cbranch-no" title="branch not covered" >true,</span> maxDelay = <span class="branch-0 cbranch-no" title="branch not covered" >100)</span> {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        toProbeID = this.selectByTask(toProbeID, pointToThisProbe)</span>
         // if (!keepLastPointerReference) toProbeID = this.lastProbeID(toProbeID)
 <span class="cstat-no" title="statement not covered" >        if (pointToThisProbe) <span class="cstat-no" title="statement not covered" >toProbeID = validProbe(toProbeID)</span></span>
 <span class="cstat-no" title="statement not covered" >        if (!toProbeID) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$to] toProbeID is invalid`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$to] toProbeID is invalid`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
 <span class="cstat-no" title="statement not covered" >        if (!this.pocket[toProbeID]) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$to] no Probe{} found for this id toProbeID:${toProbeID}`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$to] no Probe{} found for this id toProbeID:${toProbeID}`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
 <span class="cstat-no" title="statement not covered" >        if (this.$transfer_lastID) {</span>
@@ -1687,42 +1696,42 @@ class PocketSelectors extends PocketArchitect {
 <span class="cstat-no" title="statement not covered" >            if (objectSize(lastValidTransfer)) {</span>
                 const { fromProbeID, data } = <span class="cstat-no" title="statement not covered" >lastValidTransfer</span>
 <span class="cstat-no" title="statement not covered" >                if (this.$transfer_lastID === fromProbeID) {</span>
-<span class="cstat-no" title="statement not covered" >                    if (this.pocket[toProbeID].status === 'complete' || this.pocket[toProbeID].status === 'send') {</span>
-<span class="cstat-no" title="statement not covered" >                        if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$to] cannot transfer since toProbeID: ${toProbeID} is already complete`)</span></span>
-<span class="cstat-no" title="statement not covered" >                        this.$transfer_lastID = ''</span>
+<span class="cstat-no" title="statement not covered" >                    if (this.pocket[toProbeID].status === "complete" || this.pocket[toProbeID].status === "send") {</span>
+<span class="cstat-no" title="statement not covered" >                        if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$to] cannot transfer since toProbeID: ${toProbeID} is already complete`)</span></span>
+<span class="cstat-no" title="statement not covered" >                        this.$transfer_lastID = ""</span>
 <span class="cstat-no" title="statement not covered" >                        return this</span>
                     }
-<span class="cstat-no" title="statement not covered" >                    this.pocket[fromProbeID]['data'] = null </span>// from $transfer
-<span class="cstat-no" title="statement not covered" >                    this.pocket[toProbeID]['data'] = data </span>// $to
+<span class="cstat-no" title="statement not covered" >                    this.pocket[fromProbeID]["data"] = null </span>// from $transfer
+<span class="cstat-no" title="statement not covered" >                    this.pocket[toProbeID]["data"] = data </span>// $to
                 }
             } else {
-<span class="cstat-no" title="statement not covered" >                if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$to] no last valid transfer found`)</span></span>
+<span class="cstat-no" title="statement not covered" >                if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$to] no last valid transfer found`)</span></span>
             }
-<span class="cstat-no" title="statement not covered" >            this.$transfer_lastID = ''</span>
+<span class="cstat-no" title="statement not covered" >            this.$transfer_lastID = ""</span>
         }
 <span class="cstat-no" title="statement not covered" >        return this</span>
     }
 &nbsp;
     /**
-         * ### $of
-         * - points to Probe{} be reference
-         * @param {*} probeID optional/sensitive, select new point of reference
-         */
-<span class="fstat-no" title="function not covered" >    $o</span>f(probeID = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> {
+     * ### $of
+     * - points to Probe{} be reference
+     * @param {*} probeID optional/sensitive, select new point of reference
+     */
+<span class="fstat-no" title="function not covered" >    $o</span>f(probeID = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        this.selectByTask(probeID, true)</span>
 <span class="cstat-no" title="statement not covered" >        return this</span>
     }
 &nbsp;
     /**
-         * ### $data
-         * - returns Object copy of `Probe['data']`
-         * @param {*} dataProp optional, if you know what you are asking for example: `{assets:true}`,or `array['assets]`, it has catch error exception, so you wont receive any errors just `null`
-         * will return all available matched within our `Probe{}['data]`. Multiples of `dataProp{}/([])/(',')` will return an object, if only one specified, only value will be retured
-         * @param {*} probeID optional/sensitive, select new point of reference
-         * @param {*} self optional,if you want to $cached() last data enquiry and return `self` to keep chaining, nice!
-         */
-<span class="fstat-no" title="function not covered" >    $d</span>ata(dataProp = <span class="branch-0 cbranch-no" title="branch not covered" >undefined </span>/** {}||[] */, probeID = <span class="branch-0 cbranch-no" title="branch not covered" >'',</span> self = <span class="branch-0 cbranch-no" title="branch not covered" >false)</span> {
+     * ### $data
+     * - returns Object copy of `Probe['data']`
+     * @param {*} dataProp optional, if you know what you are asking for example: `{assets:true}`,or `array['assets]`, it has catch error exception, so you wont receive any errors just `null`
+     * will return all available matched within our `Probe{}['data]`. Multiples of `dataProp{}/([])/(',')` will return an object, if only one specified, only value will be returned
+     * @param {*} probeID optional/sensitive, select new point of reference
+     * @param {*} self optional,if you want to $cached() last data enquiry and return `self` to keep chaining, nice!
+     */
+<span class="fstat-no" title="function not covered" >    $d</span>ata(dataProp = <span class="branch-0 cbranch-no" title="branch not covered" >undefined </span>/** {}||[] */, probeID = <span class="branch-0 cbranch-no" title="branch not covered" >"",</span> self = <span class="branch-0 cbranch-no" title="branch not covered" >false)</span> {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.pocket[probeID]) <span class="cstat-no" title="statement not covered" >return self ? this : undefined</span></span>
@@ -1736,27 +1745,27 @@ class PocketSelectors extends PocketArchitect {
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (!dataProp || !objectSize(dataProp)) {</span>
-<span class="cstat-no" title="statement not covered" >            this._$cached_data[probeID] = copy(this.pocket[probeID]['data'])</span>
+<span class="cstat-no" title="statement not covered" >            this._$cached_data[probeID] = copy(this.pocket[probeID]["data"])</span>
 <span class="cstat-no" title="statement not covered" >            return self ? this : this._$cached_data[probeID]</span>
         }
-<span class="cstat-no" title="statement not covered" >        return this.dataPropSelector('data()', probeID, dataProp, self, copy(this.pocket[probeID]['data']))</span>
+<span class="cstat-no" title="statement not covered" >        return this.dataPropSelector("data()", probeID, dataProp, self, copy(this.pocket[probeID]["data"]))</span>
     }
 &nbsp;
     /**
-         * ### cached
-         * - grabs last cached `$data(...)` from Probe{}
-         * @param {*} dataProp{}/String optional, know what you are asking for example: ` {assets:true}/ or &gt; 'assets,values,somethingElse'`, it has catch error exception, so you wont receive any errors just `null`
-         * will return all available matched within our `_$cached_data[probeID]`. Multiples of `dataProp{}/([])/(',')` will return an object, if only one specified, only value will be retured
-         * @param {*} probeID
-         */
-<span class="fstat-no" title="function not covered" >    $c</span>ached(dataProp = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> probeID = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> {
+     * ### cached
+     * - grabs last cached `$data(...)` from Probe{}
+     * @param {*} dataProp{}/String optional, know what you are asking for example: ` {assets:true}/ or &gt; 'assets,values,somethingElse'`, it has catch error exception, so you wont receive any errors just `null`
+     * will return all available matched within our `_$cached_data[probeID]`. Multiples of `dataProp{}/([])/(',')` will return an object, if only one specified, only value will be returned
+     * @param {*} probeID
+     */
+<span class="fstat-no" title="function not covered" >    $c</span>ached(dataProp = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> probeID = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> {
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.pocket[probeID]) <span class="cstat-no" title="statement not covered" >return undefined</span></span>
         const hasValue = <span class="cstat-no" title="statement not covered" >this._$cached_data[probeID] !== undefined &amp;&amp; this._$cached_data[probeID] !== null</span>
 <span class="cstat-no" title="statement not covered" >        if (!hasValue) <span class="cstat-no" title="statement not covered" >return undefined</span></span>
         // if you provided a string make it an object
-<span class="cstat-no" title="statement not covered" >        if (isString(dataProp) &amp;&amp; (dataProp || '').length) {</span>
-<span class="cstat-no" title="statement not covered" >            dataProp = uniq(dataProp.trim().replace(/ /gi, '').split(',')).reduce(<span class="fstat-no" title="function not covered" >(n</span>, el) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        if (isString(dataProp) &amp;&amp; (dataProp || "").length) {</span>
+<span class="cstat-no" title="statement not covered" >            dataProp = uniq(dataProp.trim().replace(/ /gi, "").split(",")).reduce(<span class="fstat-no" title="function not covered" >(n</span>, el) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                if (el !== undefined) <span class="cstat-no" title="statement not covered" >n[el] = true</span></span>
 <span class="cstat-no" title="statement not covered" >                return n</span>
             }, {})
@@ -1770,71 +1779,71 @@ class PocketSelectors extends PocketArchitect {
         // no selection at all, so just return whats available
 <span class="cstat-no" title="statement not covered" >        if (!dataProp || !objectSize(dataProp)) {</span>
 <span class="cstat-no" title="statement not covered" >            return this._$cached_data[probeID] === undefined ? undefined : this._$cached_data[probeID]</span>
-        } else <span class="cstat-no" title="statement not covered" >return this.dataPropSelector('cached()', probeID, dataProp, false, this._$cached_data[probeID])</span>
+        } else <span class="cstat-no" title="statement not covered" >return this.dataPropSelector("cached()", probeID, dataProp, false, this._$cached_data[probeID])</span>
     }
 &nbsp;
     /**
-         * ### $campaign
-         * - returns Object copy of `Probe['campaign']`
-         * @param {*} probeID optional/sensitive, select new point of reference
-         */
+     * ### $campaign
+     * - returns Object copy of `Probe['campaign']`
+     * @param {*} probeID optional/sensitive, select new point of reference
+     */
 <span class="fstat-no" title="function not covered" >    $c</span>ampaign(probeID) {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.pocket[probeID]) <span class="cstat-no" title="statement not covered" >return null</span></span>
-<span class="cstat-no" title="statement not covered" >        return copy(this.pocket[probeID]['campaign'])</span>
+<span class="cstat-no" title="statement not covered" >        return copy(this.pocket[probeID]["campaign"])</span>
     }
 &nbsp;
     /**
-         * ### $ref
-         * - returns Probe{}.ref
-         * @param {*} probeID optional/sensitive, select new point of reference
-         * @returns {string}
-         */
+     * ### $ref
+     * - returns Probe{}.ref
+     * @param {*} probeID optional/sensitive, select new point of reference
+     * @returns {string}
+     */
 <span class="fstat-no" title="function not covered" >    $r</span>ef(probeID) {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.pocket[probeID]) <span class="cstat-no" title="statement not covered" >return undefined</span></span>
-<span class="cstat-no" title="statement not covered" >        return copy(this.pocket[probeID]['ref'])</span>
+<span class="cstat-no" title="statement not covered" >        return copy(this.pocket[probeID]["ref"])</span>
     }
 &nbsp;
     /**
-         * ### $status
-         * - returns Object copy of `Probe['status']`
-         * @param {*} probeID optional/sensitive, select new point of reference
-         * @returns {string}
-         */
+     * ### $status
+     * - returns Object copy of `Probe['status']`
+     * @param {*} probeID optional/sensitive, select new point of reference
+     * @returns {string}
+     */
 <span class="fstat-no" title="function not covered" >    $s</span>tatus(probeID) {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.pocket[probeID]) <span class="cstat-no" title="statement not covered" >return undefined</span></span>
-<span class="cstat-no" title="statement not covered" >        return copy(this.pocket[probeID]['status'])</span>
+<span class="cstat-no" title="statement not covered" >        return copy(this.pocket[probeID]["status"])</span>
     }
 &nbsp;
     /**
-         * ### $task
-         * - returns Object copy of `Probe['task']`
-         * @param {*} probeID optional/sensitive, select new point of reference
-         *  @returns {string}
-         */
+     * ### $task
+     * - returns Object copy of `Probe['task']`
+     * @param {*} probeID optional/sensitive, select new point of reference
+     *  @returns {string}
+     */
 <span class="fstat-no" title="function not covered" >    $t</span>ask(probeID) {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.pocket[probeID]) <span class="cstat-no" title="statement not covered" >return undefined</span></span>
-<span class="cstat-no" title="statement not covered" >        return copy(this.pocket[probeID]['task'])</span>
+<span class="cstat-no" title="statement not covered" >        return copy(this.pocket[probeID]["task"])</span>
     }
 &nbsp;
     /**
-         * ### $task
-         * - returns Object copy of `Probe['task']`
-         * @param {*} probeID optional/sensitive, select new point of reference
-         * @returns {array}
-         */
+     * ### $task
+     * - returns Object copy of `Probe['task']`
+     * @param {*} probeID optional/sensitive, select new point of reference
+     * @returns {array}
+     */
 <span class="fstat-no" title="function not covered" >    $e</span>rror(probeID) {
         // allow use of short ref names example: `::cocalola`
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
 <span class="cstat-no" title="statement not covered" >        if (!this.pocket[probeID]) <span class="cstat-no" title="statement not covered" >return undefined</span></span>
-<span class="cstat-no" title="statement not covered" >        return copy(this.pocket[probeID]['error'])</span>
+<span class="cstat-no" title="statement not covered" >        return copy(this.pocket[probeID]["error"])</span>
     }
 &nbsp;
     /**
@@ -1860,7 +1869,7 @@ class PocketSelectors extends PocketArchitect {
      */
 <span class="fstat-no" title="function not covered" >    $o</span>nChange(cb, watchProp, probeID) {
 <span class="cstat-no" title="statement not covered" >        if (!this._onChange) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$onChange] opts.onChange=true must be enabled to use this feature`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$onChange] opts.onChange=true must be enabled to use this feature`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
 <span class="cstat-no" title="statement not covered" >        probeID = this.selectByTask(probeID, true)</span>
@@ -1870,30 +1879,30 @@ class PocketSelectors extends PocketArchitect {
     }
 &nbsp;
     /**
-     * callback initialted of any probe that was completed, unless specificly selected `probeID`
+     * callback initialled of any probe that was completed, unless specificity selected `probeID`
      * @param {(probe:Probe,id)=&gt;any} cb
      * @param {*} probeID optional if you only want to listen for changes to specific probe add the id
      */
 <span class="fstat-no" title="function not covered" >    $o</span>nProbeComplete(cb, probeID) {
 <span class="cstat-no" title="statement not covered" >        if (!this._onChange) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$onChange] opts.onChange=true must be enabled to use this feature`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$onChange] opts.onChange=true must be enabled to use this feature`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
         // only run available onChange for selected probe by id
 <span class="cstat-no" title="statement not covered" >        if (probeID) {</span>
 <span class="cstat-no" title="statement not covered" >            probeID = this.selectByTask(probeID, true)</span>
 <span class="cstat-no" title="statement not covered" >            if (!this.pocket[probeID]) <span class="cstat-no" title="statement not covered" >return undefined</span></span>
-<span class="cstat-no" title="statement not covered" >            this.pocket[probeID].onChange(cb, 'status:complete')</span>
+<span class="cstat-no" title="statement not covered" >            this.pocket[probeID].onChange(cb, "status:complete")</span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         } else {
             let projectID = <span class="cstat-no" title="statement not covered" >this.lastProjectID()</span>
             let probeList = <span class="cstat-no" title="statement not covered" >this.projectProbeList(projectID)</span>
 &nbsp;
             /**
-                 * callback any probe that completed due process
-                 */
+             * callback any probe that completed due process
+             */
 <span class="cstat-no" title="statement not covered" >            probeList.forEach(<span class="fstat-no" title="function not covered" >(p</span>robe) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                probe.onChange(cb, 'status:complete')</span>
+<span class="cstat-no" title="statement not covered" >                probe.onChange(cb, "status:complete")</span>
             })
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            return this</span>
@@ -1909,7 +1918,7 @@ module.exports = PocketSelectors
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-02T04:09:25.693Z
+                at 2024-02-04T13:24:18.234Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

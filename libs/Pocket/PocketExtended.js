@@ -68,7 +68,7 @@ class PocketModuleExt extends PocketModule {
      * - you can also use it on concurrent payloads to existing `projectID`, once initial project is created every other call will update each Probe{}.data/status, based on payloadData
      * @param {ProjectPayloadModel | Promise<ProjectPayloadModel>} data required
      * @param {*} async `override current opts.sync for this payload`
-     * @param {*} type optional, new/update, `update`: if we call on an existing project we can update `data/status properties` of all assigned tasks at once
+     * @param {"new"| "update"} type optional, new/update, `update`: if we call on an existing project we can update `data/status properties` of all assigned tasks at once
      * 
      * - `initialize new payload, for as many tasks`
      * - `sets a multi task with instructions:`
@@ -111,10 +111,11 @@ class PocketModuleExt extends PocketModule {
      * - `after completion of Pocket, instance data for all Probes is deleted`
      * - can be called even before project was declared thanks to callback dispatcher `$projectSetAsync()`
      * @param {*} payloadID ,required
-     * @param allowsMultiple optional, when set to true will allow multiple calls to resolved data
+     * @param { boolean?}  allowsMultiple optional, when set to true will allow multiple calls to resolved data
+     * @param { boolean?} strict if true will check {payloadID} exists
      * @returns {PocketModule}
      */
-    $ready(payloadID, allowsMultiple = false) {
+    $ready(payloadID, allowsMultiple = false, strict = false) {
         try {
             /**
              *
@@ -131,7 +132,7 @@ class PocketModuleExt extends PocketModule {
             }
 
             // soft validation for non existent `payloadID` if called before declaration of a project
-            let _payloadID = this.lastProjectID(payloadID, false, null)
+            let _payloadID = this.lastProjectID(payloadID, null, strict === true ? "strict" : null)
             if (!payloadID && _payloadID) payloadID = _payloadID // grab last assigned id incase provided none
 
             // in case it was called the second time, when already resolved!
@@ -143,13 +144,15 @@ class PocketModuleExt extends PocketModule {
                 if (this._ready_method_set[payloadID] === true) {
                     return returnAs(Promise.reject(`[$ready] project: ${payloadID} already complete, cannot recall same $ready, ALLOW_MULTIPLE_FALSE`))
                 }
+
                 if (this._ready_method_set[payloadID] === false) {
                     return returnAs(Promise.reject(`[$ready] project: ${payloadID} you already declared $ready somewhere else, this call is ignored, ALLOW_MULTIPLE_FALSE`))
                 }
             }
 
-            if (!_payloadID) throw `payloadID must be set`
-
+            if (!_payloadID) {
+                return returnAs(Promise.reject(`payloadID must be set`))
+            }
             // we wrap it if on ready project so it allows declaring `${$ready()}` even before $project was created, cool ha!
             const p = this.$projectSetAsync(_payloadID).then(({ projectID }) => {
                 return this.ready(projectID).then((z) => {
@@ -164,7 +167,6 @@ class PocketModuleExt extends PocketModule {
 
                     this.projectsCache[projectID] = "complete"
                     this._ready_method_set[_payloadID] = true
-
                     return z
                 }, Promise.reject)
             }, Promise.reject)

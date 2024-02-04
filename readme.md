@@ -120,9 +120,10 @@ Building project for production: `common.js` and` Windows/browser` are available
 
 -   **$activeTasks( payloadID ).d:Array**: returns an `array['taskA','taskB']` from current job payload, will only be available before `$ready(..)` is resolved, and before PocketSet tasks are completed.
 
--   **$ready(payloadID, allowMultiple).d:Promise**: last calling method, when your `Pocket` tasks are completed, example: `Probe[id][status]='complete'` only then, will it resolve(), otherwise pending Probe's will remain and `$ready()` will expire, this is the desired effect, most logical behavior.
+-   **$ready(payloadID, allowMultiple, strict=false).d:Promise**: last calling method, when your `Pocket` tasks are completed, example: `Probe[id][status]='complete'` only then, will it resolve(), otherwise pending Probe's will remain and `$ready()` will expire, this is the desired effect, most logical behavior.
 
     -   `allowMultiple:boolean = false`: if you want to allow calling same project $ready(..) multiple times then set `allowMultiple=true`, otherwise it will give you warning. By default is set to `false`.
+    -   `strict=true`: will check if provided id exists on the project
 
 -   _Final note: All user/interaction methods are prefixed with '$'_
 -   _Note: Most user $methods require `...).d` for access to values, to allows chaining_

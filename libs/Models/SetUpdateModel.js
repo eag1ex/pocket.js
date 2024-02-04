@@ -1,10 +1,9 @@
-
 /**
  * Data provided to _setUpdate() method
- * @param {object} dataFrom 
+ * @param {object} dataFrom
  * @param {any} dataFrom.data
  * @param {string} dataFrom.status
- * @param {string} dataFrom.ref 
+ * @param {string} dataFrom.ref
  * @param {string} dataFrom.error
  * @param {string} dataFrom.campaign
  */

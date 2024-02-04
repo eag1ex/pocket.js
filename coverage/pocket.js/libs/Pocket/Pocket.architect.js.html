@@ -209,14 +209,7 @@
 <a name='L144'></a><a href='#L144'>144</a>
 <a name='L145'></a><a href='#L145'>145</a>
 <a name='L146'></a><a href='#L146'>146</a>
-<a name='L147'></a><a href='#L147'>147</a>
-<a name='L148'></a><a href='#L148'>148</a>
-<a name='L149'></a><a href='#L149'>149</a>
-<a name='L150'></a><a href='#L150'>150</a>
-<a name='L151'></a><a href='#L151'>151</a>
-<a name='L152'></a><a href='#L152'>152</a>
-<a name='L153'></a><a href='#L153'>153</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L147'></a><a href='#L147'>147</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -285,7 +278,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -319,7 +311,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -336,8 +327,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -362,22 +351,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-/** 
-    * ### Architect
-    * a more in depth project architecture setup, allowing more robust configuration, munipulation and data flows
-*/
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ * ### Architect
+ * a more in depth project architecture setup, allowing more robust configuration, manipulation and data flows
+ */
 &nbsp;
-const { validProjectID } = require('../utils')
+const { validProjectID } = require("../utils")
 &nbsp;
-const { objectSize, isFunction, onerror, warn, isString } = require('x-utils-es/umd')
-const ArchitectModel = require('../Models/ArchitectModel')
-const PocketModuleExt = require('./PocketExtended')
+const { objectSize, isFunction, onerror, warn, isString } = require("x-utils-es/umd")
+const ArchitectModel = require("../Models/ArchitectModel")
+const PocketModuleExt = require("./PocketExtended")
 class PocketArchitect extends PocketModuleExt {
     constructor(opts, debug) {
         super(opts, debug)
@@ -389,28 +376,28 @@ class PocketArchitect extends PocketModuleExt {
 &nbsp;
 <span class="fstat-no" title="function not covered" >    se</span>tArchitect(projectID, val) {
 <span class="cstat-no" title="statement not covered" >        if (this.architectConfig[projectID] === undefined) <span class="cstat-no" title="statement not covered" >this.architectConfig[projectID] = this.architectMod</span></span>
-<span class="cstat-no" title="statement not covered" >        this.architectConfig[projectID]['value'] = Object.assign({}, this.architectConfig[projectID]['value'], val)</span>
+<span class="cstat-no" title="statement not covered" >        this.architectConfig[projectID]["value"] = Object.assign({}, this.architectConfig[projectID]["value"], val)</span>
 <span class="cstat-no" title="statement not covered" >        return this</span>
     }
 &nbsp;
 <span class="fstat-no" title="function not covered" >    ge</span>tArchitect(projectID) {
-<span class="cstat-no" title="statement not covered" >        return (this.architectConfig[projectID] || {})['value']</span>
+<span class="cstat-no" title="statement not covered" >        return (this.architectConfig[projectID] || {})["value"]</span>
     }
 &nbsp;
-    /** 
-       * @param assetName string, specify the name you chose in your `$architect(...)` declaration,
-       * @param asCallback when exists, return asset as callback
-       * @param projectID optional, update selector and return desired asset
-       * @returns if callback is returned the same value is returned
-      */
+    /**
+     * @param assetName string, specify the name you chose in your `$architect(...)` declaration,
+     * @param asCallback when exists, return asset as callback
+     * @param projectID optional, update selector and return desired asset
+     * @returns if callback is returned the same value is returned
+     */
 <span class="fstat-no" title="function not covered" >    as</span>set(assetName, asCallback, projectID) {
 <span class="cstat-no" title="statement not covered" >        if (!isFunction(asCallback)) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$asset] asCallback must be a function`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$asset] asCallback must be a function`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return null</span>
         }
         // reserved names
-<span class="cstat-no" title="statement not covered" >        if (assetName === 'project' || assetName === 'cache') {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$asset] 'project, cache' are  restricted`)</span></span>
+<span class="cstat-no" title="statement not covered" >        if (assetName === "project" || assetName === "cache") {</span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$asset] 'project, cache' are  restricted`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return undefined</span>
         }
         const lastProject = <span class="cstat-no" title="statement not covered" >this.lastProjectID(projectID) </span>// in case we are calling `$architect` on existing project
@@ -420,102 +407,97 @@ class PocketArchitect extends PocketModuleExt {
 <span class="cstat-no" title="statement not covered" >            if (this.getArchitect(projectID)[assetName] !== undefined) {</span>
 <span class="cstat-no" title="statement not covered" >                return asCallback.call(this, this.getArchitect(projectID)[assetName])</span>
             } else {
-<span class="cstat-no" title="statement not covered" >                if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$asset] assetName for architect doesnt exist`)</span></span>
+<span class="cstat-no" title="statement not covered" >                if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$asset] assetName for architect doesnt exist`)</span></span>
 <span class="cstat-no" title="statement not covered" >                return null</span>
             }
         } else {
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$asset] architectConfig for assetName doesnt exist`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$asset] architectConfig for assetName doesnt exist`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return null</span>
         }
     }
 &nbsp;
-    /** 
-          * - can be used as a project setter same as `$payload` or `$project`, but with additional configuration
-          * 
-          * @param cb required, must return project settings: `{project:{payloadData}, asset:{value, name}, cache:{project, asset}}
-          * @param projectID optional
-          * @returns self
-         */
+    /**
+     * - can be used as a project setter same as `$payload` or `$project`, but with additional configuration
+     *
+     * @param cb required, must return project settings: `{project:{payloadData}, asset:{value, name}, cache:{project, asset}}
+     * @param projectID optional
+     * @returns self
+     */
 <span class="fstat-no" title="function not covered" >    ar</span>chitect(cb, projectID) {
-&nbsp;
 <span class="cstat-no" title="statement not covered" >        if (!isFunction(cb)) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >onerror('[pocket]', `[$architect] callback must be set`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >onerror("[pocket]", `[$architect] callback must be set`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
 &nbsp;
-        const config = <span class="cstat-no" title="statement not covered" >cb.call(this/** ,?? */)</span>
+        const config = <span class="cstat-no" title="statement not covered" >cb.call(this /** ,?? */)</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (!objectSize(config)) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >onerror('[pocket]', `[architect] must return a valid object settings {project, asset}, at least 1 is required`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >onerror("[pocket]", `[architect] must return a valid object settings {project, asset}, at least 1 is required`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
 &nbsp;
-        const configProjectID = <span class="cstat-no" title="statement not covered" >(config['project'] || {}).id</span>
+        const configProjectID = <span class="cstat-no" title="statement not covered" >(config["project"] || {}).id</span>
         const lastProject = <span class="cstat-no" title="statement not covered" >this.lastProjectID(projectID) </span>// in case we are calling `$architect` on existing project
 <span class="cstat-no" title="statement not covered" >        projectID = validProjectID(lastProject || projectID || configProjectID)</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (!projectID) {</span>
-<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >onerror('[pocket]', `[$architect] if this is a new project, you must specify projectID`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (this.debug) <span class="cstat-no" title="statement not covered" >onerror("[pocket]", `[$architect] if this is a new project, you must specify projectID`)</span></span>
 <span class="cstat-no" title="statement not covered" >            return this</span>
         }
         const validConfig = <span class="cstat-no" title="statement not covered" >Object.entries(config).reduce(<span class="fstat-no" title="function not covered" >(n</span>, [k, value]) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            if (['project', 'asset', 'cache'].indexOf(k) !== -1) <span class="cstat-no" title="statement not covered" >n[k] = value</span></span>
+<span class="cstat-no" title="statement not covered" >            if (["project", "asset", "cache"].indexOf(k) !== -1) <span class="cstat-no" title="statement not covered" >n[k] = value</span></span>
 <span class="cstat-no" title="statement not covered" >            return n</span>
         }, {})
 &nbsp;
         // default setting for `architect.cache` if getArchitect not stored
-<span class="cstat-no" title="statement not covered" >        if (!(this.getArchitect(projectID) || {})['cache']) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!(this.getArchitect(projectID) || {})["cache"]) {</span>
             const defaults = <span class="cstat-no" title="statement not covered" >{ project: false, asset: false }</span>
-<span class="cstat-no" title="statement not covered" >            if (!validConfig['cache']) <span class="cstat-no" title="statement not covered" >validConfig['cache'] = defaults</span></span>
+<span class="cstat-no" title="statement not covered" >            if (!validConfig["cache"]) <span class="cstat-no" title="statement not covered" >validConfig["cache"] = defaults</span></span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            this.setArchitect(projectID, {</span>
-                'cache': validConfig['cache']
+                cache: validConfig["cache"]
             })
-&nbsp;
-        } else <span class="cstat-no" title="statement not covered" >validConfig['cache'] = this.getArchitect(projectID)['cache']</span>
+        } else <span class="cstat-no" title="statement not covered" >validConfig["cache"] = this.getArchitect(projectID)["cache"]</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        for (let k in validConfig) {</span>
             const item = <span class="cstat-no" title="statement not covered" >validConfig[k]</span>
             // get last cache overide
-            const cached = <span class="cstat-no" title="statement not covered" >validConfig['cache'][k] === true &amp;&amp; (k === 'project' || k === 'asset')</span>
+            const cached = <span class="cstat-no" title="statement not covered" >validConfig["cache"][k] === true &amp;&amp; (k === "project" || k === "asset")</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (k === 'project') {</span>
-                // item['async'] item['type'] .. can include `async` and `type` 
+<span class="cstat-no" title="statement not covered" >            if (k === "project") {</span>
+                // item['async'] item['type'] .. can include `async` and `type`
 <span class="cstat-no" title="statement not covered" >                try {</span>
 <span class="cstat-no" title="statement not covered" >                    if (cached &amp;&amp; this.getArchitect(projectID)[k]) <span class="cstat-no" title="statement not covered" >continue</span></span>
                 } catch (err) {
-                    // 
+                    //
                 }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                this.setArchitect(projectID,</span>
-                    { project: this.$payload(item, item['async'], item['type']).d }
-                )
+<span class="cstat-no" title="statement not covered" >                this.setArchitect(projectID, { project: this.$payload(item, item["async"], item["type"]).d })</span>
             }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (k === 'asset') {</span>
-<span class="cstat-no" title="statement not covered" >                if (!isString(item['name']) || item['value'] === undefined) {</span>
-<span class="cstat-no" title="statement not covered" >                    if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$architect] asset must include {value, name}`)</span></span>
+<span class="cstat-no" title="statement not covered" >            if (k === "asset") {</span>
+<span class="cstat-no" title="statement not covered" >                if (!isString(item["name"]) || item["value"] === undefined) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$architect] asset must include {value, name}`)</span></span>
 <span class="cstat-no" title="statement not covered" >                    return this</span>
                 }
-<span class="cstat-no" title="statement not covered" >                if (item['name'] === 'project' || item['name'] === 'cache') {</span>
-<span class="cstat-no" title="statement not covered" >                    if (this.debug) <span class="cstat-no" title="statement not covered" >warn('[pocket]', `[$architect] asset props, "project, cache" are reserved`)</span></span>
+<span class="cstat-no" title="statement not covered" >                if (item["name"] === "project" || item["name"] === "cache") {</span>
+<span class="cstat-no" title="statement not covered" >                    if (this.debug) <span class="cstat-no" title="statement not covered" >warn("[pocket]", `[$architect] asset props, "project, cache" are reserved`)</span></span>
 <span class="cstat-no" title="statement not covered" >                    return this</span>
                 }
 <span class="cstat-no" title="statement not covered" >                try {</span>
-<span class="cstat-no" title="statement not covered" >                    if (cached &amp;&amp; this.getArchitect(projectID)[item['name']]) <span class="cstat-no" title="statement not covered" >continue</span></span>
+<span class="cstat-no" title="statement not covered" >                    if (cached &amp;&amp; this.getArchitect(projectID)[item["name"]]) <span class="cstat-no" title="statement not covered" >continue</span></span>
                 } catch (err) {
-                    // 
+                    //
                 }
 &nbsp;
-                // if already exists, same assets will be overriten and new will be created
+                // if already exists, same assets will be overridden and new will be created
 <span class="cstat-no" title="statement not covered" >                this.setArchitect(projectID, {</span>
-                    [item['name']]: item['value']
+                    [item["name"]]: item["value"]
                 })
             }
         }
 <span class="cstat-no" title="statement not covered" >        return this</span>
     }
-&nbsp;
 }
 &nbsp;
 module.exports = PocketArchitect
@@ -526,7 +508,7 @@ module.exports = PocketArchitect
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-02-02T04:09:25.693Z
+                at 2024-02-04T13:24:18.234Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
