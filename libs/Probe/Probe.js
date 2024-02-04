@@ -267,7 +267,6 @@ class Probe extends ProbeDataBank {
         // order of status and allowed values
         ;((stat) => {
             try {
-                console.log("his.statusStackOrder[stat].value is", this.statusStackOrder[stat].value, stat)
                 // meaning do not allow any status changes beyond `updated`
                 if (this.statusStackOrder[stat].value > 2 && this.statusStackOrder[stat].set === true) return false
             } catch (err) {
