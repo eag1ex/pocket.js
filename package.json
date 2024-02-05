@@ -12,10 +12,10 @@
         "test": "nyc --reporter=html --port=4444 --reporter=text mocha ./test/tests.js --colors --delay"
     },
     "author": "eaglex",
-    "license": "ISC",
+    "license": "CC BY-NC-ND",
     "engineStrict": true,
     "engine": {
-        "node": "16",
+        "node": "14",
         "npm": "*"
     },
     "dependencies": {
