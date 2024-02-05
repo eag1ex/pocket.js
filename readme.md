@@ -15,7 +15,8 @@ Easy to use, slightly sophisticated Pocket.js redistribution utility framework, 
 -   Flexibility - _make your work easier and justifiable_, simply more fun
 -   Easy to use, with chaining mythology
 -   Consider each Probe task of Pocket.js a campaign you are running, once all campaigns `complete to send` Pocket will resolve(). your assignment
--   ** All tests passing**
+-   **All tests passing**
+-   **Production ready**
 
 #### Stack
 
@@ -67,6 +68,9 @@ npm run example
 Project docs are available on github pages at: [ Pocket.js ](https://eag1ex.github.io/pocket.js/)
 
 ## How to build
+
+You can you the `production` branch or build it your self :)
+<br/>
 
 Building project for production: `common.js` and` Windows/browser` are available, take a look inside `package.json`.
 
@@ -150,13 +154,13 @@ Building project for production: `common.js` and` Windows/browser` are available
 -   **$transfer(fromProbeID = ''):self**: select data from `fromProbeID` and hold it in `_transferCache`, until `$to(probeID)` is called
 -   **$to(toProbeID = '', pointToThisProbe = true, maxDelay = 100):self**: works together with `$transfer`, will transfer `data` from one Probe{} to another
 -   **$data(dataProp:{}||[] , probeID = '', self = false)**: returns Object copy of `Probe['data']`
--   **$cached(dataProp = {}, probeID = ''):{}**:
--   **$campaign(probeID):string**:
--   **$ref(probeID)**:
--   **$status(probeID):String**:
--   **$task(probeID):string**:
--   **$error(probeID):[]**:
--   **$all(probeID):probeGetters**:
+-   **$cached(dataProp = {}, probeID = ''):{}**: Grabs last cached `$data(...)` from Probe{}
+-   **$campaign(probeID):string**: Returns Object copy of `Probe['campaign']`
+-   **$ref(probeID)**: Returns Probe{}.ref
+-   **$status(probeID):String**: Returns Object copy of `Probe['status']`
+-   **$task(probeID):string**: Returns Object copy of `Probe['task']`
+-   **$error(probeID):[]**: Returns Object copy of `Probe['task']`
+-   **$all(probeID):probeGetters**: Return object copy of all setters: `{id,status,campaign,task,data}`
 -   **$architect(cb, projectID)**: more construct way of setting up a project and allowing few external assets to be used. This method uses $payload inheritance with access to `type` and `async`. Things to remember consecutive call to $architect thru  .$condition() method, can only update existing items.
     -   `cb(()=>({project:payloadData, type,async}))`: return callback must return {project:payload} as minimum requirement, when running in a loop or repetitive actions, it is best to set type='update' so that concurrent call to the same task wont wont be ignored, `type` is state base, so last setting is kept
 -   **$asset(assetName, projectID)**: can access the asset declared in `$architect`
