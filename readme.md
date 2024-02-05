@@ -4,20 +4,18 @@
 
 #### About
 
--   Easy to use, lightly sophisticated Pocket.js redistribution controller, allowing you to probe data with status management.
--   Well documented, clean beautified code.
--   You assign tasks associated to individual `Probes` controlled by `Pocket.js`, once your payload status is: `complete`, `await ready(id)` can be resolved.
+Easy to use, slightly sophisticated Pocket.js redistribution utility framework, allowing you to probe data with status management, well documented, clean beautified code. You assign tasks associated to individual `Probes` controlled by `Pocket.js`, once your payload status is: `complete`, `await ready(id)` can be resolved.
 
 #### Why use it
 
--   Project is status driven, requires tasks to complete
-    -   many iterating, looping thru data
+-   Project is status driven and pattern driven, requires tasks to complete
 -   Specify `tasks`, and receive results by assignment
--   Manage each task ( Probe/task ) states and resolutions
+-   Manage task ( Probe/task ) states and resolutions
 -   Re/distribution of data/scheduled assignments to different areas of your code
--   Creative flexibility - _make your work easier and justifiable_, simply more fun
--   Easy to use, user friendly, chaining mythology
--   Consider each task of the Pocket to be a campaign that you are running, once all campaigns are `complete=>send` Pocket will resolve().
+-   Flexibility - _make your work easier and justifiable_, simply more fun
+-   Easy to use, with chaining mythology
+-   Consider each Probe task of Pocket.js a campaign you are running, once all campaigns `complete to send` Pocket will resolve(). your assignment
+-   ** All tests passing**
 
 #### Stack
 
@@ -33,12 +31,15 @@
 
 #### What is Pocket
 
--   `Pocket > Probe`: Main/parent module managing each new payload and `Probe` until resolved, give tools access to user.
+-   `Pocket > Probe`: Main/parent module managing each new payload pushed thru the `Probe`, it watches the status of its tasks, once all are complete the $ready event is called.
+    -   You can consider the task list your campaign list.
+    -   refer to example: `node /samples/pocket.simple.js`
 
 #### What is a Probe
 
--   `Probe < Pocket`: Child module doesnt know about Pocket, its status/state managed, when `complete`, Pocket intercepts, and waits until all Probe tasks `complete`. Can be used independently if needed.
-    -   You can consider each probe to me a campaign.
+-   `Probe < Pocket`: Child module doesnt know about Pocket, its status managed, when `complete`, Pocket intercepts, and waits until all Probe tasks `complete`. Can be used independently if needed.
+    -   You can consider each probe a todo item, part of a bigger assignment.
+    -   refer to example: `node /samples/simple.probe.js`
 
 #### Playground
 
@@ -54,7 +55,8 @@ you can play around with `/samples`
 npm i
 
 ## then play :)
-node /samples/simple
+node /samples/pocket.simple.js
+node /samples/pocket.advance.js
 
 ## or
 npm run example
@@ -173,36 +175,21 @@ for comments/and linting use:
 -   `Document This`
 -   `Add jsdoc comments`
 
-#### TODO on premium release:
-
--   **(add)** typescript support in later version.
--   **(add)** browser version support.
--   **(add)** history state management.
-
-#### Test / Mocha and coverage
-
--   To run a Mocha test: `npm run mocha`
--   To run full coverage test with Instanbul: `npm run test`
--   Coverage can be found in `./coverage/index.html`
-
 #### Examples
 
 ```js
-// ./samples/simple.js
-
-// can use production/bundle after running: /$ npm run build:umd
-// const Pocket = require("../build/index")
+// pocket.simple.js
 
 const Pocket = require("../index").Pocket
 const pock = new Pocket({ async: false, dispatcher: true, withDataBank: true, onChange: true, deleteWithDelay: 0, completeOnNull: true }, true)
 
-const data1 = {
+const data = {
     // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
     id: "pocket-1", // Belt and Road Initiative
     tasks: [
         {
-            ref: "abc",
             task: "china",
+            ref: "abc",
             data: { assets: 10, type: "billions", info: "benefactor" },
             campaign: "Belt_and_Road_Initiative"
         },
@@ -215,61 +202,35 @@ const data1 = {
     ]
 }
 
-const data2 = {
-    // source: `https://en.wikipedia.org/wiki/List_of_projects_of_the_Belt_and_Road_Initiative`
-    id: "pocket-2", // Belt and Road Initiative
-    tasks: [
-        {
-            ref: "abc",
-            task: "china2",
-            data: { assets: 10, type: "billions", info: "benefactor" },
-            campaign: "Belt_and_Road_Initiative"
-        },
-        {
-            task: "srilanka2",
-            ref: "efg",
-            data: { budget: 1.4, type: "billions", project: "naval port" },
-            campaign: "Belt_and_Road_Initiative"
-        }
-    ]
-}
+// this will check data assignments follow format principles then assign it to Pocket
+const onSet = pock.$project(data, false, "update").d
 
-const onSet1 = pock.$project(data1, false, "update").d
-const onSet2 = pock.$project(data2, false, "update").d
+if (onSet) {
+    pock.$filter(function (probe) {
+        // filter by probe data attributes
+        return true
+    }).d // access computed data , or continue chaining
 
-if (onSet1 && onSet2) {
-    pock
+    /** we only have initiated single Pocket so dont need to select it, refer to pocket.advance.js */
+    pock.$filter((probe) => {
+        // select all probe tasks
+        return true
+    })
         .$compute(function (probe, id) {
-            // do something
-            // this.error = 'error!'
+            // run thru all probe tasks based on filter condition
+            console.log("probe.task", probe.task)
+            this.data = "any new data type 1"
+            if (probe.task === "china") this.status = "complete"
         })
-        .$filter(function (probe) {
-            // filter by probe data attributes
-            return true
-        }).d // access computed data , or continue chaining
-
-    pock.$select(`pocket-1`)
         .$filter((probe) => {
-            return probe.task === "china"
+            return probe.task === "srilanka"
         })
         .$compute(function (probe, id) {
             // run thru all probe tasks based on filter condition
-            console.log("pocket-1/probe.task", probe.task)
-            this.data = "new data"
+            console.log("probe.task", probe.task)
+            this.data = "any new data type 2"
             this.status = "complete"
         })
-        .$select(`pocket-2`)
-        .$filter((probe) => {
-            return true
-        })
-        .$compute(function (probe, id) {
-            // run thru all probe tasks based on filter condition
-            console.log("pocket-2/probe.task", probe.task)
-            this.data = "new data2"
-            this.status = "complete"
-        })
-
-    //.$update({ data: { assets: 10.55 } }) << higher priority over
 }
 
 // observe all changes of china pocket
@@ -282,21 +243,10 @@ pock.$get(`pocket-1`).onChange(function (data, id) {
     console.log("pocket-1 onChange", data.status.id)
 }, "all")
 
-// catch results when all of pocket-1 probe tasks have completed
-// pocket-1 did not complete because we have set .$filter oen one task only
+// pocket-1 will only resolve if all Probe tasks have been set as complete
 pock.$ready(`pocket-1`, true)
     .d.then((z) => {
         console.log("pocket-1 ready", z)
-    })
-    .catch((err) => {
-        console.log("ups", err)
-    })
-
-// catch results when all of pocket-2 probe tasks have completed
-// this pocket has completed all tasks
-pock.$ready(`pocket-2`, true)
-    .d.then((z) => {
-        console.log("pocket-2 ready", z)
     })
     .catch((err) => {
         console.log("ups", err)
@@ -306,6 +256,19 @@ pock.$ready(`pocket-2`, true)
 // console.log("[pock.$get][data]", pock.$get("pocket-1::china").data)
 // console.log("[pock.$get][dataBank]", "pocket-1::china", pock.$get("pocket-1::china").dataBank)
 ```
+
+#### Test / Mocha and coverage
+
+-   To run a Mocha test: `npm run mocha`
+-   To run full coverage test with Instanbul: `npm run test`
+-   Coverage can be found in `./coverage/index.html`
+-
+
+#### TODO on premium release:
+
+-   **(add)** typescript support in later version.
+-   **(add)** browser version support.
+-   **(add)** history state management.
 
 ##### Contact
 

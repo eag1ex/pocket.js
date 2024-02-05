@@ -93,6 +93,9 @@ class Probe extends ProbeDataBank {
         this._id = v
     }
 
+    /**
+     * @returns {string}
+     */
     get id() {
         return this._id
     }
@@ -113,13 +116,17 @@ class Probe extends ProbeDataBank {
     }
 
     /**
-     * @returns an arrays of errors or null
+     * returns an arrays of errors or undefined
+     * @returns {any[]| undefined}
      */
     get error() {
         if (!this._error.length) return undefined
         return this._error
     }
 
+    /**
+     * @returns {string}
+     */
     get ref() {
         return this._ref
     }
@@ -140,6 +147,9 @@ class Probe extends ProbeDataBank {
         this.dispatchChange("ref")
     }
 
+    /**
+     * @returns {string}
+     */
     get campaign() {
         return this._campaign
     }
@@ -181,6 +191,9 @@ class Probe extends ProbeDataBank {
         this._task = v.replace(/ /gi, "_").toLowerCase() // every task must be valid with required
     }
 
+    /**
+     * @returns {string}
+     */
     get task() {
         return this._task
     }
@@ -258,6 +271,7 @@ class Probe extends ProbeDataBank {
      * `send`: once the status was set `complete` data is resolved first then status is set as `send`.
      * and Probe is locked, cannot be interacted with. Follow the strategic order set by `statusStackOrder`
      * `error` acts like complete, it will resolve() last available data and block the Probe
+     * @returns {'open' | 'updated' | 'complete' | 'send' | 'error'}
      */
     get status() {
         return this._status
@@ -366,10 +380,10 @@ class Probe extends ProbeDataBank {
     }
 
     /**
-     * Resolve lext promise and returns last status
+     * Resolve text promise and returns last status
      *
      * @memberof Probe
-     * @returns {Promise}
+     * @returns {Promise<any>}
      */
     get setStatusAsync() {
         const lastPromise = last(this._statusAsync.sort((a, b) => a.timestamp - b.timestamp).map((z) => z["p"]))
@@ -405,6 +419,10 @@ class Probe extends ProbeDataBank {
         return this.getStatusAsync
     }
 
+    /**
+     * returns copy of Prob properties
+     * @returns {error?:any,ref:string, campaign?:string,data:any,id:string, task:string, status:string }
+     */
     all() {
         const d = { error: this.error, ref: this.ref, campaign: this.campaign, data: this.data, id: this.id, task: this.task, status: this.status }
         if (this.withDataBank) d.dataBank = copy(this.dataBank)

@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "docs": "jsdoc -c .jsdoc.json --verbose",
-        "example": "node samples/simple",
+        "example": "node samples/pocket.simple.js",
         "lint": "./node_modules/.bin/eslint  --ext .js pocket libs",
         "lint:fix": "./node_modules/.bin/eslint --fix --ext .js pocket libs",
         "build:umd": "cross-env NODE_ENV=none ./node_modules/.bin/webpack --config webpack/webpack.config.commonjs.js --display-error-details --colors --progress",

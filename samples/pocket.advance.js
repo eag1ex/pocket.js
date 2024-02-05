@@ -11,8 +11,8 @@ const data1 = {
     id: "pocket-1", // Belt and Road Initiative
     tasks: [
         {
-            ref: "abc",
             task: "china",
+            ref: "abc",
             data: { assets: 10, type: "billions", info: "benefactor" },
             campaign: "Belt_and_Road_Initiative"
         },
@@ -44,12 +44,15 @@ const data2 = {
     ]
 }
 
+// this will check data assignments follow format principles then assign it to Pocket
 const onSet1 = pock.$project(data1, false, "update").d
 const onSet2 = pock.$project(data2, false, "update").d
 
 if (onSet1 && onSet2) {
+    // by default Pocket $select by last assignment (pocket-2)
     pock
-        .$compute(function (probe, id) {
+        .$compute(function (probe) {
+            console.log("probe:id", probe.id)
             // do something
             // this.error = 'error!'
         })
@@ -65,7 +68,7 @@ if (onSet1 && onSet2) {
         .$compute(function (probe, id) {
             // run thru all probe tasks based on filter condition
             console.log("pocket-1/probe.task", probe.task)
-            this.data = "new data"
+            this.data = "any new data type 1"
             this.status = "complete"
         })
         .$select(`pocket-2`)
@@ -75,7 +78,7 @@ if (onSet1 && onSet2) {
         .$compute(function (probe, id) {
             // run thru all probe tasks based on filter condition
             console.log("pocket-2/probe.task", probe.task)
-            this.data = "new data2"
+            this.data = "any new data type 2"
             this.status = "complete"
         })
 
@@ -104,6 +107,7 @@ pock.$ready(`pocket-1`, true)
 
 // catch results when all of pocket-2 probe tasks have completed
 // this pocket has completed all tasks
+
 pock.$ready(`pocket-2`, true)
     .d.then((z) => {
         console.log("pocket-2 ready", z)

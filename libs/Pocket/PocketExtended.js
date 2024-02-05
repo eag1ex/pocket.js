@@ -113,7 +113,7 @@ class PocketModuleExt extends PocketModule {
      * @param {*} payloadID ,required
      * @param { boolean?}  allowsMultiple optional, when set to true will allow multiple calls to resolved data
      * @param { boolean?} strict if true will check {payloadID} exists
-     * @returns {PocketModule}
+     * @returns {PocketModule & {d:Promise<any>}}
      */
     $ready(payloadID, allowsMultiple = false, strict = false) {
         try {
