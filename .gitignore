@@ -4,6 +4,7 @@ desktop.ini
 !build
 info.md
 temp
+.ini
 logcommits.md
 *.env
 *.dev
