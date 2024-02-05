@@ -2,9 +2,7 @@
 
 #### [ Developed by Eaglex ](http://eaglex.net)
 
-#### About
-
-Easy to use, slightly sophisticated Pocket.js redistribution utility framework, allowing you to probe data with status management, well documented, clean beautified code. You assign tasks associated to individual `Probes` controlled by `Pocket.js`, once your payload status is: `complete`, `await ready(id)` can be resolved.
+Easy to use, Pocket.js redistribution utility framework, allowing you to probe data with state management, well documented, clean beautified code. You can probe task assignments and control its outcome anywhere in your code.
 
 #### Why use it
 
@@ -15,7 +13,7 @@ Easy to use, slightly sophisticated Pocket.js redistribution utility framework, 
 -   Flexibility - _make your work easier and justifiable_, simply more fun
 -   Easy to use, with chaining mythology
 -   Consider each Probe task of Pocket.js a campaign you are running, once all campaigns `complete to send` Pocket will resolve(). your assignment
--   ** All tests passing**
+-   **All tests passing**
 
 #### Stack
 

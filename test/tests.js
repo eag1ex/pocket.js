@@ -427,7 +427,6 @@ describe(`Independant new Probe({}) tests`, function () {
 
             expect(prob.status).equal(`send`)
             prob.status = "updated"
-            console.log("what is prob.status ", prob.status)
             expect(prob.status).equal(`send`)
             prob.status = "error"
             expect(prob.status).equal(`send`)
