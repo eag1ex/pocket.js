@@ -7,7 +7,7 @@
         "example": "node samples/pocket.simple.js"
     },
     "author": "eaglex",
-    "license": "ISC",
+    "license": "CC BY-NC-ND",
     "engineStrict": true,
     "engine": {
         "node": "16",
