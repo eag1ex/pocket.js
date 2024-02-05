@@ -15,3 +15,5 @@ Dockerfile
 tests
 docker-compose.yml
 __temp
+docs
+.nyc_output

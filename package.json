@@ -4,12 +4,7 @@
     "description": "data pocket redistribution",
     "main": "index.js",
     "scripts": {
-        "docs": "jsdoc -c .jsdoc.json --verbose",
-        "example": "node samples/pocket.simple.js",
-        "lint": "./node_modules/.bin/eslint  --ext .js pocket libs",
-        "lint:fix": "./node_modules/.bin/eslint --fix --ext .js pocket libs",
-        "build:umd": "cross-env NODE_ENV=none ./node_modules/.bin/webpack --config webpack/webpack.config.commonjs.js --display-error-details --colors --progress",
-        "test": "nyc --reporter=html --port=4444 --reporter=text mocha ./test/tests.js --colors --delay"
+        "example": "node samples/pocket.simple.js"
     },
     "author": "eaglex",
     "license": "ISC",
@@ -19,44 +14,7 @@
         "npm": "*"
     },
     "dependencies": {
-        "x-utils-es": "^2.4.0",
-        "cross-env": "^7.0.2"
+        "x-utils-es": "^2.4.0"
     },
-    "devDependencies": {
-        "@babel/plugin-proposal-class-properties": "^7.1.0",
-        "@babel/plugin-syntax-dynamic-import": "^7.0.0",
-        "@babel/polyfill": "^7.0.0",
-        "@babel/preset-env": "^7.1.0",
-        "@babel/preset-react": "^7.9.4",
-        "@types/chai": "^4.3.11",
-        "@types/eslint": "^8.56.2",
-        "@types/mocha": "^10.0.6",
-        "@types/terser-webpack-plugin": "^5.2.0",
-        "@types/webpack": "^5.28.5",
-        "@types/webpack-merge": "^5.0.0",
-        "babel-eslint": "^10.0.1",
-        "babel-loader": "^8.0.4",
-        "better-docs": "^2.3.2",
-        "chai": "^4.2.0",
-        "clean-webpack-plugin": "^0.1.19",
-        "copy-webpack-plugin": "^4.6.0",
-        "core-js": "^2.5.7",
-        "eslint": "^5.16.0",
-        "eslint-import-resolver-webpack": "^0.11.0",
-        "eslint-loader": "^2.1.1",
-        "eslint-plugin-babel": "^4.1.2",
-        "eslint-plugin-import": "^2.20.2",
-        "eslint-plugin-node": "^11.1.0",
-        "eslint-plugin-promise": "^4.2.1",
-        "eslint-plugin-standard": "^4.0.1",
-        "jsdoc": "^4.0.2",
-        "minami": "^1.2.3",
-        "mocha": "^7.1.2",
-        "nyc": "^15.0.1",
-        "taffydb": "^2.7.3",
-        "terser-webpack-plugin": "^3.0.2",
-        "webpack": "^4.47.0",
-        "webpack-cli": "^3.3.12",
-        "webpack-merge": "^4.2.2"
-    }
+    "devDependencies": {}
 }
