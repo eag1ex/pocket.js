@@ -1,9 +1,9 @@
 /* eslint-disable */
 
 // can use production/bundle after running: /$ npm run build:umd
-// const Pocket = require("../build/index")
+const Pocket = require("../build/index")
 
-const Pocket = require("../index").Pocket
+//const Pocket = require("../index").Pocket
 const pock = new Pocket({ async: false, dispatcher: true, withDataBank: true, onChange: true, deleteWithDelay: 0, completeOnNull: true }, true)
 
 const data = {
