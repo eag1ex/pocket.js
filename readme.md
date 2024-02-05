@@ -269,6 +269,7 @@ pock.$ready(`pocket-1`, true)
 -   **(add)** typescript support in later version.
 -   **(add)** browser version support.
 -   **(add)** history state management.
+-   **(add)** add more unit tests for selectors
 
 ##### Contact
 
