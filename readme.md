@@ -39,7 +39,7 @@ Easy to use, Pocket.js redistribution utility framework, allowing you to probe d
     -   You can consider each probe a todo item, part of a bigger assignment.
     -   refer to example: `node /samples/simple.probe.js`
 
-### Pocket code documentation
+#### Pocket code documentation
 
 Project docs are available on github pages at: **[ Pocket.js ](https://eag1ex.github.io/pocket.js/)**
 
@@ -64,7 +64,7 @@ node /samples/pocket.advance.js
 npm run example
 ```
 
-## How to build
+#### How to build
 
 Building project for production: `common.js` and` Windows/browser` are available, take a look inside `package.json`.
 
