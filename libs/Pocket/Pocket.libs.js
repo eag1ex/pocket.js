@@ -1,4 +1,8 @@
 /**
+ * @typedef {import("../Probe/Probe")} Probe
+ */
+
+/**
  * ### PocketLibs
  * - Top of the stack class of `PocketModule`, all `opt` initial `properties` are set here
  */
@@ -46,7 +50,7 @@ class PocketLibs extends Imports {
         this.$transfer_lastID = "" // set when we call `$transfer()` and reset after `$to()`
 
         /**
-         * @return `{[id]:[...probes],...}` as promise
+         * @type {{id: Promise<Array<Probe>> }}
          */
         this._ready = {} // collect all ready example: `{id:Promise}`
 
@@ -109,7 +113,7 @@ class PocketLibs extends Imports {
 
     /**
      * ### projectSetDispatcher
-     * - create new dispather to act as a callback for setting new projects in future. NOTE once project is created and using $architect /$project/$payload to update will not recreate `projectSetDispatcher`
+     * - create new dispatcher to act as a callback for setting new projects in future. NOTE once project is created and using $architect /$project/$payload to update will not recreate `projectSetDispatcher`
      * - works with `$projectSetAsync`
      * @param {*} projectID
      * @returns `dispatcher`
@@ -126,7 +130,7 @@ class PocketLibs extends Imports {
 
     /**
      * @param {*} projectID
-     * @returns array [Probe{},...] of selected project
+     * @returns {Probe[]}  of selected project
      */
     projectProbeList(projectID) {
         if (!projectID) return []
@@ -138,7 +142,7 @@ class PocketLibs extends Imports {
     /**
      * ### clearStoreTransfers
      * - clear any pending transfers
-     * @param {*} projectID required
+     * @param {string} projectID required
      */
     clearStoreTransfers(projectID = "") {
         if (!projectID) return
@@ -203,6 +207,7 @@ class PocketLibs extends Imports {
      * - works with `PocketSelectors class`, when `::taskNames, taskName` are specified, extracts full probeID by matching previous pointer reference and updates `lastProbeID()`
      * - returns valid probeID or null
      * @param {*} taskOrProbeID  required, but optional
+     * @returns {string}
      */
     selectByTask(taskOrProbeID = "", updateLastProbeID = null) {
         taskOrProbeID = !isString(taskOrProbeID) ? "" : taskOrProbeID

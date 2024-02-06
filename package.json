@@ -50,6 +50,7 @@
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-standard": "^4.0.1",
         "jsdoc": "^4.0.2",
+        "jsdoc-tsimport-plugin": "^1.0.5",
         "minami": "^1.2.3",
         "mocha": "^7.1.2",
         "nyc": "^15.0.1",

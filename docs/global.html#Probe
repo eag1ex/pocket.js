@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>PocketLibs - Documentation</title>
+    <title>Probe - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">PocketLibs</h1>
+    <h1 class="page-title">Probe</h1>
     
 
     
@@ -42,7 +42,7 @@
 <header>
     
         <h2>
-        PocketLibs
+        Probe
         </h2>
         
     
@@ -56,7 +56,7 @@
 
     
 
-    <h4 class="name" id="PocketLibs"><span class="type-signature"></span>new PocketLibs<span class="signature">(opts, debug)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Probe"><span class="type-signature"></span>new Probe<span class="signature">(props, debug)</span><span class="type-signature"></span></h4>
 
     
 
@@ -95,7 +95,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line27">line 27</a>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -139,13 +139,13 @@
 
         <tr>
             
-                <td class="name"><code>opts</code></td>
+                <td class="name"><code>props</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>Object</code></span>
+<span class="param-type"><code>object</code></span>
 
 
             
@@ -156,7 +156,7 @@
             
 
             <td class="description last">
-                <p>available options</p>
+                <p>probe options <code>{id,task,campaign,data,status,emitter,completeOnNull}</code></p>
                 
                     
 
@@ -182,13 +182,13 @@
 
         <tr>
             
-                <td class="name"><code>async</code></td>
+                <td class="name"><code>id</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>boolean</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -199,7 +199,7 @@
             
 
             <td class="description last">
-                <p>when set, allow $payload(<code>data</code>) to be async object</p>
+                <p>required, case sensitive, all will be toLowerCase()</p>
                 
             </td>
         </tr>
@@ -208,13 +208,13 @@
 
         <tr>
             
-                <td class="name"><code>onChange</code></td>
+                <td class="name"><code>task</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>boolean</code></span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -225,7 +225,137 @@
             
 
             <td class="description last">
-                <p>loads watch for changes Probe asset</p>
+                <p>once set cannot be changed</p>
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>campaign</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>optional, once set cannot be changed</p>
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>any</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>optional any value except undefined, cannot be change once status set to <code>complete</code> or send</p>
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ref</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>(optional) any type of string reference</p>
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>status</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>string</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>required to control Probe actions</p>
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>emitter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code><a href="global.html#emitter_cb">emitter_cb</a></code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>optional, dispatcher/emitter available if not null</p>
                 
             </td>
         </tr>
@@ -251,111 +381,7 @@
             
 
             <td class="description last">
-                <p>Allow Probe to complete even if data</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>disableWarnings</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>boolean</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>disable some less relevant warning messages</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>withDataBank</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>boolean</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>deleteWithDelay</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>number</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>dispatcher,</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>any</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>when set to true, loads external library <code>Dispatcher</code></p>
+                <p>override complete setting even if data was never set</p>
                 
             </td>
         </tr>
@@ -378,7 +404,7 @@
             <td class="type">
             
                 
-<span class="param-type"><code>*</code></span>
+<span class="param-type"><code>boolean</code></span>
 
 
             
@@ -389,7 +415,7 @@
             
 
             <td class="description last">
-                <p>optional</p>
+                
                 
             </td>
         </tr>
@@ -433,7 +459,7 @@
         
             
 <div class="section-members">
-<h4 class="name" id="_ready"><span class="type-signature"></span>_ready<span class="type-signature"> :Object</span></h4>
+<h4 class="name" id="campaign"><span class="type-signature"></span>campaign<span class="type-signature"></span></h4>
 
 
 
@@ -471,77 +497,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line55">line 55</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><code>Object</code></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-</div>
-
-        
-            
-<div class="section-members">
-<h4 class="name" id="payloadData"><span class="type-signature"></span>payloadData<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line42">line 42</a>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line162">line 162</a>
     </li></ul></dd>
     
 
@@ -563,17 +519,14 @@
         
             
 <div class="section-members">
-<h4 class="name" id="probeProps"><span class="type-signature"></span>probeProps<span class="type-signature"></span></h4>
+<h4 class="name" id="completeAsync"><span class="type-signature"></span>completeAsync<span class="type-signature"></span></h4>
 
 
 
 
 <div class="description">
-    <h3>probeProps</h3>
-<ul>
-<li><code>each probe props that can be available and send on ready</code></li>
-<li><code>order is important, keep 'status' last</code></li>
-<li>only updatable props are: <code>'campaign', 'data', 'error', 'ref', 'status'(limited)</code></li>
+    <ul>
+<li>when status is set to complete or send, the promise will then be resolved</li>
 </ul>
 </div>
 
@@ -610,7 +563,976 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line326">line 326</a>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line419">line 419</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="data"><span class="type-signature"></span>data<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line236">line 236</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="error"><span class="type-signature"></span>error<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <ul>
+<li>collect all errors in to an array</li>
+<li>no empty error values will be set</li>
+</ul>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line116">line 116</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="error"><span class="type-signature"></span>error<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>returns an arrays of errors or undefined</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line131">line 131</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="getStatusAsync"><span class="type-signature"></span>getStatusAsync<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <h3>statusAsync</h3>
+<ul>
+<li>dynamic promise resolver with <code>Simple Q</code> from <code>eaglex.net</code></li>
+<li>works with <code>setStatusAsync</code> setter/getter</li>
+<li>return last 'resolve' status from last <code>timestamp</code> setting</li>
+</ul>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line410">line 410</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="id"><span class="type-signature"></span>id<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line108">line 108</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="onchangeDispatch"><span class="type-signature"></span>onchangeDispatch<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>initiates dispatcher to handle on change value of [data,status,ref,error,campaign]</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line546">line 546</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="ref"><span class="type-signature"></span>ref<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line139">line 139</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="ref"><span class="type-signature"></span>ref<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <ul>
+<li>accept string, can only be set when status isnt complete</li>
+<li>can be used to find your Pocket by particular <code>ref</code></li>
+</ul>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line147">line 147</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="setStatusAsync"><span class="type-signature"></span>setStatusAsync<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <ul>
+<li>works with <code>statusAsync</code></li>
+<li>(1.) setter creates our new sq() promise every time, and allows use or resolve</li>
+<li>to use example: setStatusAsync.resolve()</li>
+</ul>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line384">line 384</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="setStatusAsync"><span class="type-signature"></span>setStatusAsync<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Resolve text promise and returns last status</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line397">line 397</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="sq"><span class="type-signature"></span>sq<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>nice and easy, save some coding, and added security</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="status"><span class="type-signature"></span>status<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>allow status: open | updated | complete | send | error
+<code>open</code>: status is set when pocked is initialized
+<code>updated</code>: status is set when data is updated
+<code>complete</code>: status is set when you want to complete and discard probe
+<code>send</code>: once the status was set <code>complete</code> data is resolved first then status is set as <code>send</code>.
+and Probe is locked, cannot be interacted with. Follow the strategic order set by <code>statusStackOrder</code>
+<code>error</code> acts like complete, it will resolve() last available data and block the Probe</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line285">line 285</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="statusAsync"><span class="type-signature">(readonly) </span>statusAsync<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <ul>
+<li>alias of <code>getStatusAsync</code></li>
+</ul>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line427">line 427</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="statusStackOrder"><span class="type-signature"></span>statusStackOrder<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>forward motion <code>status</code> update is allowed
+<code>value</code>: importance que
+<code>set</code>: if status already set</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line265">line 265</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+</div>
+
+        
+            
+<div class="section-members">
+<h4 class="name" id="task"><span class="type-signature"></span>task<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line206">line 206</a>
     </li></ul></dd>
     
 
@@ -641,18 +1563,14 @@
 
     
 
-    <h4 class="name" id="accessLastValidTransfer"><span class="type-signature"></span>accessLastValidTransfer<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="all"><span class="type-signature"></span>all<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="global.html#allReturns">allReturns</a>}</span></h4>
 
     
 
 
 
 <div class="description">
-    <h3>accessLastValidTransfer</h3>
-<p>returns latest transfer that is inRange from <code>fromAverageTimeHasPast</code> in <code>ms</code> vs current Date.getTime</p>
-<ul>
-<li>removes _transferCached that was found</li>
-</ul>
+    <p>returns copy of Prob properties</p>
 </div>
 
 
@@ -688,7 +1606,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line180">line 180</a>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line447">line 447</a>
     </li></ul></dd>
     
 
@@ -705,792 +1623,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="clearStoreTransfers"><span class="type-signature"></span>clearStoreTransfers<span class="signature">(projectID)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <h3>clearStoreTransfers</h3>
-<ul>
-<li>clear any pending transfers</li>
-</ul>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line147">line 147</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>projectID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>string</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <p>required</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="dataPropSelector"><span class="type-signature"></span>dataPropSelector<span class="signature">(probeID, dataProp, self, probeData{})</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <h3>dataPropSelector</h3>
-<ul>
-<li>works with <code>$data()</code> and <code>$cached()</code> user selectors</li>
-<li>refer to <code>PocketSelectors</code> module</li>
-</ul>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line288">line 288</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>probeID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>*</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">
-                <p>required</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>dataProp</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>*</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">
-                <p>optional</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>self</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>*</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last">
-                <p>optional</p>
-                
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>probeData{}</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>*</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">
-                <p>required our referencing probeData{}</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="lastProbeID"><span class="type-signature"></span>lastProbeID<span class="signature">(probeID)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <h3>lastProbeID</h3>
-<ul>
-<li>return last reference to probeID</li>
-<li>cache with <code>_lastProbeID</code></li>
-</ul>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line270">line 270</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>probeID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>*</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="lastProjectID"><span class="type-signature"></span>lastProjectID<span class="signature">(type)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    <h3>lastProjectID</h3>
-<ul>
-<li>every project is a job initiated by payload, so <code>payload.id === lastProjectID()</code></li>
-</ul>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line254">line 254</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    strict
-                
-                </td>
-            
-
-            <td class="description last">
-                <p>strictly validate against scoped projectID</p>
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="projectProbeList"><span class="type-signature"></span>projectProbeList<span class="signature">(projectID)</span><span class="type-signature"> &rarr; {Array.&lt;<a href="global.html#Probe">Probe</a>>}</span></h4>
-
-    
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line135">line 135</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>projectID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>*</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                
-                
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -1516,16 +1648,12 @@
     </dt>
     <dd>
         
-<span class="param-type"><code>Array.&lt;<a href="global.html#Probe">Probe</a>></code></span>
+<span class="param-type"><code><a href="global.html#allReturns">allReturns</a></code></span>
 
 
     </dd>
 </dl>
 
-
-<div class="param-desc">
-    <p>of selected project</p>
-</div>
 
     
 </div>
@@ -1539,17 +1667,16 @@
 
     
 
-    <h4 class="name" id="projectSetDispatcher"><span class="type-signature"></span>projectSetDispatcher<span class="signature">(projectID)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="dispatchChange"><span class="type-signature"></span>dispatchChange<span class="signature">(changedName)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <h3>projectSetDispatcher</h3>
-<ul>
-<li>create new dispatcher to act as a callback for setting new projects in future. NOTE once project is created and using $architect /$project/$payload to update will not recreate <code>projectSetDispatcher</code></li>
-<li>works with <code>$projectSetAsync</code></li>
+    <ul>
+<li>works with onchangeDispatch, onChange</li>
+<li>emits next value to <code>onchangeDispatch</code> listener</li>
 </ul>
 </div>
 
@@ -1586,7 +1713,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line121">line 121</a>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line531">line 531</a>
     </li></ul></dd>
     
 
@@ -1630,7 +1757,7 @@
 
         <tr>
             
-                <td class="name"><code>projectID</code></td>
+                <td class="name"><code>changedName</code></td>
             
 
             <td class="type">
@@ -1647,7 +1774,7 @@
             
 
             <td class="description last">
-                
+                <p>required, provide name of Probe prop to alert dispatcher what has changed</p>
                 
             </td>
         </tr>
@@ -1676,7 +1803,7 @@
 
 
 <div class="param-desc">
-    <p><code>dispatcher</code></p>
+    <p>self</p>
 </div>
 
     
@@ -1691,17 +1818,16 @@
 
     
 
-    <h4 class="name" id="selectByTask"><span class="type-signature"></span>selectByTask<span class="signature">(taskOrProbeID)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="onChange"><span class="type-signature"></span>onChange<span class="signature">(cb(data,id))</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <h3>selectByTask</h3>
-<ul>
-<li>works with <code>PocketSelectors class</code>, when <code>::taskNames, taskName</code> are specified, extracts full probeID by matching previous pointer reference and updates <code>lastProbeID()</code></li>
-<li>returns valid probeID or null</li>
+    <ul>
+<li>can be used when <code>opts.onChange=true</code> is set</li>
+<li>changes are observed for <code>[ data,status,ref,error,campaign,status:complete]</code></li>
 </ul>
 </div>
 
@@ -1738,7 +1864,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line212">line 212</a>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line466">line 466</a>
     </li></ul></dd>
     
 
@@ -1782,13 +1908,13 @@
 
         <tr>
             
-                <td class="name"><code>taskOrProbeID</code></td>
+                <td class="name"><code>cb(data,id)</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><code>*</code></span>
+<span class="param-type"><code><a href="global.html#onChange_cb">onChange_cb</a></code></span>
 
 
             
@@ -1799,7 +1925,7 @@
             
 
             <td class="description last">
-                <p>required, but optional</p>
+                <p>callback returns updated value in real time</p>
                 
             </td>
         </tr>
@@ -1821,27 +1947,6 @@
 
 
 
-<div class="section-returns">
-<h5>Returns:</h5>
-
-        
-
-<dl class="param-type">
-    <dt>
-        Type:
-    </dt>
-    <dd>
-        
-<span class="param-type"><code>string</code></span>
-
-
-    </dd>
-</dl>
-
-
-    
-</div>
-
 
 
 </div>
@@ -1851,18 +1956,14 @@
 
     
 
-    <h4 class="name" id="storeTransfers"><span class="type-signature"></span>storeTransfers<span class="signature">(fromProbeID, data)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="onComplete"><span class="type-signature"></span>onComplete<span class="signature">(status)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <h3>storeTransfers</h3>
-<ul>
-<li>caches pending transfers when using <code>$transfer</code> with <code>$to()</code></li>
-<li>access last data by timestamp</li>
-</ul>
+    <p>status watch, when current status changes execute send</p>
 </div>
 
 
@@ -1898,7 +1999,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pocket_Pocket.libs.js.html">Pocket/Pocket.libs.js</a>, <a href="Pocket_Pocket.libs.js.html#line170">line 170</a>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line564">line 564</a>
     </li></ul></dd>
     
 
@@ -1942,7 +2043,280 @@
 
         <tr>
             
-                <td class="name"><code>fromProbeID</code></td>
+                <td class="name"><code>status</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>*</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="onOpenStatus"><span class="type-signature"></span>onOpenStatus<span class="signature">(status)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>do something on open task, this means we start request for data</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line587">line 587</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>status</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>*</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">(data:any,, merge:Boolean,)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <h3>update</h3>
+<ul>
+<li>update data of current Probe{}.data</li>
+</ul>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Probe_Probe.js.html">Probe/Probe.js</a>, <a href="Probe_Probe.js.html#line246">line 246</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data:any,</code></td>
             
 
             <td class="type">
@@ -1968,7 +2342,7 @@
 
         <tr>
             
-                <td class="name"><code>data</code></td>
+                <td class="name"><code>merge:Boolean,</code></td>
             
 
             <td class="type">
@@ -1985,7 +2359,7 @@
             
 
             <td class="description last">
-                <p>required</p>
+                <p>optional for merging object to this.data</p>
                 
             </td>
         </tr>

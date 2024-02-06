@@ -61,6 +61,7 @@ if (onSet1 && onSet2) {
             return true
         }).d // access computed data , or continue chaining
 
+    // continue later in code to access desired pocket
     pock.$select(`pocket-1`)
         .$filter((probe) => {
             return probe.task === "china"

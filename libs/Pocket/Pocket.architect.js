@@ -28,10 +28,11 @@ class PocketArchitect extends PocketModuleExt {
     }
 
     /**
+     * @ignore
      * @param assetName string, specify the name you chose in your `$architect(...)` declaration,
-     * @param asCallback when exists, return asset as callback
+     * @param {Function} asCallback when exists, return asset as callback
      * @param projectID optional, update selector and return desired asset
-     * @returns if callback is returned the same value is returned
+     * @returns {object | null} if callback is returned the same value is returned
      */
     asset(assetName, asCallback, projectID) {
         if (!isFunction(asCallback)) {
@@ -62,9 +63,9 @@ class PocketArchitect extends PocketModuleExt {
     /**
      * - can be used as a project setter same as `$payload` or `$project`, but with additional configuration
      *
-     * @param cb required, must return project settings: `{project:{payloadData}, asset:{value, name}, cache:{project, asset}}
+     * @param {Function} cb required, must return project settings: `{project:{payloadData}, asset:{value, name}, cache:{project, asset}}
      * @param projectID optional
-     * @returns self
+     * @returns {this}
      */
     architect(cb, projectID) {
         if (!isFunction(cb)) {
@@ -104,7 +105,7 @@ class PocketArchitect extends PocketModuleExt {
 
         for (let k in validConfig) {
             const item = validConfig[k]
-            // get last cache overide
+            // get last cache override
             const cached = validConfig["cache"][k] === true && (k === "project" || k === "asset")
 
             if (k === "project") {

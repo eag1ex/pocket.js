@@ -35,7 +35,7 @@ class ProbeDataBank {
      *
      *
      * @memberof ProbeDataBank
-     * @returns {[{data:any,data_id:string}]} may also return []
+     * @returns {Array<{data:any,data_id:string}>} may also return []
      */
     get dataBank() {
         // @ts-ignore

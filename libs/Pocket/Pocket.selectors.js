@@ -60,6 +60,7 @@ class PocketSelectors extends PocketArchitect {
      * ### $projectSet
      * - use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
      * @param {*} projectID required
+     * @returns {boolean}
      */
     $projectSet(projectID = "") {
         projectID = validProjectID(projectID)
@@ -68,10 +69,17 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
+     * Callback for adding two numbers.
+     *
+     * @callback condition_cb
+     * @param {PocketSelectors} pocket
+     * @returns {any}
+     */
+
+    /**
      * REVIEW self is inconsistent here we may have to update this logic
-     * @memberof PocketSelectors
      * run conditional statement within callback, so we can keep chaining in the same block
-     * @param {(pocket:PocketSelectors)=>any} cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
+     * @param {condition_cb} cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
      * @param {string} id `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`
      * @returns {PocketSelectors} by default returns Pocket/self, or any true value passed inside callback
      */
@@ -221,9 +229,16 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
+     *
+     * @callback filter_cb
+     * @param {Probe} probe
+     * @returns {any}
+     */
+
+    /**
      * Filter works together with `$compute` or standalone when specified `.d` to return filtered `list`
      * @memberof PocketSelectors
-     * @param {(probe:Probe)=>any} cb
+     * @param {filter_cb} cb
      * @param {string} projectID
      * @returns {PocketSelectors}
      */
@@ -270,11 +285,18 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
+     *
+     * @callback compute_cb
+     * @param {Probe} probe
+     * @returns {any}
+     */
+
+    /**
      * ### $compute
      * @instance
      * - iterate thru each Probe{}/ instance in a callback, and make changes to it
      * - note: you can only compute thru items that are not `complete`
-     * @param {(probe:Probe)=>any} cb cb callback to current Probe instance process
+     * @param {compute_cb} cb cb callback to current Probe instance process
      * @param {string} projectID optional/sensitive, selects new point of reference.
      */
     $compute(cb, projectID = "") {
@@ -321,11 +343,18 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
+     *
+     * @callback list_cb
+     * @param {object} probeCopy
+     * @returns {{}}
+     */
+
+    /**
      * ### $list
      * - list active Probes{} by project id, should return all assigned probe/tasks regardless of status
      * - returns array[] of active Probe{}/tasks or []
      * @param {*} projectID optional/sensitive, selects new point of reference.
-     * @param {(probeCopy:object)=>{}} cb((probe, probeID)=>) optional, when set will loop thru each Probe{} in callback
+     * @param {list_cb} cb((probe, probeID)=>) optional, when set will loop thru each Probe{} in callback
      * @param {*} type optional, set to `list`, will return latest Probes, that includes if initiated cb and made a few changes
      */
     $list(projectID = "", cb = null, type = "self") {
@@ -563,9 +592,17 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
+     *
+     * @callback onChange_cb
+     * @param {Probe} probe
+     * @param {string} id
+     * @returns {any}
+     */
+
+    /**
      * - changes are observed for `[data,status,ref,error,campaign, status:complete]`
      * - when watchProp `status:complete` is selected all copy data is returned in callback
-     * @param {(probe:Probe,id)=>any} cb
+     * @param {onChange_cb} cb
      * @param watchProp specify what property to watch, defaults to `all`, except for `status:complete`
      * @param {*} probeID optional/sensitive, select new point of reference
 
@@ -582,8 +619,16 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
+     *
+     * @callback onProbeComplete_cb
+     * @param {Probe} probe
+     * @param {string} id
+     * @returns {any}
+     */
+
+    /**
      * callback initialled of any probe that was completed, unless specificity selected `probeID`
-     * @param {(probe:Probe,id)=>any} cb
+     * @param {onProbeComplete_cb} cb
      * @param {*} probeID optional if you only want to listen for changes to specific probe add the id
      */
     $onProbeComplete(cb, probeID) {

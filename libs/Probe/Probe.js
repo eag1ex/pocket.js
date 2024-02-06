@@ -8,6 +8,15 @@
 // const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
 const { isString, sq, isArray, warn, log, isNumber, onerror, last, copy, isObject, isFunction, dispatcher } = require("x-utils-es/umd")
 const ProbeDataBank = require("./Probe.dataBank")
+
+/**
+ *
+ * @callback emitter_cb
+ * @param {Probe} probe
+ * @param { 'open' | 'updated' | 'complete' | 'send' | 'error'} status
+ * @returns {{}}
+ */
+
 class Probe extends ProbeDataBank {
     /**
      * @param {object} props probe options `{id,task,campaign,data,status,emitter,completeOnNull}`
@@ -17,7 +26,7 @@ class Probe extends ProbeDataBank {
      * @param {any} props.data optional any value except undefined, cannot be change once status set to `complete` or send
      * @param {string} props.ref (optional) any type of string reference
      * @param {string} props.status required to control Probe actions
-     * @param {({ prob: Probe, status })=>{}} props.emitter optional, dispatcher/emitter available if not null
+     * @param {emitter_cb} props.emitter optional, dispatcher/emitter available if not null
      * @param {boolean} props.completeOnNull override complete setting even if data was never set
      * @param {boolean} debug
      */
@@ -420,8 +429,20 @@ class Probe extends ProbeDataBank {
     }
 
     /**
+     * @typedef {Object} allReturns
+     * @prop {string} ref
+     * @prop {any} data
+     * @prop {string} id
+     * @prop {string} task
+     * @prop {string} status
+     * @prop {any?} error
+     * @prop {string?} campaign
+     *
+     */
+
+    /**
      * returns copy of Prob properties
-     * @returns {error?:any,ref:string, campaign?:string,data:any,id:string, task:string, status:string }
+     * @returns {(allReturns)}
      */
     all() {
         const d = { error: this.error, ref: this.ref, campaign: this.campaign, data: this.data, id: this.id, task: this.task, status: this.status }
@@ -430,9 +451,17 @@ class Probe extends ProbeDataBank {
     }
 
     /**
+     *
+     * @callback onChange_cb
+     * @param {Probe} probe
+     * @param {string} id
+     * @returns {{}}
+     */
+
+    /**
      * - can be used when `opts.onChange=true` is set
      * - changes are observed for `[ data,status,ref,error,campaign,status:complete]`
-     * @param {(probe:Probe,id)=>{}} cb(data,id) callback returns updated value in real time
+     * @param {onChange_cb} cb(data,id) callback returns updated value in real time
      */
     onChange(cb, watch = "all") {
         if (!this._onChange) {
