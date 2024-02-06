@@ -394,7 +394,7 @@ class Probe extends ProbeDataBank {
     /**
      * Resolve text promise and returns last status
      *
-     * @memberof Probe
+     * memberof Probe
      * @returns {Promise<any>}
      */
     get setStatusAsync() {
@@ -404,8 +404,7 @@ class Probe extends ProbeDataBank {
     }
 
     /**
-     * ### statusAsync
-     * - dynamic promise resolver with `Simple Q` from `eaglex.net`
+     * dynamic promise resolver with `Simple Q` from `eaglex.net`
      * - works with `setStatusAsync` setter/getter
      * - return last 'resolve' status from last `timestamp` setting
      * @returns {Promise<string>} status name
@@ -416,7 +415,7 @@ class Probe extends ProbeDataBank {
     }
 
     /**
-     * - when status is set to complete or send, the promise will then be resolved
+     * when status is set to complete or send, the promise will then be resolved
      * @returns {Promise<{status, id}>}
      */
     get completeAsync() {
@@ -462,7 +461,7 @@ class Probe extends ProbeDataBank {
      */
 
     /**
-     * - can be used when `opts.onChange=true` is set
+     * can be used when `opts.onChange=true` is set
      * - changes are observed for `[ data,status,ref,error,campaign,status:complete]`
      * @param {onChange_cb} cb(data,id) callback returns updated value in real time
      */

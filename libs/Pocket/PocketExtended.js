@@ -56,8 +56,7 @@ class PocketModuleExt extends PocketModule {
         this.clearStoreTransfers(id)
     }
     /**
-     * ### $removeProject
-     * - removes all Probes and references relating to `projectID`
+     * removes all Probes and references relating to `projectID`
      * @param {*} projectID
      */
     $removeProject(projectID) {
@@ -108,7 +107,6 @@ class PocketModuleExt extends PocketModule {
     }
 
     /**
-     * @exports d
      * memberof PocketModule
      * - resolves currently active `$payload(...)`
      * - `after completion of Pocket, instance data for all Probes is deleted`

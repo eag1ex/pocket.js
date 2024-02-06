@@ -16,6 +16,9 @@ prob.data = { order: 20, value: 0 }
 // when setting complete, the last status send is automatically escalated.
 prob.status = "complete"
 
+// this data will not change once the status is complete
+prob.data = null
+
 // any changes to be notified
 prob.onChange(function (d) {
     console.log("[prob.onChange]")

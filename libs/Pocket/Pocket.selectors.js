@@ -25,16 +25,18 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * memberof PocketArchitect
+     *
      * more construct way of setting up a project and allowing few external assets to be used. This method uses $payload inheritance with access to `type` and `async`. Things to remember consecutive call to $architect thru  .$condition() method, can only update existing items.
     -   `cb(()=>({project:payloadData, type,async}))`: return callback must return {project:payload} as minimum requirement, when running in a loop or repetitive actions, it is best to set type='update' so that concurrent call to the same task wont wont be ignored, `type` is state base, so last setting is kept
+    -  memberof PocketArchitect
      */
     $architect(cb, projectID) {
         return super.architect(cb, projectID)
     }
 
     /**
-     *  memberof PocketArchitect
+     * can access the asset declared in `$architect`
+     *  - memberof PocketArchitect
      *
      */
     $asset(assetName, asCallback, projectID) {
@@ -42,7 +44,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * - check is probe exists on PocketModule
+     * check is probe exists on PocketModule
      * @param {*} probeID required, can specify `::taskName` or full id `{projectID}::{probeID}`
      * @returns boolean
      */
@@ -60,8 +62,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * ### $projectSet
-     * - use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
+     * use it to check if project already available, it is similar to `$projectSetAsync` but not a promise, returns current status, not in future
      * @param {*} projectID required
      * @returns {boolean}
      */
@@ -81,6 +82,7 @@ class PocketSelectors extends PocketArchitect {
 
     /**
      * REVIEW self is inconsistent here we may have to update this logic
+     *
      * run conditional statement within callback, so we can keep chaining in the same block
      * @param {condition_cb} cb required, inside callback access to self for PocketModule, or for Probe{}, depending on `projectID/probeID` id specified
      * @param {string} id `projectID/probeID` optional, specify either `projectID` or `probeID`, defaults to last `projectID`
@@ -134,7 +136,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * - return last probe status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
+     * return last probe status, this is a dynamic Promise, creates new promise every time status is changed, so then it needs to bu called again to get latest update
      * @param {*} probeID
      */
     $probeStatusAsync(probeID = "") {
@@ -145,8 +147,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * ### $get
-     * - `get probe by 'id::taskName'`
+     *`get probe by 'id::taskName'`
      * - `returns instance`
      *  methods:`{get,all}` props: `{id,data,tasks,status}`
      * @param {*} probeID required, example format: `${payload.id}::taskName`
@@ -172,7 +173,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * - as name suggest sets up new new data for Probe/task, it derives from `$update`
+     * as name suggest sets up new new data for Probe/task, it derives from `$update`
      * @param {SetUpdateModel} dataFrom required, must specify what to set on Probe{}, example: `dataFrom:{data:'coke',status:'complete',campaign:'cocacola'}`
      * - we should only use `$set` for initialization, this action also calls `clearStoreTransfers`
      * @param {*} probeID required, example format: `${payload.id}::taskName`
@@ -185,8 +186,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * ### $probe
-     * - return as Probe{}, similar as $get(...), although does additional check for instanceOf Probe{}
+     * return as Probe{}, similar as $get(...), although does additional check for instanceOf Probe{}
      * @param {*} probeID
      * @returns {Probe}
      */
@@ -221,8 +221,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * ### $select
-     * - select current payloadID/project/job by id you are working on
+     * select current payloadID/project/job by id you are working on
      * @param {*} projectID optional/sensitive, selects new point of reference.
      */
     $select(projectID = undefined) {
@@ -295,9 +294,7 @@ class PocketSelectors extends PocketArchitect {
      */
 
     /**
-     * ### $compute
-     * @instance
-     * - iterate thru each Probe{}/ instance in a callback, and make changes to it
+     * iterate thru each Probe{}/ instance in a callback, and make changes to it
      * - note: you can only compute thru items that are not `complete`
      * @param {compute_cb} cb cb callback to current Probe instance process
      * @param {string} projectID optional/sensitive, selects new point of reference.
@@ -353,8 +350,7 @@ class PocketSelectors extends PocketArchitect {
      */
 
     /**
-     * ### $list
-     * - list active Probes{} by project id, should return all assigned probe/tasks regardless of status
+     * list active Probes{} by project id, should return all assigned probe/tasks regardless of status
      * - returns array[] of active Probe{}/tasks or []
      * @param {*} projectID optional/sensitive, selects new point of reference.
      * @param {list_cb} cb ((probe, probeID)=>) optional, when set will loop thru each Probe{} in callback
@@ -383,8 +379,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * ### $transfer
-     * - select data from `fromProbeID` and hold it in `_transferCache`, until `$to(probeID)` is called
+     * select data from `fromProbeID` and hold it in `_transferCache`, until `$to(probeID)` is called
      * - warning, action removes `Probe[fromProbeID].data` and overrides it on Probe[probeID].data, only when `$to(probeID)` is called, simple as that!
      * @param {*} fromProbeID optional/sensitive, selects new point of reference.
      */
@@ -403,8 +398,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * ### $to
-     * - works together with `$transfer`, will transfer `data` from one Probe{} to another
+     * works together with `$transfer`, will transfer `data` from one Probe{} to another
      * if `_transferCache` is set, the cache is cleared.
      * @param {*} toProbeID optional/sensitive, points to Probe{} `data` will be packed, it is not previous reference pointer, but the next.
      * - will only work if `toProbeID` is not yet complete
@@ -448,8 +442,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * ### $of
-     * - points to Probe{} be reference
+     * points to Probe{} be reference
      * @param {*} probeID optional/sensitive, select new point of reference
      */
     $of(probeID = "") {
@@ -459,8 +452,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * ### $data
-     * - returns Object copy of `Probe['data']`
+     * returns Object copy of `Probe['data']`
      * @param {*} dataProp optional, if you know what you are asking for example: `{assets:true}`,or `array['assets]`, it has catch error exception, so you wont receive any errors just `null`
      * will return all available matched within our `Probe{}['data]`. Multiples of `dataProp{}/([])/(',')` will return an object, if only one specified, only value will be returned
      * @param {*} probeID optional/sensitive, select new point of reference
@@ -487,8 +479,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * ### cached
-     * - grabs last cached `$data(...)` from Probe{}
+     * grabs last cached `$data(...)` from Probe{}
      * @param {*} dataProp{}/String optional, know what you are asking for example: ` {assets:true}/ or > 'assets,values,somethingElse'`, it has catch error exception, so you wont receive any errors just `null`
      * will return all available matched within our `_$cached_data[probeID]`. Multiples of `dataProp{}/([])/(',')` will return an object, if only one specified, only value will be returned
      * @param {*} probeID
@@ -518,8 +509,7 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * ### $campaign
-     * - returns Object copy of `Probe['campaign']`
+     * returns Object copy of `Probe['campaign']`
      * @param {*} probeID optional/sensitive, select new point of reference
      */
     $campaign(probeID) {

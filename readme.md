@@ -35,6 +35,7 @@ Easy to use, Pocket.js redistribution utility framework, allowing you to probe d
 -   `Probe < Pocket`: Child module doesnt know about Pocket, its status managed, when `complete`, Pocket intercepts, and waits until all Probe tasks `complete`. Can be used independently if needed.
     -   You can consider each probe a todo item, part of a bigger assignment.
     -   refer to example: `node /samples/simple.probe.js`
+    -   Becomes immutable once the status is set to complete
 
 #### Pocket code documentation
 
@@ -56,6 +57,7 @@ npm i
 ## then play :)
 node /samples/pocket.simple.js
 node /samples/pocket.advance.js
+node /samples/simple.probe.js
 
 ## or
 npm run example
