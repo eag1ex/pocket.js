@@ -2,7 +2,11 @@
  * This is the last Pocket extended class
  */
 
-const PocketSelectors = require('./Pocket.selectors')
+const PocketSelectors = require("./Pocket.selectors")
+
+/**
+ * @class
+ */
 class Pocket extends PocketSelectors {
     /**
      *
@@ -17,8 +21,7 @@ class Pocket extends PocketSelectors {
      * @param {*} debug optional
      */
     constructor(opts, debug) {
-        super(opts, debug)      
+        super(opts, debug)
     }
-    
 }
 module.exports = Pocket

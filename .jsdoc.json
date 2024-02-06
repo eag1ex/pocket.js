@@ -5,8 +5,15 @@
     },
     "source": {
         "includePattern": ".+\\.js(doc|x)?$", // Only process file ending in .js, .jsdoc or .jsx
-        "include": ["./libs", "package.json", "readme.md"], // Check all folders.
-        // "include": ["./libs/Pocket/PocketExit.module.js", "./libs/Pocket/PocketExtended.js", "package.json", "readme.md"], //
+        //"include": ["./libs", "package.json", "readme.md"], // Check all folders.
+        "include": [
+            "./libs/Probe/Probe.js",
+            "./libs/Pocket/Pocket.architect.js",
+            "./libs/Pocket/Pocket.selectors.js",
+            "./libs/Pocket/PocketExtended.js",
+            "package.json",
+            "readme.md"
+        ], //
 
         "exclude": ["node_modules"] // Be gone, node_modules.
     },

@@ -8,6 +8,10 @@ const { validProjectID } = require("../utils")
 const { objectSize, isFunction, onerror, warn, isString } = require("x-utils-es/umd")
 const ArchitectModel = require("../Models/ArchitectModel")
 const PocketModuleExt = require("./PocketExtended")
+
+/**
+ * @class
+ */
 class PocketArchitect extends PocketModuleExt {
     constructor(opts, debug) {
         super(opts, debug)

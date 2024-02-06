@@ -1,4 +1,45 @@
-// @ts-nocheck
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Probe/Probe.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PocketArchitect.html">PocketArchitect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketArchitect.html#architect">architect</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PocketModuleExt.html">PocketModuleExt</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModuleExt.html#$payload">$payload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModuleExt.html#$removeProject">$removeProject</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModuleExt.html#deletePocketSet">deletePocketSet</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PocketSelectors.html">PocketSelectors</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$all">$all</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$architect">$architect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$asset">$asset</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$cached">$cached</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$campaign">$campaign</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$compute">$compute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$condition">$condition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$data">$data</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$error">$error</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$exists">$exists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$filter">$filter</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$get">$get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$getByRef">$getByRef</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$list">$list</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$of">$of</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$onChange">$onChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$onProbeComplete">$onProbeComplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$probe">$probe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$probeStatusAsync">$probeStatusAsync</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$projectComplete">$projectComplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$projectSet">$projectSet</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$ref">$ref</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$select">$select</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$set">$set</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$status">$status</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$task">$task</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$to">$to</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$transfer">$transfer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$update">$update</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Probe.html">Probe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#all">all</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#dispatchChange">dispatchChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#onChange">onChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#onComplete">onComplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#onOpenStatus">onOpenStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Probe.html#update">update</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-d.html">d</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Probe/Probe.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// @ts-nocheck
 /**
  * Set new probe model
  * - every new task has a set of requirements controlled by `statusStackOrder` in status setter. Once status is `complete` and data available, information is send and probe is blocked.
@@ -92,7 +133,7 @@ class Probe extends ProbeDataBank {
         if (v.indexOf(`:::`) !== -1) throw "each id must be of format id::taskName"
 
         // validate chars
-        const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
+        const pat = /[`~!@#$%^&amp;*()\=?;'",.&lt;>\{\}\[\]\\\/]/gi
         const regx = new RegExp(pat, "gi")
         if (regx.test(v)) throw `your id is invalid, allowed chars: ${pat}`
 
@@ -169,7 +210,7 @@ class Probe extends ProbeDataBank {
     set campaign(v) {
         if (v === undefined) return
         if (this._campaign) {
-            if (this.debug && !this.disableWarnings) warn("[pocket]", `cannot update already set campaign ${this._campaign}`)
+            if (this.debug &amp;&amp; !this.disableWarnings) warn("[pocket]", `cannot update already set campaign ${this._campaign}`)
             return
         }
         if (!v) return
@@ -185,7 +226,7 @@ class Probe extends ProbeDataBank {
     set task(v) {
         if (v === undefined) return
         if (this._task) {
-            if (this.debug && !this.disableWarnings) warn("[pocket]", `cannot update already set task`)
+            if (this.debug &amp;&amp; !this.disableWarnings) warn("[pocket]", `cannot update already set task`)
             return
         }
 
@@ -196,7 +237,7 @@ class Probe extends ProbeDataBank {
         }
         if (v.indexOf("::") !== -1) throw "task separator :: is restricted"
         if (v.split(" ").length > 1) throw "task cannot have spaces, use separators: _+"
-        const pat = /[`~!@#$%^&*()\=?;'",.<>\{\}\[\]\\\/]/gi
+        const pat = /[`~!@#$%^&amp;*()\=?;'",.&lt;>\{\}\[\]\\\/]/gi
         const regx = new RegExp(pat, "gi")
         if (regx.test(v)) throw `your task is invalid, allowed chars: ${pat}`
 
@@ -218,12 +259,12 @@ class Probe extends ProbeDataBank {
         const complete = this.status === "complete" || this.status === "send"
         if (complete) {
             // NOTE this can also happen if you are using $transfer().$to from `PocketModule` that is a delayed
-            if (this.debug && !this.disableWarnings) warn("[pocket]", `you cannot update data once the status is complete or send`)
+            if (this.debug &amp;&amp; !this.disableWarnings) warn("[pocket]", `you cannot update data once the status is complete or send`)
             return
         }
 
         this._dataIndex++
-        if (this.status === "open" && this._data !== null && this._dataIndex > 1) this.status = "updated"
+        if (this.status === "open" &amp;&amp; this._data !== null &amp;&amp; this._dataIndex > 1) this.status = "updated"
 
         this._data = v
         if (this.withDataBank) this.dataBank = v
@@ -248,14 +289,14 @@ class Probe extends ProbeDataBank {
      */
     update(data, merge = null) {
         if (this.status === "complete" || this.status === "send") {
-            if (this.debug && !this.disableWarnings) warn(`[Probe][update] cannot update data on complete status`)
+            if (this.debug &amp;&amp; !this.disableWarnings) warn(`[Probe][update] cannot update data on complete status`)
             return this
         }
-        if (!isObject(data) && merge) {
+        if (!isObject(data) &amp;&amp; merge) {
             if (this.debug) warn("[pocket]", `[Probe][update] cannot update none object 'data' with option 'merge=true' set`)
             return this
         }
-        if (isObject(data) && merge) this.data = Object.assign({}, this.data, data)
+        if (isObject(data) &amp;&amp; merge) this.data = Object.assign({}, this.data, data)
         else if (data !== undefined) this.data = data
         return this
     }
@@ -294,12 +335,12 @@ class Probe extends ProbeDataBank {
         ;((stat) => {
             try {
                 // meaning do not allow any status changes beyond `updated`
-                if (this.statusStackOrder[stat].value > 2 && this.statusStackOrder[stat].set === true) return false
+                if (this.statusStackOrder[stat].value > 2 &amp;&amp; this.statusStackOrder[stat].set === true) return false
             } catch (err) {
                 onerror("statusStackOrder invalid status")
             }
 
-            // if (this._status === 'send' && (stat === 'complete' || stat ==='send')) {
+            // if (this._status === 'send' &amp;&amp; (stat === 'complete' || stat ==='send')) {
             //     if (this.debug) warn(`cannot update status if already complete, id:${this.id}`)
             //     return false
             // }
@@ -335,7 +376,7 @@ class Probe extends ProbeDataBank {
                     break
 
                 case "complete":
-                    if (this.data === null && this.completeOnNull !== true) {
+                    if (this.data === null &amp;&amp; this.completeOnNull !== true) {
                         if (this.debug) warn("[pocket]", `[status] cannot complete status because data is null, to complete you set data prop to false`)
                         break
                     }
@@ -395,11 +436,11 @@ class Probe extends ProbeDataBank {
      * Resolve text promise and returns last status
      *
      * @memberof Probe
-     * @returns {Promise<any>}
+     * @returns {Promise&lt;any>}
      */
     get setStatusAsync() {
         const lastPromise = last(this._statusAsync.sort((a, b) => a.timestamp - b.timestamp).map((z) => z["p"]))
-        lastPromise.resolve(copy(this.status)) // << we are only returning
+        lastPromise.resolve(copy(this.status)) // &lt;&lt; we are only returning
         return lastPromise
     }
 
@@ -408,7 +449,7 @@ class Probe extends ProbeDataBank {
      * - dynamic promise resolver with `Simple Q` from `eaglex.net`
      * - works with `setStatusAsync` setter/getter
      * - return last 'resolve' status from last `timestamp` setting
-     * @returns {Promise<string>} status name
+     * @returns {Promise&lt;string>} status name
      */
     get getStatusAsync() {
         // @ts-ignore
@@ -417,7 +458,7 @@ class Probe extends ProbeDataBank {
 
     /**
      * - when status is set to complete or send, the promise will then be resolved
-     * @returns {Promise<{status, id}>}
+     * @returns {Promise&lt;{status, id}>}
      */
     get completeAsync() {
         return this._completeAsync.promise
@@ -498,7 +539,7 @@ class Probe extends ProbeDataBank {
         this.onchangeDispatch.subscribe(function (data, id) {
             // NOTE data['changed'] // returned in dispatch only provided name of asset changed
             // no point to carry data if we can access it direct
-            if (data["changed"] && watch === "all") {
+            if (data["changed"] &amp;&amp; watch === "all") {
                 cb.bind(self)(self, id)
                 return
             }
@@ -507,7 +548,7 @@ class Probe extends ProbeDataBank {
              * on status complete return all data copy in callback
              */
             if (watch === "status:complete") {
-                if (data["changed"] === "status" && (self["status"] === "send" || self["status"] === "complete") && !self._sealed) {
+                if (data["changed"] === "status" &amp;&amp; (self["status"] === "send" || self["status"] === "complete") &amp;&amp; !self._sealed) {
                     let d = {
                         ...copy(self),
                         status: "complete"
@@ -518,7 +559,7 @@ class Probe extends ProbeDataBank {
                 return this
             }
 
-            if (data["changed"] === watch && self[watch] !== undefined) {
+            if (data["changed"] === watch &amp;&amp; self[watch] !== undefined) {
                 cb.bind(self)(self[watch], id)
             }
         })
@@ -565,7 +606,7 @@ class Probe extends ProbeDataBank {
      * @param {*} status
      */
     onComplete(status) {
-        if ((status === "complete" || status === "error") && this._status !== "send" && (this._dataIndex > 0 || this.completeOnNull === true)) {
+        if ((status === "complete" || status === "error") &amp;&amp; this._status !== "send" &amp;&amp; (this._dataIndex > 0 || this.completeOnNull === true)) {
             if (this.emitter) {
                 setTimeout(() => {
                     this.emitter({ probe: this, status })
@@ -601,3 +642,22 @@ class Probe extends ProbeDataBank {
 }
 
 module.exports = Probe
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Tue Feb 06 2024 18:11:40 GMT+0700 (Indochina Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

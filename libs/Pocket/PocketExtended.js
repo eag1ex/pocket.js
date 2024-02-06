@@ -11,6 +11,9 @@ const { onerror, warn, isPromise, validID, isString } = require("x-utils-es/umd"
 // const PocketLibs = require('./Pocket.libs')
 const PocketModule = require("./Pocket.module")
 
+/**
+ * @class
+ */
 class PocketModuleExt extends PocketModule {
     constructor(opts, debug) {
         super(opts, debug)
@@ -106,7 +109,7 @@ class PocketModuleExt extends PocketModule {
 
     /**
      * @exports d
-     * @memberof PocketModule
+     * memberof PocketModule
      * - resolves currently active `$payload(...)`
      * - `after completion of Pocket, instance data for all Probes is deleted`
      * - can be called even before project was declared thanks to callback dispatcher `$projectSetAsync()`

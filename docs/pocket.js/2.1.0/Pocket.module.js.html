@@ -1,4 +1,45 @@
-// const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Pocket.module.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="Pocket.html">Pocket</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PocketArchitect.html">PocketArchitect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketArchitect.html#architect">architect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketArchitect.html#.PocketSelectors#$architect">PocketSelectors#$architect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketArchitect.html#.PocketSelectors#$asset">PocketSelectors#$asset</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PocketLibs.html">PocketLibs</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#accessLastValidTransfer">accessLastValidTransfer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#clearStoreTransfers">clearStoreTransfers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#dataPropSelector">dataPropSelector</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#lastProbeID">lastProbeID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#lastProjectID">lastProjectID</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#projectProbeList">projectProbeList</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#projectSetDispatcher">projectSetDispatcher</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#selectByTask">selectByTask</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketLibs.html#storeTransfers">storeTransfers</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PocketModule.html">PocketModule</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#$activeTasks">$activeTasks</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#$projectSetAsync">$projectSetAsync</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#_emit">_emit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#_get">_get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#_setUpdate">_setUpdate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#distributor">distributor</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#payload">payload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#ready">ready</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#setDefer">setDefer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModule.html#setProbe">setProbe</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PocketModuleExt.html">PocketModuleExt</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModuleExt.html#$payload">$payload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModuleExt.html#$removeProject">$removeProject</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketModuleExt.html#deletePocketSet">deletePocketSet</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="global.html#PocketSelectors">PocketSelectors</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$all">$all</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$cached">$cached</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$campaign">$campaign</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$compute">$compute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$condition">$condition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$data">$data</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$error">$error</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$exists">$exists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$filter">$filter</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$get">$get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$getByRef">$getByRef</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$list">$list</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$of">$of</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$onChange">$onChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$onProbeComplete">$onProbeComplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$probe">$probe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$probeStatusAsync">$probeStatusAsync</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$projectComplete">$projectComplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$projectSet">$projectSet</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$ref">$ref</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$select">$select</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$set">$set</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$status">$status</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$task">$task</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$to">$to</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$transfer">$transfer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PocketSelectors#$update">$update</a></span></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-d.html">d</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Pocket.module.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// const messageCODE = require('./errors') // DISPLAY MESSAGES WITH CODE
 
 // MODELS AND TYPES
 const ProjectPayloadModel = require("../Models/ProjectPayloadModel")
@@ -62,7 +103,7 @@ class PocketModule extends PocketLibs {
         this.d = null
         let isUpdated = null
 
-        if (this.payloadData[data.id] && (!type || type === "new")) {
+        if (this.payloadData[data.id] &amp;&amp; (!type || type === "new")) {
             this._lastProjectID = data.id
             if (this.debug) warn(`[$payload] this payload.id already exists`)
             return true
@@ -86,13 +127,13 @@ class PocketModule extends PocketLibs {
             }
 
             const probeID = `${data.id}::${val["task"]}`
-            if (type === "update" && !initialProject && this.pocket[probeID]) {
+            if (type === "update" &amp;&amp; !initialProject &amp;&amp; this.pocket[probeID]) {
                 if (val["data"]) this.pocket[probeID]["data"] = val["data"]
                 if (val["status"]) this.pocket[probeID]["status"] = val["status"]
 
                 // NOTE in case we update status in case it wasnt provided but new data was assigned
                 // status should only be changed after data is set
-                if (!val["status"] && val["data"] && this.pocket[probeID]["status"] === "open") {
+                if (!val["status"] &amp;&amp; val["data"] &amp;&amp; this.pocket[probeID]["status"] === "open") {
                     this.pocket[probeID]["status"] = "updated"
                 }
                 if (val["ref"]) this.pocket[probeID]["ref"] = val["ref"]
@@ -112,7 +153,7 @@ class PocketModule extends PocketLibs {
             if (!this.payloadData[data.id]) this.payloadData[data.id] = { value: [], status: "open", timestamp: new Date().getTime() }
             const exists = this.payloadData[data.id]["value"].filter((z) => z.task.indexOf(val.task) !== -1)
             if (exists.length) {
-                if (this.debug && !this.disableWarnings) warn("[pocket]", `the same task "${val.task}" already exists on the payload, you must choose uniq`)
+                if (this.debug &amp;&amp; !this.disableWarnings) warn("[pocket]", `the same task "${val.task}" already exists on the payload, you must choose uniq`)
                 continue
             }
 
@@ -121,7 +162,7 @@ class PocketModule extends PocketLibs {
         }
 
         // only when updating existance of Probe{}
-        if (type === "update" && this.payloadData[data.id] && !initialProject) {
+        if (type === "update" &amp;&amp; this.payloadData[data.id] &amp;&amp; !initialProject) {
             this.projectsCache[data.id] = "open"
             return isUpdated
         }
@@ -221,7 +262,7 @@ class PocketModule extends PocketLibs {
         payloadID = this.lastProjectID(payloadID)
         if (!objectSize(this.pocket)) return returnAs([])
         let tasks = Object.entries(this.pocket).reduce((n, [probeID, probe]) => {
-            if (probeID.indexOf(payloadID || "") === 0 && payloadID && this.payloadData[payloadID]) n.push(probe["task"])
+            if (probeID.indexOf(payloadID || "") === 0 &amp;&amp; payloadID &amp;&amp; this.payloadData[payloadID]) n.push(probe["task"])
             else if (!payloadID) n.push(probe["task"])
             return n
         }, [])
@@ -231,7 +272,7 @@ class PocketModule extends PocketLibs {
     /**
      * @summary called by $ready()
      * @memberof PocketModule
-     * @returns {Promise<ProbeModel[]>}
+     * @returns {Promise&lt;ProbeModel[]>}
      */
     ready(payloadID = "") {
         this.d = null
@@ -290,7 +331,7 @@ class PocketModule extends PocketLibs {
             return n
         }, [])
 
-        for (let inx = 0; inx < dataFromArr.length; inx++) {
+        for (let inx = 0; inx &lt; dataFromArr.length; inx++) {
             if ((dataFromArr[inx] || {})["data"] === undefined) continue
             const [key, value] = Object.entries(dataFromArr[inx]["data"])[0]
             if (this.pocket[id][key] !== undefined) {
@@ -306,13 +347,13 @@ class PocketModule extends PocketLibs {
             }
         }
         // when setting new data, using `$set()` we should clear any cached Probes and related data
-        if (updated && type === "set") {
+        if (updated &amp;&amp; type === "set") {
             this.clearStoreTransfers(id)
             if (this.$transfer_lastID === id) this.$transfer_lastID = ""
             if (this._$cached_data[id]) delete this._$cached_data[id]
         }
 
-        // if(updated && type==='update') { }
+        // if(updated &amp;&amp; type==='update') { }
         return returnAs(updated)
     }
 
@@ -345,9 +386,9 @@ class PocketModule extends PocketLibs {
             const userOutput = (pock) => {
                 const output = {}
                 if (!isObject(pock)) return null
-                for (let i = 0; i < this.probeProps.length; i++) {
+                for (let i = 0; i &lt; this.probeProps.length; i++) {
                     const prop = this.probeProps[i]
-                    if (pock[prop] !== undefined && pock[prop] !== null) output[prop] = pock[prop]
+                    if (pock[prop] !== undefined &amp;&amp; pock[prop] !== null) output[prop] = pock[prop]
                 }
                 return output
             }
@@ -461,3 +502,22 @@ class PocketModule extends PocketLibs {
 }
 
 module.exports = PocketModule
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Tue Feb 06 2024 18:01:04 GMT+0700 (Indochina Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

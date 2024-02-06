@@ -1,4 +1,45 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Pocket.selectors.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PocketSelectors.html">PocketSelectors</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$all">$all</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$cached">$cached</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$campaign">$campaign</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$compute">$compute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$condition">$condition</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$data">$data</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$error">$error</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$exists">$exists</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$filter">$filter</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$get">$get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$getByRef">$getByRef</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$list">$list</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$of">$of</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$onChange">$onChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$onProbeComplete">$onProbeComplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$probe">$probe</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$probeStatusAsync">$probeStatusAsync</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$projectComplete">$projectComplete</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$projectSet">$projectSet</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$ref">$ref</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$select">$select</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$set">$set</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$status">$status</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$task">$task</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$to">$to</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$transfer">$transfer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="PocketSelectors.html#$update">$update</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Pocket.selectors.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * ### PocketSelectors
  * - Extends PocketModule using selectors for better access to Probes
  * - allow selection to reference by, example:  `taskName`, `::taskName` and `${projectID}::taskName`, thanks to `selectByTask()` method
@@ -25,17 +66,14 @@ class PocketSelectors extends PocketArchitect {
     }
 
     /**
-     * memberof PocketArchitect
-     * more construct way of setting up a project and allowing few external assets to be used. This method uses $payload inheritance with access to `type` and `async`. Things to remember consecutive call to $architect thru  .$condition() method, can only update existing items.
-    -   `cb(()=>({project:payloadData, type,async}))`: return callback must return {project:payload} as minimum requirement, when running in a loop or repetitive actions, it is best to set type='update' so that concurrent call to the same task wont wont be ignored, `type` is state base, so last setting is kept
+     * @memberof PocketArchitect
      */
     $architect(cb, projectID) {
         return super.architect(cb, projectID)
     }
 
     /**
-     *  memberof PocketArchitect
-     *
+     *  @memberof PocketArchitect
      */
     $asset(assetName, asCallback, projectID) {
         return super.asset(assetName, asCallback, projectID)
@@ -240,7 +278,7 @@ class PocketSelectors extends PocketArchitect {
 
     /**
      * Filter works together with `$compute` or standalone when specified `.d` to return filtered `list`
-     * memberof PocketSelectors
+     * @memberof PocketSelectors
      * @param {filter_cb} cb
      * @param {string} projectID
      * @returns {PocketSelectors}
@@ -277,7 +315,7 @@ class PocketSelectors extends PocketArchitect {
                 return
             }
 
-            if (matchFound !== undefined && (matchFound === true || matchFound === 1)) {
+            if (matchFound !== undefined &amp;&amp; (matchFound === true || matchFound === 1)) {
                 // dont re-add same probe
                 const isNew = this._lastFilterList[projectID].filter((z, i) => (z || {}).id === probe.id).length
 
@@ -331,7 +369,7 @@ class PocketSelectors extends PocketArchitect {
                 })
             lastFilter.forEach((probe) => {
                 // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete
-                if (probe.status !== "complete" && probe.status !== "send") cb.call(probe, probe)
+                if (probe.status !== "complete" &amp;&amp; probe.status !== "send") cb.call(probe, probe)
             })
             // finally only return not none list on probes, then clear _lastFilterList
             return returnAs(this._lastFilterList[projectID])
@@ -339,7 +377,7 @@ class PocketSelectors extends PocketArchitect {
             this.projectProbeList(projectID).forEach((probe) => {
                 // compute method is designed to allow access to each Probe, but we do not want to allow looping thru assets that are already complete
 
-                if (probe.status !== "complete" && probe.status !== "send") cb.call(probe, probe)
+                if (probe.status !== "complete" &amp;&amp; probe.status !== "send") cb.call(probe, probe)
             })
             return returnAs(this.projectProbeList(projectID))
         }
@@ -472,7 +510,7 @@ class PocketSelectors extends PocketArchitect {
         if (!this.pocket[probeID]) return self ? this : undefined
 
         // NOTE can provide as an array
-        if (isArray(dataProp) && (dataProp || []).length) {
+        if (isArray(dataProp) &amp;&amp; (dataProp || []).length) {
             dataProp = uniq(dataProp).reduce((n, el) => {
                 if (el !== undefined) n[el.trim()] = true
                 return n
@@ -496,17 +534,17 @@ class PocketSelectors extends PocketArchitect {
     $cached(dataProp = {}, probeID = "") {
         probeID = this.selectByTask(probeID, true)
         if (!this.pocket[probeID]) return undefined
-        const hasValue = this._$cached_data[probeID] !== undefined && this._$cached_data[probeID] !== null
+        const hasValue = this._$cached_data[probeID] !== undefined &amp;&amp; this._$cached_data[probeID] !== null
         if (!hasValue) return undefined
         // if you provided a string make it an object
-        if (isString(dataProp) && (dataProp || "").length) {
+        if (isString(dataProp) &amp;&amp; (dataProp || "").length) {
             dataProp = uniq(dataProp.trim().replace(/ /gi, "").split(",")).reduce((n, el) => {
                 if (el !== undefined) n[el] = true
                 return n
             }, {})
         }
         // return cached data if its not an object, or undefined
-        if (!objectSize(this._$cached_data[probeID]) && hasValue) {
+        if (!objectSize(this._$cached_data[probeID]) &amp;&amp; hasValue) {
             if (objectSize(dataProp)) return undefined
             // our cache not an object, but we are asking for dataProp reference, so should return undefined
             else return this._$cached_data[probeID]
@@ -662,3 +700,22 @@ class PocketSelectors extends PocketArchitect {
 }
 
 module.exports = PocketSelectors
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Tue Feb 06 2024 18:04:08 GMT+0700 (Indochina Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
