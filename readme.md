@@ -2,7 +2,7 @@
 
 #### [ Developed by Eaglex ](http://eaglex.net)
 
-Easy to use, Pocket.js redistribution utility framework, allowing you to probe data with state management, well documented, clean beautified code. You can probe task assignments and control its outcome anywhere in your code.
+Easy to use, Pocket.js redistribution utility framework, allowing you to probe data and managing state, well documented, clean beautified code. You can probe task assignments and control its outcome anywhere in your code.
 
 #### Why use it
 
