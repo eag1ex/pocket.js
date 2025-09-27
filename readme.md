@@ -6,6 +6,7 @@ Easy to use, Pocket.js redistribution utility framework, allowing you to probe d
 
 #### Why use it
 
+-   It uses [Require.js/AMD](https://requirejs.org/docs/whyamd.html) for compatibility and encapsulation.
 -   Project is status driven and pattern driven, requires tasks to complete
 -   Specify `tasks`, and receive results by assignment
 -   Manage task ( Probe/task ) states and resolutions
@@ -15,6 +16,10 @@ Easy to use, Pocket.js redistribution utility framework, allowing you to probe d
 -   Consider each Probe task of Pocket.js a campaign you are running, once all campaigns `complete to send` Pocket will resolve(). your assignment
 -   **All tests passing**
 -   **Production ready**
+
+#### Pocket code documentation
+
+Project docs are available on github pages at: [ Pocket.js ](https://eag1ex.github.io/pocket.js/)
 
 #### About the code:
 
@@ -36,10 +41,6 @@ Easy to use, Pocket.js redistribution utility framework, allowing you to probe d
     -   You can consider each probe a todo item, part of a bigger assignment.
     -   refer to example: `node /samples/simple.probe.js`
     -   Becomes immutable once the status is set to complete
-
-#### Pocket code documentation
-
-Project docs are available on github pages at: [ Pocket.js ](https://eag1ex.github.io/pocket.js/)
 
 #### Playground
 
@@ -65,7 +66,7 @@ npm run example
 
 #### Stack
 
--   Node.js, ES6, JavaScript, data-management, state/management, Promise (sync/async), prototyping, class chaining, OOP (SETTERS/GETTER), Istanbul/nyc, Eslint, Mocha/Chai, Custom Utils, debug/error exception handling, user/friendly logging, jsdocs, task runners
+-   Node.js, ES6, JavaScript, Require.js/AMD, data-management, state/management, Promise (sync/async), prototyping, class chaining, OOP (SETTERS/GETTER), Istanbul/nyc, Eslint, Mocha/Chai, Custom Utils, debug/error exception handling, user/friendly logging, jsdocs, task runners
 
 #### How to build
 
@@ -81,6 +82,8 @@ Building project for production: `common.js` and` Windows/browser` are available
 4. To use in browser just include script source `<script src="build/js/pocket_umd.js"/>`
     1. then access via: `new Window.Pocket({...})`
         1. <img src="./screens/window.pocket.png" width="500"/>
+
+-   it uses [Require.js/AMD](https://requirejs.org/docs/whyamd.html) in the build to support client with own encapsulation.
 
 #### PocketModule config/opts and status logic:
 
