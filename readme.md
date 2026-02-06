@@ -1,6 +1,6 @@
 ### Pocket.js (P/p)
 
-#### [ Developed by Eaglex ](https://michaelworks.eaglex.net/)
+#### [ Developed by MichaelWorks ](https://michaelworks.eaglex.net/)
 
 Easy to use, Pocket.js redistribution utility framework, allowing you to probe data and managing state, well documented, clean beautified code. You can probe task assignments and control its outcome anywhere in your code.
 
