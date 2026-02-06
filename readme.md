@@ -1,6 +1,6 @@
 ### Pocket.js (P/p)
 
-#### [ Developed by Eaglex ](http://eaglex.net)
+#### [ Developed by Eaglex ](https://michaelworks.eaglex.net/)
 
 Easy to use, Pocket.js redistribution utility framework, allowing you to probe data and managing state, well documented, clean beautified code. You can probe task assignments and control its outcome anywhere in your code.
 
@@ -279,7 +279,7 @@ pock.$ready(`pocket-1`, true)
 
 ##### Contact
 
--   Have questions, or would like to submit feedback, `contact me at: https://eaglex.net/app/contact?product=Pocket.js`
+-   Have questions, or would like to submit feedback, `contact me at: (https://michaelworks.eaglex.net/connect`
 
 ##### LICENSE
 

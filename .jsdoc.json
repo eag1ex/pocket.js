@@ -31,10 +31,12 @@
         "useLongnameInNav": true,
         "showInheritedInNav": true
     },
+
     "opts": {
         "destination": "./docs/", // Where I want my docs to be generated.
         "recurse": true,
         "encoding": "utf8",
-        "template": "node_modules/minami"
+        "template": "custom-jsdoc-template" // Use the custom template folder
+        // "template": "node_modules/minami"
     }
 }
